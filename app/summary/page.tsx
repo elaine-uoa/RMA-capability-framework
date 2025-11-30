@@ -2,7 +2,7 @@
 
 import { useAssessment } from "@/contexts/AssessmentContext";
 import { capabilities } from "@/data/capabilities";
-import { CapabilityLevel } from "@/types";
+import { CapabilityLevel, SelectedDescriptor } from "@/types";
 import Link from "next/link";
 
 export default function SummaryPage() {
@@ -35,10 +35,34 @@ export default function SummaryPage() {
     const currentIndex = levelOrder.indexOf(response.currentLevel);
     const desiredIndex = levelOrder.indexOf(response.desiredLevel);
 
-    if (desiredIndex > currentIndex) {
+    if (desiredIndex >= currentIndex) {
       const capability = capabilities.find((c) => c.id === capabilityId);
-      const nextLevel = capability?.levels[desiredIndex];
-      return nextLevel;
+      if (!capability) return null;
+
+      const focusAreas = response.focusAreas || [];
+      
+      // Get unchecked descriptors from current level (to complete current level)
+      const currentLevelData = capability.levels[currentIndex];
+      const currentUnchecked = currentLevelData?.bulletPoints
+        .map((point, idx) => ({ point, index: idx, level: response.currentLevel! }))
+        .filter((_, idx) => !focusAreas.some(
+          fa => fa.level === response.currentLevel && fa.descriptorIndex === idx
+        )) || [];
+
+      // Get unchecked descriptors from target level (to reach target level)
+      const targetLevelData = capability.levels[desiredIndex];
+      const targetUnchecked = targetLevelData?.bulletPoints
+        .map((point, idx) => ({ point, index: idx, level: response.desiredLevel! }))
+        .filter((_, idx) => !focusAreas.some(
+          fa => fa.level === response.desiredLevel && fa.descriptorIndex === idx
+        )) || [];
+
+      return {
+        currentLevel: response.currentLevel,
+        desiredLevel: response.desiredLevel,
+        currentUnchecked,
+        targetUnchecked
+      };
     }
     return null;
   };
@@ -84,11 +108,14 @@ export default function SummaryPage() {
           <div>
             <h1 className="text-4xl font-bold text-slate-900 mb-2">Development Summary</h1>
             <p className="text-slate-600">
-              Completed on {new Date(assessmentState.lastUpdated).toLocaleDateString('en-NZ', { 
+              Last updated on {new Date(assessmentState.lastUpdated).toLocaleDateString('en-NZ', { 
                 year: 'numeric', 
                 month: 'long', 
                 day: 'numeric' 
               })}
+            </p>
+            <p className="text-sm text-slate-500 mt-2">
+              Focus on 1–3 capabilities per year for targeted professional development
             </p>
           </div>
         </div>
@@ -133,9 +160,12 @@ export default function SummaryPage() {
               </div>
               <div className="bg-white rounded-lg border border-slate-200 p-6">
                 <div className="text-3xl font-bold text-slate-900 mb-1">
-                  {Math.round((completedCapabilities.length / capabilities.length) * 100)}%
+                  {completedCapabilities.reduce((sum, c) => {
+                    const response = getResponse(c.id);
+                    return sum + (response?.focusAreas?.length || 0);
+                  }, 0)}
                 </div>
-                <div className="text-sm text-slate-600">Completion</div>
+                <div className="text-sm text-slate-600">Focus Areas Selected</div>
               </div>
             </div>
 
@@ -193,15 +223,106 @@ export default function SummaryPage() {
               </div>
             </div>
 
+            {/* Development Focus Areas */}
+            {completedCapabilities.some(c => {
+              const response = getResponse(c.id);
+              return response?.focusAreas && response.focusAreas.length > 0;
+            }) && (
+              <div className="mb-12">
+                <div className="mb-6">
+                  <h2 className="text-xl font-bold text-slate-900 mb-2">Your Selected Focus Areas</h2>
+                  <p className="text-sm text-slate-600">
+                    These are the specific descriptors you selected as focus areas for your development
+                  </p>
+                </div>
+                <div className="space-y-6">
+                  {completedCapabilities.map((capability) => {
+                    const response = getResponse(capability.id);
+                    const focusAreas = response?.focusAreas || [];
+                    
+                    if (focusAreas.length === 0) return null;
+
+                    // Group focus areas by level
+                    const focusByLevel: Record<CapabilityLevel, SelectedDescriptor[]> = {
+                      FOUNDATION: [],
+                      INTERMEDIATE: [],
+                      ADVANCED: [],
+                      EXEMPLAR: []
+                    };
+
+                    focusAreas.forEach(fa => {
+                      if (focusByLevel[fa.level]) {
+                        focusByLevel[fa.level].push(fa);
+                      }
+                    });
+
+                    return (
+                      <div
+                        key={capability.id}
+                        className="bg-white rounded-lg border border-slate-200 p-6"
+                      >
+                        <div className="mb-4">
+                          <h3 className="font-bold text-slate-900 text-lg mb-2">{capability.name}</h3>
+                          <p className="text-sm text-slate-600">
+                            {focusAreas.length} focus area{focusAreas.length !== 1 ? 's' : ''} selected
+                          </p>
+                        </div>
+                        
+                        <div className="space-y-4">
+                          {Object.entries(focusByLevel).map(([level, descriptors]) => {
+                            if (descriptors.length === 0) return null;
+                            
+                            const levelData = capability.levels.find(l => l.level === level as CapabilityLevel);
+                            if (!levelData) return null;
+
+                            return (
+                              <div key={level} className="bg-indigo-50 rounded-lg p-4 border border-indigo-100">
+                                <div className="font-semibold text-indigo-900 text-sm mb-3">
+                                  {level.charAt(0) + level.slice(1).toLowerCase()} Level
+                                </div>
+                                <ul className="space-y-2">
+                                  {descriptors
+                                    .sort((a, b) => a.descriptorIndex - b.descriptorIndex)
+                                    .map((fa) => {
+                                      const descriptor = levelData.bulletPoints[fa.descriptorIndex];
+                                      if (!descriptor) return null;
+                                      
+                                      return (
+                                        <li key={`${fa.level}-${fa.descriptorIndex}`} className="flex gap-2 text-sm text-slate-700">
+                                          <span className="text-indigo-600 font-medium">✓</span>
+                                          <span>{descriptor}</span>
+                                        </li>
+                                      );
+                                    })}
+                                </ul>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
             {/* Growth Opportunities */}
             {completedCapabilities.some(c => getGrowthSuggestions(c.id)) && (
               <div>
-                <h2 className="text-xl font-bold text-slate-900 mb-6">Growth Opportunities</h2>
+                <div className="mb-6">
+                  <h2 className="text-xl font-bold text-slate-900 mb-2">Growth Opportunities</h2>
+                  <p className="text-sm text-slate-600">
+                    These are the descriptors you haven't selected yet, showing what you still need to work on
+                  </p>
+                </div>
                 <div className="space-y-6">
                   {completedCapabilities.map((capability) => {
                     const growth = getGrowthSuggestions(capability.id);
                     const response = getResponse(capability.id);
                     if (!growth) return null;
+
+                    const hasCurrentUnchecked = growth.currentUnchecked.length > 0;
+                    const hasTargetUnchecked = growth.targetUnchecked.length > 0;
 
                     return (
                       <div
@@ -216,16 +337,49 @@ export default function SummaryPage() {
                           </p>
                         </div>
                         
-                        <div className="bg-slate-50 rounded-lg p-4 border border-slate-200">
-                          <p className="font-semibold text-slate-900 text-sm mb-3">Key focus areas:</p>
-                          <ul className="space-y-2">
-                            {growth.bulletPoints.slice(0, 3).map((point, idx) => (
-                              <li key={idx} className="flex gap-2 text-sm text-slate-700">
-                                <span className="text-slate-400">•</span>
-                                <span>{point}</span>
-                              </li>
-                            ))}
-                          </ul>
+                        <div className="space-y-4">
+                          {/* Current Level - Unchecked descriptors */}
+                          {hasCurrentUnchecked && (
+                            <div className="bg-blue-50 rounded-lg p-4 border border-blue-100">
+                              <p className="font-semibold text-blue-900 text-sm mb-3">
+                                To complete {getLevelLabel(growth.currentLevel)} level ({growth.currentUnchecked.length} remaining):
+                              </p>
+                              <ul className="space-y-2">
+                                {growth.currentUnchecked.map((item) => (
+                                  <li key={`current-${item.index}`} className="flex gap-2 text-sm text-slate-700">
+                                    <span className="text-blue-600 font-medium">{item.index + 1}.</span>
+                                    <span>{item.point}</span>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
+
+                          {/* Target Level - Unchecked descriptors */}
+                          {hasTargetUnchecked && (
+                            <div className="bg-green-50 rounded-lg p-4 border border-green-100">
+                              <p className="font-semibold text-green-900 text-sm mb-3">
+                                To reach {getLevelLabel(growth.desiredLevel)} level ({growth.targetUnchecked.length} remaining):
+                              </p>
+                              <ul className="space-y-2">
+                                {growth.targetUnchecked.map((item) => (
+                                  <li key={`target-${item.index}`} className="flex gap-2 text-sm text-slate-700">
+                                    <span className="text-green-600 font-medium">{item.index + 1}.</span>
+                                    <span>{item.point}</span>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
+
+                          {/* If all descriptors are already selected */}
+                          {!hasCurrentUnchecked && !hasTargetUnchecked && (
+                            <div className="bg-slate-50 rounded-lg p-4 border border-slate-200">
+                              <p className="text-sm text-slate-600">
+                                You've already selected all descriptors from both your current and target levels as focus areas.
+                              </p>
+                            </div>
+                          )}
                         </div>
                       </div>
                     );

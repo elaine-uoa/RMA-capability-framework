@@ -13,11 +13,17 @@ export interface Capability {
   levels: CapabilityLevelDescriptor[];
 }
 
+export interface SelectedDescriptor {
+  level: CapabilityLevel;
+  descriptorIndex: number; // Index of the bullet point in the level's bulletPoints array
+}
+
 export interface AssessmentResponse {
   capabilityId: string;
   currentLevel: CapabilityLevel | null;
   desiredLevel: CapabilityLevel | null;
   notes: string;
+  focusAreas?: SelectedDescriptor[]; // Selected descriptors as focus areas
 }
 
 export interface AssessmentState {

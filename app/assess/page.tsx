@@ -6,7 +6,7 @@ import { capabilities } from "@/data/capabilities";
 import { CapabilityNavigation } from "@/components/CapabilityNavigation";
 import { CapabilitySelector } from "@/components/CapabilitySelector";
 import { useAssessment } from "@/contexts/AssessmentContext";
-import { CapabilityLevel } from "@/types";
+import { CapabilityLevel, SelectedDescriptor } from "@/types";
 import Link from "next/link";
 
 function LevelTabs({ 
@@ -14,13 +14,17 @@ function LevelTabs({
   currentLevel, 
   onSelectLevel,
   selectedTab,
-  setSelectedTab 
+  setSelectedTab,
+  focusAreas,
+  onToggleFocusArea
 }: { 
   levels: any[], 
   currentLevel: CapabilityLevel | null, 
   onSelectLevel: (l: CapabilityLevel) => void,
   selectedTab: CapabilityLevel,
-  setSelectedTab: (l: CapabilityLevel) => void
+  setSelectedTab: (l: CapabilityLevel) => void,
+  focusAreas: SelectedDescriptor[],
+  onToggleFocusArea: (level: CapabilityLevel, index: number) => void
 }) {
   const levelOrder: CapabilityLevel[] = ["FOUNDATION", "INTERMEDIATE", "ADVANCED", "EXEMPLAR"];
   const activeLevelData = levels.find(l => l.level === selectedTab);
@@ -96,15 +100,45 @@ function LevelTabs({
           </button>
         </div>
 
-        <div className="space-y-3 mb-8">
-          {activeLevelData?.bulletPoints.map((point: string, idx: number) => (
-            <div key={idx} className="flex gap-3 text-slate-700 leading-relaxed">
-              <span className="flex-shrink-0 w-5 h-5 rounded-full bg-slate-100 flex items-center justify-center text-xs font-medium text-slate-600 mt-0.5">
-                {idx + 1}
-              </span>
-              <span>{point}</span>
-            </div>
-          ))}
+        <div className="mb-6">
+          <div className="flex items-center justify-between mb-4">
+            <h4 className="text-sm font-semibold text-slate-700">Key Indicators</h4>
+            <span className="text-xs text-slate-500">
+              Select descriptors to mark as focus areas
+            </span>
+          </div>
+          <div className="space-y-3">
+            {activeLevelData?.bulletPoints.map((point: string, idx: number) => {
+              const isSelected = focusAreas.some(
+                fa => fa.level === selectedTab && fa.descriptorIndex === idx
+              );
+              
+              return (
+                <label
+                  key={idx}
+                  className={`
+                    flex gap-3 p-3 rounded-lg cursor-pointer transition-all
+                    ${isSelected 
+                      ? 'bg-indigo-50 border-2 border-indigo-200' 
+                      : 'hover:bg-slate-50 border-2 border-transparent'}
+                  `}
+                >
+                  <div className="flex items-start gap-3 flex-1">
+                    <input
+                      type="checkbox"
+                      checked={isSelected}
+                      onChange={() => onToggleFocusArea(selectedTab, idx)}
+                      className="mt-1 w-5 h-5 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 focus:ring-2 cursor-pointer"
+                    />
+                    <span className="flex-shrink-0 w-5 h-5 rounded-full bg-slate-100 flex items-center justify-center text-xs font-medium text-slate-600 mt-0.5">
+                      {idx + 1}
+                    </span>
+                    <span className="text-slate-700 leading-relaxed flex-1">{point}</span>
+                  </div>
+                </label>
+              );
+            })}
+          </div>
         </div>
 
         {activeLevelData?.alignmentStatement && (
@@ -147,6 +181,7 @@ function AssessmentInner({ capability, capabilityId, getResponse, updateResponse
   const [desiredLevel, setDesiredLevel] = useState<CapabilityLevel | null>(response?.desiredLevel || null);
   const [notes, setNotes] = useState(response?.notes || "");
   const [selectedTab, setSelectedTab] = useState<CapabilityLevel>(response?.currentLevel || "FOUNDATION");
+  const [focusAreas, setFocusAreas] = useState<SelectedDescriptor[]>(response?.focusAreas || []);
 
   // Use ref to track if this is the first render
   const isFirstRender = useRef(true);
@@ -160,11 +195,11 @@ function AssessmentInner({ capability, capabilityId, getResponse, updateResponse
 
     // Debounce the save to avoid too many updates
     const timeoutId = setTimeout(() => {
-      updateResponse(capabilityId, { currentLevel, desiredLevel, notes });
+      updateResponse(capabilityId, { currentLevel, desiredLevel, notes, focusAreas });
     }, 300);
 
     return () => clearTimeout(timeoutId);
-  }, [currentLevel, desiredLevel, notes]); // Remove capabilityId and updateResponse from deps
+  }, [currentLevel, desiredLevel, notes, focusAreas]); // Remove capabilityId and updateResponse from deps
 
   // Update local state when capability changes
   useEffect(() => {
@@ -173,8 +208,26 @@ function AssessmentInner({ capability, capabilityId, getResponse, updateResponse
     setDesiredLevel(newResponse?.desiredLevel || null);
     setNotes(newResponse?.notes || "");
     setSelectedTab(newResponse?.currentLevel || "FOUNDATION");
+    setFocusAreas(newResponse?.focusAreas || []);
     isFirstRender.current = true; // Reset first render flag
   }, [capabilityId, getResponse]);
+
+  // Toggle focus area selection
+  const handleToggleFocusArea = (level: CapabilityLevel, index: number) => {
+    setFocusAreas(prev => {
+      const existingIndex = prev.findIndex(
+        fa => fa.level === level && fa.descriptorIndex === index
+      );
+      
+      if (existingIndex >= 0) {
+        // Remove if already selected
+        return prev.filter((_, idx) => idx !== existingIndex);
+      } else {
+        // Add if not selected
+        return [...prev, { level, descriptorIndex: index }];
+      }
+    });
+  };
 
   return (
     <>
@@ -213,6 +266,8 @@ function AssessmentInner({ capability, capabilityId, getResponse, updateResponse
           currentLevel={currentLevel}
           selectedTab={selectedTab}
           setSelectedTab={setSelectedTab}
+          focusAreas={focusAreas}
+          onToggleFocusArea={handleToggleFocusArea}
           onSelectLevel={(level) => {
             setCurrentLevel(level);
             setSelectedTab(level);
