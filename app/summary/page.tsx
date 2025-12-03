@@ -182,7 +182,6 @@ export default function SummaryPage() {
                       <th className="text-left py-4 px-6 font-semibold text-slate-700 text-sm">Capability</th>
                       <th className="text-left py-4 px-6 font-semibold text-slate-700 text-sm">Current</th>
                       <th className="text-left py-4 px-6 font-semibold text-slate-700 text-sm">Target</th>
-                      <th className="text-left py-4 px-6 font-semibold text-slate-700 text-sm">Notes</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -194,7 +193,15 @@ export default function SummaryPage() {
                           className="border-b border-slate-100 hover:bg-slate-50 transition-colors"
                         >
                           <td className="py-4 px-6">
-                            <div className="font-medium text-slate-900">{capability.name}</div>
+                            <Link
+                              href={`/assess?capability=${capability.id}`}
+                              className="font-medium text-slate-900 hover:text-slate-700 hover:underline transition-colors inline-flex items-center gap-1.5"
+                            >
+                              {capability.name}
+                              <svg className="w-4 h-4 opacity-60" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                              </svg>
+                            </Link>
                           </td>
                           <td className="py-4 px-6">
                             <span className="inline-flex px-3 py-1 rounded-lg text-sm font-medium bg-slate-100 text-slate-700">
@@ -210,11 +217,6 @@ export default function SummaryPage() {
                               <span className="text-slate-400 text-sm">—</span>
                             )}
                           </td>
-                          <td className="py-4 px-6">
-                            <div className="text-slate-600 text-sm max-w-xs truncate">
-                              {response?.notes || <span className="text-slate-400">—</span>}
-                            </div>
-                          </td>
                         </tr>
                       );
                     })}
@@ -222,6 +224,34 @@ export default function SummaryPage() {
                 </table>
               </div>
             </div>
+
+            {/* Development Notes Section */}
+            {completedCapabilities.some(c => {
+              const response = getResponse(c.id);
+              return response?.notes && response.notes.trim().length > 0;
+            }) && (
+              <div className="bg-white rounded-lg border border-slate-200 mb-12">
+                <div className="p-6 border-b border-slate-200">
+                  <h2 className="text-xl font-bold text-slate-900">Development Notes</h2>
+                  <p className="text-sm text-slate-600 mt-1">Personal reflections and development goals for each capability</p>
+                </div>
+                <div className="divide-y divide-slate-200">
+                  {completedCapabilities.map((capability) => {
+                    const response = getResponse(capability.id);
+                    if (!response?.notes || response.notes.trim().length === 0) return null;
+                    
+                    return (
+                      <div key={capability.id} className="p-6">
+                        <h3 className="font-semibold text-slate-900 mb-3">{capability.name}</h3>
+                        <div className="text-slate-700 leading-relaxed whitespace-pre-wrap break-words overflow-visible">
+                          {response.notes}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
 
             {/* Development Focus Areas */}
             {completedCapabilities.some(c => {

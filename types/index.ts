@@ -1,9 +1,16 @@
 export type CapabilityLevel = "FOUNDATION" | "INTERMEDIATE" | "ADVANCED" | "EXEMPLAR";
 
+export interface DescriptorAlignment {
+  descriptorIndex: number; // Index of the bullet point
+  alignmentText: string; // Alignment statement for this specific descriptor
+  frameworks?: string[]; // Optional: frameworks this aligns to (e.g., "Whāia Te Hihiri", "Ngā Taumata Tutuki")
+}
+
 export interface CapabilityLevelDescriptor {
   level: CapabilityLevel;
   bulletPoints: string[];
-  alignmentStatement?: string;
+  alignmentStatement?: string; // General alignment for the level (kept for backward compatibility)
+  descriptorAlignments?: DescriptorAlignment[]; // Descriptor-specific alignments
 }
 
 export interface Capability {
