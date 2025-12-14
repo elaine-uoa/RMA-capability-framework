@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { AssessmentProvider } from "@/contexts/AssessmentContext";
+import { Navbar } from "@/components/Navbar";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -16,9 +17,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
-        <AssessmentProvider>{children}</AssessmentProvider>
+    <html lang="en" className="w-full">
+      <body className={`${inter.className} w-full flex flex-col items-center`}>
+        <AssessmentProvider>
+          <div className="w-full flex flex-col items-center">
+            <Navbar />
+            <div className="w-full">
+              {children}
+            </div>
+          </div>
+        </AssessmentProvider>
       </body>
     </html>
   );

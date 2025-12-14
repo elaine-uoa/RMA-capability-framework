@@ -30,7 +30,14 @@ export interface AssessmentResponse {
   currentLevel: CapabilityLevel | null;
   desiredLevel: CapabilityLevel | null;
   notes: string;
-  focusAreas?: SelectedDescriptor[]; // Selected descriptors as focus areas
+  // Descriptors the user CAN currently demonstrate (self-assessment)
+  demonstratedDescriptors?: SelectedDescriptor[];
+  // Descriptors the user WANTS TO develop (development plan)
+  developmentFocus?: SelectedDescriptor[];
+  // Development notes per focus area
+  developmentNotes?: Record<string, string>; // key: "level-descriptorIndex"
+  // Legacy field - kept for backward compatibility during migration
+  focusAreas?: SelectedDescriptor[];
 }
 
 export interface AssessmentState {

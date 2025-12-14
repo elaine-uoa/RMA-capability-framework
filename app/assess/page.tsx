@@ -9,6 +9,15 @@ import { useAssessment } from "@/contexts/AssessmentContext";
 import { CapabilityLevel, SelectedDescriptor, DescriptorAlignment } from "@/types";
 import Link from "next/link";
 
+// Framework/treaty links
+const FRAMEWORK_LINKS: Record<string, string> = {
+  "Te Tiriti o Waitangi": "https://nzhistory.govt.nz/politics/treaty-of-waitangi",
+  "Whāia Te Hihiri": "https://www.journal.mai.ac.nz/content/te-hihiri-process-coming-know",
+  // Ngā Taumata Tutuki - link to be added when available
+};
+
+const RESEARCH_HUB_URL = "https://research-hub.auckland.ac.nz/induction-skills-and-development/research-management-and-administration-rma-staff-development";
+
 // Component for individual descriptor with alignment support
 function DescriptorItem({
   point,
@@ -112,14 +121,33 @@ function DescriptorItem({
             <div className="pt-3 border-t border-green-100">
               <p className="text-xs font-medium text-green-800 mb-1.5">Aligned to:</p>
               <div className="flex flex-wrap gap-2">
-                {alignment.frameworks.map((framework, idx) => (
-                  <span
-                    key={idx}
-                    className="inline-flex items-center px-2.5 py-1 rounded-md bg-green-50 text-green-700 text-xs font-medium border border-green-200"
-                  >
-                    {framework}
-                  </span>
-                ))}
+                {alignment.frameworks.map((framework, idx) => {
+                  const url = FRAMEWORK_LINKS[framework];
+                  if (url) {
+                    return (
+                      <a
+                        key={idx}
+                        href={url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-green-50 text-green-700 text-xs font-medium border border-green-200 hover:bg-green-100 hover:border-green-300 transition-colors"
+                      >
+                        {framework}
+                        <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                        </svg>
+                      </a>
+                    );
+                  }
+                  return (
+                    <span
+                      key={idx}
+                      className="inline-flex items-center px-2.5 py-1 rounded-md bg-green-50 text-green-700 text-xs font-medium border border-green-200"
+                    >
+                      {framework}
+                    </span>
+                  );
+                })}
               </div>
             </div>
           )}
@@ -222,9 +250,9 @@ function LevelTabs({
 
         <div className="mb-6">
           <div className="flex items-center justify-between mb-4">
-            <h4 className="text-sm font-semibold text-slate-700">Key Indicators</h4>
+            <h4 className="text-sm font-semibold text-slate-700">Self-assessment descriptors</h4>
             <span className="text-xs text-slate-500">
-              Select descriptors to mark as focus areas
+              Tick the descriptors you can currently demonstrate
             </span>
           </div>
           <div className="space-y-3">
@@ -252,31 +280,36 @@ function LevelTabs({
           </div>
         </div>
 
-        {activeLevelData?.alignmentStatement && (
-          <div className="bg-slate-50 rounded-lg p-6 border border-slate-200">
-            <div className="flex items-start justify-between mb-3">
-              <h4 className="font-semibold text-slate-900">General Māori Alignment & Te Tiriti o Waitangi</h4>
-              {activeLevelData.descriptorAlignments && activeLevelData.descriptorAlignments.length > 0 && (
-                <span className="text-xs text-slate-500 bg-white px-2 py-1 rounded border border-slate-200">
-                  {activeLevelData.descriptorAlignments.length} descriptor{activeLevelData.descriptorAlignments.length !== 1 ? 's' : ''} with specific alignments
-                </span>
-              )}
-            </div>
-            <p className="text-slate-600 leading-relaxed italic text-sm mb-2">
-              {activeLevelData.alignmentStatement}
-            </p>
-            {activeLevelData.descriptorAlignments && activeLevelData.descriptorAlignments.length > 0 && (
-              <p className="text-xs text-slate-500 mt-3 pt-3 border-t border-slate-200">
-                <span className="inline-flex items-center gap-1">
-                  <svg className="w-3 h-3 text-green-600" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-                  </svg>
-                  Some descriptors above have specific alignment statements. Click the info icon to view them.
-                </span>
+        {/* Training Resources */}
+        <div className="bg-slate-50 rounded-lg p-6 border border-slate-200">
+          <div className="flex items-start justify-between">
+            <div>
+              <h4 className="font-semibold text-slate-900 mb-2">Training & Development Resources</h4>
+              <p className="text-slate-600 text-sm mb-3">
+                Access training materials, courses, and development resources for RMA staff.
               </p>
+              <a
+                href={RESEARCH_HUB_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 text-sm font-medium text-indigo-600 hover:text-indigo-700 transition-colors"
+              >
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                </svg>
+                Visit Research Hub – RMA Staff Development
+                <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                </svg>
+              </a>
+            </div>
+            {activeLevelData?.descriptorAlignments && activeLevelData.descriptorAlignments.length > 0 && (
+              <span className="text-xs text-slate-500 bg-white px-2 py-1 rounded border border-slate-200 flex-shrink-0">
+                {activeLevelData.descriptorAlignments.length} descriptor{activeLevelData.descriptorAlignments.length !== 1 ? 's' : ''} with alignment info
+              </span>
             )}
           </div>
-        )}
+        </div>
       </div>
     </div>
   );
@@ -306,10 +339,11 @@ function AssessmentInner({ capability, capabilityId, getResponse, updateResponse
   const response = getResponse(capabilityId);
   
   const [currentLevel, setCurrentLevel] = useState<CapabilityLevel | null>(response?.currentLevel || null);
-  const [desiredLevel, setDesiredLevel] = useState<CapabilityLevel | null>(response?.desiredLevel || null);
-  const [notes, setNotes] = useState(response?.notes || "");
   const [selectedTab, setSelectedTab] = useState<CapabilityLevel>(response?.currentLevel || "FOUNDATION");
-  const [focusAreas, setFocusAreas] = useState<SelectedDescriptor[]>(response?.focusAreas || []);
+  // Use demonstratedDescriptors (new) or fallback to focusAreas (legacy)
+  const [demonstratedDescriptors, setDemonstratedDescriptors] = useState<SelectedDescriptor[]>(
+    response?.demonstratedDescriptors || response?.focusAreas || []
+  );
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
 
   // Use ref to track if this is the first render and previous capability
@@ -319,7 +353,7 @@ function AssessmentInner({ capability, capabilityId, getResponse, updateResponse
   // Manual save function
   const handleSave = () => {
     setSaveStatus('saving');
-    updateResponse(capabilityId, { currentLevel, desiredLevel, notes, focusAreas });
+    updateResponse(capabilityId, { currentLevel, demonstratedDescriptors });
     setTimeout(() => {
       setSaveStatus('saved');
       setTimeout(() => setSaveStatus('idle'), 2000);
@@ -336,13 +370,13 @@ function AssessmentInner({ capability, capabilityId, getResponse, updateResponse
     // Debounce the save to avoid too many updates
     setSaveStatus('saving');
     const timeoutId = setTimeout(() => {
-      updateResponse(capabilityId, { currentLevel, desiredLevel, notes, focusAreas });
+      updateResponse(capabilityId, { currentLevel, demonstratedDescriptors });
       setSaveStatus('saved');
       setTimeout(() => setSaveStatus('idle'), 2000);
     }, 300);
 
     return () => clearTimeout(timeoutId);
-  }, [currentLevel, desiredLevel, notes, focusAreas]); // Remove capabilityId and updateResponse from deps
+  }, [currentLevel, demonstratedDescriptors]); // Remove capabilityId and updateResponse from deps
 
   // Update local state when capability changes (but preserve selectedTab if user is viewing a different tab)
   useEffect(() => {
@@ -350,21 +384,19 @@ function AssessmentInner({ capability, capabilityId, getResponse, updateResponse
     if (previousCapabilityId.current !== capabilityId) {
       const newResponse = getResponse(capabilityId);
       setCurrentLevel(newResponse?.currentLevel || null);
-      setDesiredLevel(newResponse?.desiredLevel || null);
-      setNotes(newResponse?.notes || "");
       // Reset selectedTab only when switching to a new capability
       setSelectedTab(newResponse?.currentLevel || "FOUNDATION");
-      setFocusAreas(newResponse?.focusAreas || []);
+      setDemonstratedDescriptors(newResponse?.demonstratedDescriptors || newResponse?.focusAreas || []);
       isFirstRender.current = true; // Reset first render flag
       previousCapabilityId.current = capabilityId;
     }
   }, [capabilityId, getResponse]); // Only run when capabilityId changes
 
-  // Toggle focus area selection
-  const handleToggleFocusArea = (level: CapabilityLevel, index: number) => {
-    setFocusAreas(prev => {
+  // Toggle demonstrated descriptor selection
+  const handleToggleDemonstrated = (level: CapabilityLevel, index: number) => {
+    setDemonstratedDescriptors(prev => {
       const existingIndex = prev.findIndex(
-        fa => fa.level === level && fa.descriptorIndex === index
+        d => d.level === level && d.descriptorIndex === index
       );
       
       if (existingIndex >= 0) {
@@ -378,34 +410,31 @@ function AssessmentInner({ capability, capabilityId, getResponse, updateResponse
   };
 
   return (
-    <>
+    <div className="w-full min-h-screen bg-[#f8f9fa] flex flex-col items-center">
       {/* Header */}
-      <header className="bg-white border-b border-slate-200">
-        <div className="max-w-5xl mx-auto px-6 py-8">
-          <nav className="flex items-center justify-between mb-8">
-            <Link 
-              href="/" 
-              className="text-slate-600 hover:text-slate-900 transition-colors font-medium flex items-center gap-2"
-            >
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-              </svg>
-              Home
-            </Link>
-            
-            <div className="flex items-center gap-3">
-              <Link
-                href="/summary"
-                className="inline-flex items-center gap-2 px-4 py-2 bg-slate-900 text-white rounded-lg font-medium hover:bg-slate-800 transition-colors text-sm"
-              >
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
-                View Summary
-              </Link>
-              <CapabilitySelector currentCapabilityId={capabilityId} />
+      <header className="w-full bg-white border-b border-slate-200 flex justify-center">
+        <div className="w-full max-w-4xl px-8 sm:px-12 lg:px-16 py-8">
+          {/* Capability selector and mode indicator */}
+          <div className="flex items-center justify-between mb-6">
+            <div className="bg-amber-50 border border-amber-100 text-amber-900 rounded-lg px-4 py-2">
+              <span className="font-semibold text-sm">Self-assessment mode</span>
             </div>
-          </nav>
+            <CapabilitySelector currentCapabilityId={capabilityId} />
+          </div>
+
+          <div className="bg-amber-50 border border-amber-100 text-amber-900 rounded-lg p-4 mb-6">
+            <div className="font-semibold flex items-center gap-2">
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              Self-assessment mode
+            </div>
+            <p className="text-sm text-amber-800 mt-1">
+              Review each level and tick the descriptors you can <strong>currently demonstrate</strong>. 
+              Select the level that best represents your current capability. 
+              Once complete, build your development plan to identify focus areas.
+            </p>
+          </div>
 
           <div>
             <h1 className="text-4xl font-bold text-slate-900 mb-4 tracking-tight">
@@ -419,14 +448,15 @@ function AssessmentInner({ capability, capabilityId, getResponse, updateResponse
       </header>
 
       {/* Main Content */}
-      <main className="max-w-5xl mx-auto px-6 py-12">
+      <main className="w-full flex justify-center">
+        <div className="w-full max-w-4xl px-8 sm:px-12 lg:px-16 py-12">
         <LevelTabs 
           levels={capability.levels}
           currentLevel={currentLevel}
           selectedTab={selectedTab}
           setSelectedTab={setSelectedTab}
-          focusAreas={focusAreas}
-          onToggleFocusArea={handleToggleFocusArea}
+          focusAreas={demonstratedDescriptors}
+          onToggleFocusArea={handleToggleDemonstrated}
           onSelectLevel={(level) => {
             setCurrentLevel(level);
             // Don't change selectedTab - let user stay on the tab they're viewing
@@ -434,111 +464,64 @@ function AssessmentInner({ capability, capabilityId, getResponse, updateResponse
           }}
         />
 
-        {/* Reflection Section */}
+        {/* Assessment Summary & Next Steps */}
         <div className="mt-12 bg-white rounded-lg border border-slate-200 p-8">
-          <h3 className="text-xl font-bold text-slate-900 mb-6">Personal Reflection</h3>
+          <h3 className="text-xl font-bold text-slate-900 mb-4">Assessment Summary</h3>
           
-          <div className="grid md:grid-cols-2 gap-8">
-            <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-3">
-                Target / Desired Level
-              </label>
-              <select 
-                value={desiredLevel || ""} 
-                onChange={(e) => setDesiredLevel(e.target.value ? e.target.value as CapabilityLevel : null)}
-                className="w-full px-4 py-3 border border-slate-200 rounded-lg focus:ring-2 focus:ring-slate-900 focus:border-slate-900 bg-white transition-all"
-              >
-                <option value="">Select a target level (optional)</option>
-                <option value="FOUNDATION">Foundation</option>
-                <option value="INTERMEDIATE">Intermediate</option>
-                <option value="ADVANCED">Advanced</option>
-                <option value="EXEMPLAR">Exemplar</option>
-              </select>
-            </div>
-
-            <div>
-              <div className="flex items-center justify-between mb-3">
-                <label className="block text-sm font-semibold text-slate-700">
-                  Development Notes
-                </label>
-                <span className={`text-xs font-medium ${
-                  notes.length > 500 ? 'text-red-600' : 
-                  notes.length > 400 ? 'text-amber-600' : 
-                  'text-slate-500'
-                }`}>
-                  {notes.length} / 500 characters
-                </span>
+          <div className="grid md:grid-cols-3 gap-6 mb-6">
+            <div className="bg-slate-50 rounded-lg p-4 border border-slate-200">
+              <div className="text-sm text-slate-600 mb-1">Current Level</div>
+              <div className="text-lg font-semibold text-slate-900">
+                {currentLevel ? currentLevel.charAt(0) + currentLevel.slice(1).toLowerCase() : "Not selected"}
               </div>
-              <textarea
-                value={notes}
-                onChange={(e) => {
-                  if (e.target.value.length <= 500) {
-                    setNotes(e.target.value);
-                  }
-                }}
-                placeholder="Capture your thoughts, evidence, or development goals (max 500 characters)..."
-                maxLength={500}
-                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-slate-900 focus:border-slate-900 resize-y min-h-[120px] transition-all ${
-                  notes.length > 500 ? 'border-red-300 bg-red-50' : 
-                  notes.length > 400 ? 'border-amber-300' : 
-                  'border-slate-200'
-                }`}
-              />
-              {notes.length >= 500 && (
-                <p className="text-xs text-red-600 mt-1">Character limit reached</p>
-              )}
+            </div>
+            <div className="bg-slate-50 rounded-lg p-4 border border-slate-200">
+              <div className="text-sm text-slate-600 mb-1">Descriptors Demonstrated</div>
+              <div className="text-lg font-semibold text-slate-900">
+                {demonstratedDescriptors.length}
+              </div>
+            </div>
+            <div className="bg-slate-50 rounded-lg p-4 border border-slate-200">
+              <div className="text-sm text-slate-600 mb-1">Status</div>
+              <div className="text-lg font-semibold text-slate-900">
+                {saveStatus === 'saving' ? 'Saving...' : saveStatus === 'saved' ? 'Saved' : 'Auto-saved'}
+              </div>
             </div>
           </div>
           
-          <div className="mt-6 pt-6 border-t border-slate-200">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-              <div className="flex items-center gap-3">
-                {saveStatus === 'saving' && (
-                  <div className="flex items-center gap-2 text-sm text-slate-600">
-                    <div className="w-4 h-4 border-2 border-slate-400 border-t-transparent rounded-full animate-spin"></div>
-                    <span>Saving...</span>
-                  </div>
-                )}
-                {saveStatus === 'saved' && (
-                  <div className="flex items-center gap-2 text-sm text-green-600">
-                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                    </svg>
-                    <span>Saved</span>
-                  </div>
-                )}
-                {saveStatus === 'idle' && (
-                  <div className="flex items-center gap-2 text-sm text-slate-500">
-                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                    </svg>
-                    <span>Auto-saved</span>
-                  </div>
-                )}
-                <button
-                  onClick={handleSave}
-                  className="ml-4 px-4 py-2 bg-white border border-slate-300 text-slate-700 rounded-lg font-medium hover:bg-slate-50 hover:border-slate-400 transition-colors text-sm"
-                >
-                  Save Now
-                </button>
-              </div>
-              
-              <div className="flex items-center gap-3">
-                <Link
-                  href="/summary"
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-slate-900 text-white rounded-lg font-medium hover:bg-slate-800 transition-colors shadow-sm hover:shadow-md"
-                >
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                  </svg>
-                  Go to Summary Report
-                </Link>
-              </div>
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pt-6 border-t border-slate-200">
+            <div className="flex items-center gap-3">
+              <button
+                onClick={handleSave}
+                className="px-4 py-2 bg-white border border-slate-300 text-slate-700 rounded-lg font-medium hover:bg-slate-50 hover:border-slate-400 transition-colors text-sm"
+              >
+                Save Now
+              </button>
+              <p className="text-xs text-slate-500">
+                Your assessment is saved automatically.
+              </p>
             </div>
             
-            <p className="text-xs text-slate-500 mt-3">
-              Your assessment for this capability is saved automatically. You can return to this page anytime to update your responses.
-            </p>
+            <div className="flex items-center gap-3">
+              <Link
+                href="/summary"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-white border border-slate-300 text-slate-700 rounded-lg font-medium hover:bg-slate-50 hover:border-slate-400 transition-colors text-sm"
+              >
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                View Summary
+              </Link>
+              <Link
+                href="/plan"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-slate-900 text-white rounded-lg font-medium hover:bg-slate-800 transition-colors shadow-sm hover:shadow-md"
+              >
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                </svg>
+                Build Development Plan
+              </Link>
+            </div>
           </div>
         </div>
 
@@ -546,8 +529,9 @@ function AssessmentInner({ capability, capabilityId, getResponse, updateResponse
         <div className="mt-12">
           <CapabilityNavigation currentCapabilityId={capabilityId} />
         </div>
+        </div>
       </main>
-    </>
+    </div>
   );
 }
 

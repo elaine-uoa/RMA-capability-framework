@@ -24,13 +24,29 @@ export function AssessmentProvider({ children }: { children: ReactNode }) {
   const [assessmentState, setAssessmentState] = useState<AssessmentState>(defaultState);
   const [isHydrated, setIsHydrated] = useState(false);
 
-  // Load from localStorage on mount
+  // Load from localStorage on mount with migration for legacy data
   useEffect(() => {
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
       if (stored) {
         const parsed = JSON.parse(stored);
-        setAssessmentState(parsed);
+        // Migrate legacy focusAreas to demonstratedDescriptors
+        const migratedResponses: Record<string, AssessmentResponse> = {};
+        for (const [key, response] of Object.entries(parsed.responses || {})) {
+          const r = response as AssessmentResponse;
+          if (r.focusAreas && !r.demonstratedDescriptors) {
+            migratedResponses[key] = {
+              ...r,
+              demonstratedDescriptors: r.focusAreas,
+            };
+          } else {
+            migratedResponses[key] = r;
+          }
+        }
+        setAssessmentState({
+          ...parsed,
+          responses: migratedResponses,
+        });
       }
     } catch (error) {
       console.error("Error loading assessment state:", error);
