@@ -30,7 +30,7 @@ export interface AssessmentResponse {
   currentLevel: CapabilityLevel | null;
   desiredLevel: CapabilityLevel | null;
   notes: string;
-  // Descriptors the user CAN currently demonstrate (self-assessment)
+  // Behaviours the user can competently demonstrate (holistic self-assessment - includes previous roles/experiences)
   demonstratedDescriptors?: SelectedDescriptor[];
   // Descriptors the user WANTS TO develop (development plan)
   developmentFocus?: SelectedDescriptor[];
@@ -38,6 +38,9 @@ export interface AssessmentResponse {
   developmentNotes?: Record<string, string>; // key: "level-descriptorIndex"
   // Legacy field - kept for backward compatibility during migration
   focusAreas?: SelectedDescriptor[];
+  // Explicitly included in assessment set (for capabilities outside current role or with zero experience)
+  // Allows capability to appear in development plan even if no level selected or descriptors ticked
+  isIncluded?: boolean;
 }
 
 export interface AssessmentState {

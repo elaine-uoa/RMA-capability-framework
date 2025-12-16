@@ -18,18 +18,22 @@ const FRAMEWORK_LINKS: Record<string, string> = {
 
 const RESEARCH_HUB_URL = "https://research-hub.auckland.ac.nz/induction-skills-and-development/research-management-and-administration-rma-staff-development";
 
-// Component for individual descriptor with alignment support
+// Component for individual descriptor with DUAL checkboxes: "I can do" + "Want to develop"
 function DescriptorItem({
   point,
   index,
-  isSelected,
-  onToggleFocusArea,
+  isDemonstrated,
+  isWantToDevelop,
+  onToggleDemonstrated,
+  onToggleWantToDevelop,
   alignment
 }: {
   point: string;
   index: number;
-  isSelected: boolean;
-  onToggleFocusArea: () => void;
+  isDemonstrated: boolean;
+  isWantToDevelop: boolean;
+  onToggleDemonstrated: () => void;
+  onToggleWantToDevelop: () => void;
   alignment?: DescriptorAlignment;
 }) {
   const [showAlignment, setShowAlignment] = useState(false);
@@ -47,27 +51,58 @@ function DescriptorItem({
     }
   }, [showAlignment]);
 
+  // Determine background color based on status
+  const getBgClass = () => {
+    if (isDemonstrated && isWantToDevelop) {
+      return 'bg-gradient-to-r from-amber-50 to-green-50 border-2 border-amber-200';
+    }
+    if (isDemonstrated) {
+      return 'bg-amber-50 border-2 border-amber-200';
+    }
+    if (isWantToDevelop) {
+      return 'bg-green-50 border-2 border-green-200';
+    }
+    return 'hover:bg-slate-50 border-2 border-transparent';
+  };
+
   return (
     <div className="relative">
-      <label
-        className={`
-          flex gap-3 p-3 rounded-lg cursor-pointer transition-all
-          ${isSelected 
-            ? 'bg-indigo-50 border-2 border-indigo-200' 
-            : 'hover:bg-slate-50 border-2 border-transparent'}
-        `}
-      >
-        <div className="flex items-start gap-3 flex-1">
-          <input
-            type="checkbox"
-            checked={isSelected}
-            onChange={onToggleFocusArea}
-            className="mt-1 w-5 h-5 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 focus:ring-2 cursor-pointer"
-          />
-          <span className="flex-shrink-0 w-5 h-5 rounded-full bg-slate-100 flex items-center justify-center text-xs font-medium text-slate-600 mt-0.5">
+      <div className={`p-4 rounded-lg transition-all ${getBgClass()}`}>
+        <div className="flex items-start gap-3">
+          <span className="flex-shrink-0 w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center text-xs font-medium text-slate-600 mt-0.5">
             {index + 1}
           </span>
-          <span className="text-slate-700 leading-relaxed flex-1">{point}</span>
+          <div className="flex-1 min-w-0">
+            <p className="text-slate-700 leading-relaxed mb-3">{point}</p>
+            
+            {/* Dual checkbox row */}
+            <div className="flex flex-wrap items-center gap-4">
+              <label className="flex items-center gap-2 cursor-pointer group">
+                <input
+                  type="checkbox"
+                  checked={isDemonstrated}
+                  onChange={onToggleDemonstrated}
+                  className="w-4 h-4 rounded border-slate-300 text-amber-600 focus:ring-amber-500 focus:ring-2 cursor-pointer"
+                />
+                <span className={`text-sm ${isDemonstrated ? 'text-amber-700 font-medium' : 'text-slate-600 group-hover:text-slate-800'}`}>
+                  I can do this
+                </span>
+              </label>
+              
+              <label className="flex items-center gap-2 cursor-pointer group">
+                <input
+                  type="checkbox"
+                  checked={isWantToDevelop}
+                  onChange={onToggleWantToDevelop}
+                  className="w-4 h-4 rounded border-slate-300 text-green-600 focus:ring-green-500 focus:ring-2 cursor-pointer"
+                />
+                <span className={`text-sm ${isWantToDevelop ? 'text-green-700 font-medium' : 'text-slate-600 group-hover:text-slate-800'}`}>
+                  Want to develop
+                </span>
+              </label>
+            </div>
+          </div>
+          
           {alignment && (
             <button
               type="button"
@@ -89,7 +124,7 @@ function DescriptorItem({
             </button>
           )}
         </div>
-      </label>
+      </div>
       
       {alignment && showAlignment && (
         <div
@@ -163,19 +198,30 @@ function LevelTabs({
   onSelectLevel,
   selectedTab,
   setSelectedTab,
-  focusAreas,
-  onToggleFocusArea
+  demonstratedDescriptors,
+  developmentFocus,
+  onToggleDemonstrated,
+  onToggleWantToDevelop
 }: { 
   levels: any[], 
   currentLevel: CapabilityLevel | null, 
   onSelectLevel: (l: CapabilityLevel) => void,
   selectedTab: CapabilityLevel,
   setSelectedTab: (l: CapabilityLevel) => void,
-  focusAreas: SelectedDescriptor[],
-  onToggleFocusArea: (level: CapabilityLevel, index: number) => void
+  demonstratedDescriptors: SelectedDescriptor[],
+  developmentFocus: SelectedDescriptor[],
+  onToggleDemonstrated: (level: CapabilityLevel, index: number) => void,
+  onToggleWantToDevelop: (level: CapabilityLevel, index: number) => void
 }) {
   const levelOrder: CapabilityLevel[] = ["FOUNDATION", "INTERMEDIATE", "ADVANCED", "EXEMPLAR"];
   const activeLevelData = levels.find(l => l.level === selectedTab);
+
+  // Count demonstrated and want-to-develop per level
+  const getLevelCounts = (level: CapabilityLevel) => {
+    const demonstrated = demonstratedDescriptors.filter(d => d.level === level).length;
+    const wantToDevelop = developmentFocus.filter(d => d.level === level).length;
+    return { demonstrated, wantToDevelop };
+  };
 
   const getLevelBgColor = (level: CapabilityLevel, isActive: boolean) => {
     if (isActive) {
@@ -186,11 +232,28 @@ function LevelTabs({
 
   return (
     <div className="mt-8">
+      {/* Legend */}
+      <div className="flex flex-wrap items-center gap-4 mb-6 text-sm">
+        <div className="flex items-center gap-2">
+          <span className="w-3 h-3 rounded bg-amber-200 border border-amber-300"></span>
+          <span className="text-slate-600">I can do this</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="w-3 h-3 rounded bg-green-200 border border-green-300"></span>
+          <span className="text-slate-600">Want to develop</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="w-3 h-3 rounded bg-gradient-to-r from-amber-200 to-green-200 border border-amber-300"></span>
+          <span className="text-slate-600">Both</span>
+        </div>
+      </div>
+
       {/* Tab Pills */}
       <div className="flex flex-wrap gap-3 mb-8">
         {levelOrder.map((level) => {
           const isActive = selectedTab === level;
           const isCurrent = currentLevel === level;
+          const counts = getLevelCounts(level);
           
           return (
             <button
@@ -206,6 +269,20 @@ function LevelTabs({
                 {level.charAt(0) + level.slice(1).toLowerCase()}
                 {isCurrent && (
                   <span className="w-2 h-2 rounded-full bg-green-500" />
+                )}
+                {(counts.demonstrated > 0 || counts.wantToDevelop > 0) && (
+                  <span className={`flex items-center gap-1 text-xs ${isActive ? 'text-slate-300' : 'text-slate-400'}`}>
+                    {counts.demonstrated > 0 && (
+                      <span className={`px-1.5 py-0.5 rounded ${isActive ? 'bg-amber-500/30' : 'bg-amber-100'}`}>
+                        {counts.demonstrated}
+                      </span>
+                    )}
+                    {counts.wantToDevelop > 0 && (
+                      <span className={`px-1.5 py-0.5 rounded ${isActive ? 'bg-green-500/30' : 'bg-green-100'}`}>
+                        {counts.wantToDevelop}
+                      </span>
+                    )}
+                  </span>
                 )}
               </span>
             </button>
@@ -240,25 +317,28 @@ function LevelTabs({
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                 </svg>
-                Selected
+                Current Level
               </span>
             ) : (
-              "Select as Current"
+              "Set as Current Level"
             )}
           </button>
         </div>
 
         <div className="mb-6">
           <div className="flex items-center justify-between mb-4">
-            <h4 className="text-sm font-semibold text-slate-700">Self-assessment descriptors</h4>
+            <h4 className="text-sm font-semibold text-slate-700">Descriptors</h4>
             <span className="text-xs text-slate-500">
-              Tick the descriptors you can currently demonstrate
+              For each descriptor, indicate your status
             </span>
           </div>
           <div className="space-y-3">
             {activeLevelData?.bulletPoints.map((point: string, idx: number) => {
-              const isSelected = focusAreas.some(
-                fa => fa.level === selectedTab && fa.descriptorIndex === idx
+              const isDemonstrated = demonstratedDescriptors.some(
+                d => d.level === selectedTab && d.descriptorIndex === idx
+              );
+              const isWantToDevelop = developmentFocus.some(
+                d => d.level === selectedTab && d.descriptorIndex === idx
               );
               
               // Check if this descriptor has an alignment
@@ -271,8 +351,10 @@ function LevelTabs({
                   key={idx}
                   point={point}
                   index={idx}
-                  isSelected={isSelected}
-                  onToggleFocusArea={() => onToggleFocusArea(selectedTab, idx)}
+                  isDemonstrated={isDemonstrated}
+                  isWantToDevelop={isWantToDevelop}
+                  onToggleDemonstrated={() => onToggleDemonstrated(selectedTab, idx)}
+                  onToggleWantToDevelop={() => onToggleWantToDevelop(selectedTab, idx)}
                   alignment={descriptorAlignment}
                 />
               );
@@ -340,10 +422,17 @@ function AssessmentInner({ capability, capabilityId, getResponse, updateResponse
   
   const [currentLevel, setCurrentLevel] = useState<CapabilityLevel | null>(response?.currentLevel || null);
   const [selectedTab, setSelectedTab] = useState<CapabilityLevel>(response?.currentLevel || "FOUNDATION");
+  
   // Use demonstratedDescriptors (new) or fallback to focusAreas (legacy)
   const [demonstratedDescriptors, setDemonstratedDescriptors] = useState<SelectedDescriptor[]>(
     response?.demonstratedDescriptors || response?.focusAreas || []
   );
+  
+  // Development focus - what user wants to develop (NEW: selected on same page)
+  const [developmentFocus, setDevelopmentFocus] = useState<SelectedDescriptor[]>(
+    response?.developmentFocus || []
+  );
+  
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
 
   // Use ref to track if this is the first render and previous capability
@@ -353,7 +442,7 @@ function AssessmentInner({ capability, capabilityId, getResponse, updateResponse
   // Manual save function
   const handleSave = () => {
     setSaveStatus('saving');
-    updateResponse(capabilityId, { currentLevel, demonstratedDescriptors });
+    updateResponse(capabilityId, { currentLevel, demonstratedDescriptors, developmentFocus });
     setTimeout(() => {
       setSaveStatus('saved');
       setTimeout(() => setSaveStatus('idle'), 2000);
@@ -370,13 +459,13 @@ function AssessmentInner({ capability, capabilityId, getResponse, updateResponse
     // Debounce the save to avoid too many updates
     setSaveStatus('saving');
     const timeoutId = setTimeout(() => {
-      updateResponse(capabilityId, { currentLevel, demonstratedDescriptors });
+      updateResponse(capabilityId, { currentLevel, demonstratedDescriptors, developmentFocus });
       setSaveStatus('saved');
       setTimeout(() => setSaveStatus('idle'), 2000);
     }, 300);
 
     return () => clearTimeout(timeoutId);
-  }, [currentLevel, demonstratedDescriptors]); // Remove capabilityId and updateResponse from deps
+  }, [currentLevel, demonstratedDescriptors, developmentFocus]); // Remove capabilityId and updateResponse from deps
 
   // Update local state when capability changes (but preserve selectedTab if user is viewing a different tab)
   useEffect(() => {
@@ -387,14 +476,32 @@ function AssessmentInner({ capability, capabilityId, getResponse, updateResponse
       // Reset selectedTab only when switching to a new capability
       setSelectedTab(newResponse?.currentLevel || "FOUNDATION");
       setDemonstratedDescriptors(newResponse?.demonstratedDescriptors || newResponse?.focusAreas || []);
+      setDevelopmentFocus(newResponse?.developmentFocus || []);
       isFirstRender.current = true; // Reset first render flag
       previousCapabilityId.current = capabilityId;
     }
   }, [capabilityId, getResponse]); // Only run when capabilityId changes
 
-  // Toggle demonstrated descriptor selection
+  // Toggle demonstrated descriptor selection ("I can do this")
   const handleToggleDemonstrated = (level: CapabilityLevel, index: number) => {
     setDemonstratedDescriptors(prev => {
+      const existingIndex = prev.findIndex(
+        d => d.level === level && d.descriptorIndex === index
+      );
+      
+      if (existingIndex >= 0) {
+        // Remove if already selected
+        return prev.filter((_, idx) => idx !== existingIndex);
+      } else {
+        // Add if not selected
+        return [...prev, { level, descriptorIndex: index }];
+      }
+    });
+  };
+
+  // Toggle development focus ("Want to develop")
+  const handleToggleWantToDevelop = (level: CapabilityLevel, index: number) => {
+    setDevelopmentFocus(prev => {
       const existingIndex = prev.findIndex(
         d => d.level === level && d.descriptorIndex === index
       );
@@ -427,12 +534,13 @@ function AssessmentInner({ capability, capabilityId, getResponse, updateResponse
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-              Self-assessment mode
+              Self-Assessment & Development Focus
             </div>
-            <p className="text-sm text-amber-800 mt-1">
-              Review each level and tick the descriptors you can <strong>currently demonstrate</strong>. 
-              Select the level that best represents your current capability. 
-              Once complete, build your development plan to identify focus areas.
+            <p className="text-sm text-amber-800 mt-1 mb-2">
+              For each descriptor, indicate: <strong className="text-amber-900">"I can do this"</strong> for behaviours you can competently demonstrate, and/or <strong className="text-green-700">"Want to develop"</strong> for areas you want to focus on. You can select both if you have some experience but want to strengthen it further.
+            </p>
+            <p className="text-xs text-amber-700 mt-2 italic border-t border-amber-200 pt-2">
+              <strong>Note:</strong> This is a holistic assessment. If you have genuinely demonstrated a behaviour before and could still do it (even if not currently in your role), you can reasonably tick "I can do this". Previous roles and experiences count. This tool is for development and career conversations, not performance reviews.
             </p>
           </div>
 
@@ -455,8 +563,10 @@ function AssessmentInner({ capability, capabilityId, getResponse, updateResponse
           currentLevel={currentLevel}
           selectedTab={selectedTab}
           setSelectedTab={setSelectedTab}
-          focusAreas={demonstratedDescriptors}
-          onToggleFocusArea={handleToggleDemonstrated}
+          demonstratedDescriptors={demonstratedDescriptors}
+          developmentFocus={developmentFocus}
+          onToggleDemonstrated={handleToggleDemonstrated}
+          onToggleWantToDevelop={handleToggleWantToDevelop}
           onSelectLevel={(level) => {
             setCurrentLevel(level);
             // Don't change selectedTab - let user stay on the tab they're viewing
@@ -465,20 +575,26 @@ function AssessmentInner({ capability, capabilityId, getResponse, updateResponse
         />
 
         {/* Assessment Summary & Next Steps */}
-        <div className="mt-12 bg-white rounded-lg border border-slate-200 p-8">
+        <div className="mt-8 bg-white rounded-lg border border-slate-200 p-8">
           <h3 className="text-xl font-bold text-slate-900 mb-4">Assessment Summary</h3>
           
-          <div className="grid md:grid-cols-3 gap-6 mb-6">
+          <div className="grid md:grid-cols-4 gap-4 mb-6">
             <div className="bg-slate-50 rounded-lg p-4 border border-slate-200">
               <div className="text-sm text-slate-600 mb-1">Current Level</div>
               <div className="text-lg font-semibold text-slate-900">
                 {currentLevel ? currentLevel.charAt(0) + currentLevel.slice(1).toLowerCase() : "Not selected"}
               </div>
             </div>
-            <div className="bg-slate-50 rounded-lg p-4 border border-slate-200">
-              <div className="text-sm text-slate-600 mb-1">Descriptors Demonstrated</div>
-              <div className="text-lg font-semibold text-slate-900">
-                {demonstratedDescriptors.length}
+            <div className="bg-amber-50 rounded-lg p-4 border border-amber-200">
+              <div className="text-sm text-amber-700 mb-1">I Can Do</div>
+              <div className="text-lg font-semibold text-amber-900">
+                {demonstratedDescriptors.length} descriptor{demonstratedDescriptors.length !== 1 ? 's' : ''}
+              </div>
+            </div>
+            <div className="bg-green-50 rounded-lg p-4 border border-green-200">
+              <div className="text-sm text-green-700 mb-1">Want to Develop</div>
+              <div className="text-lg font-semibold text-green-900">
+                {developmentFocus.length} descriptor{developmentFocus.length !== 1 ? 's' : ''}
               </div>
             </div>
             <div className="bg-slate-50 rounded-lg p-4 border border-slate-200">
@@ -514,12 +630,12 @@ function AssessmentInner({ capability, capabilityId, getResponse, updateResponse
               </Link>
               <Link
                 href="/plan"
-                className="inline-flex items-center gap-2 px-6 py-3 bg-slate-900 text-white rounded-lg font-medium hover:bg-slate-800 transition-colors shadow-sm hover:shadow-md"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition-colors shadow-sm hover:shadow-md"
               >
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
                 </svg>
-                Build Development Plan
+                {developmentFocus.length > 0 ? `Add Notes (${developmentFocus.length} items)` : 'Development Plan'}
               </Link>
             </div>
           </div>

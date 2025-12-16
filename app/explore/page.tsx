@@ -290,8 +290,8 @@ function ExploreContent() {
             <div>
               <h3 className="text-xl font-bold text-amber-900 mb-2">Ready to assess yourself?</h3>
               <p className="text-amber-800 text-sm">
-                Start the self-assessment for this capability. Mark descriptors you can currently demonstrate 
-                and identify your proficiency level.
+                Start the self-assessment for this capability. Mark behaviours you can competently demonstrate 
+                (including from previous roles/experiences) and identify your proficiency level.
               </p>
             </div>
             <a

@@ -85,9 +85,9 @@ export default function HowToUsePage() {
               <span className="text-amber-700 font-bold">2</span>
             </div>
             <div>
-              <h2 className="text-xl font-bold text-slate-900 mb-2">Self-Assessment</h2>
+              <h2 className="text-xl font-bold text-slate-900 mb-2">Self-Assessment & Development Focus</h2>
               <p className="text-slate-600 leading-relaxed">
-                Assess your current capabilities by marking what you can demonstrate and selecting your current level.
+                Assess your current capabilities and identify what you want to develop – all in one place.
               </p>
             </div>
           </div>
@@ -103,25 +103,29 @@ export default function HowToUsePage() {
               <svg className="w-5 h-5 text-amber-600 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
               </svg>
-              <p className="text-slate-700 text-sm"><strong>Tick the checkboxes</strong> for descriptors you can currently demonstrate. Be honest – this is about where you are now.</p>
+              <p className="text-slate-700 text-sm">For each descriptor, use the <strong>two checkboxes</strong>:</p>
+            </div>
+            <div className="ml-8 space-y-2">
+              <p className="text-slate-700 text-sm flex items-center gap-2">
+                <span className="w-3 h-3 rounded bg-amber-200 border border-amber-300"></span>
+                <strong>"I can do this"</strong> – behaviours you can competently demonstrate (include previous roles/experiences)
+              </p>
+              <p className="text-slate-700 text-sm flex items-center gap-2">
+                <span className="w-3 h-3 rounded bg-green-200 border border-green-300"></span>
+                <strong>"Want to develop"</strong> – areas you want to focus on for your development plan
+              </p>
             </div>
             <div className="flex items-start gap-3">
               <svg className="w-5 h-5 text-amber-600 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
               </svg>
-              <p className="text-slate-700 text-sm"><strong>Select your current level</strong> by clicking "Select as Current" on the level that best represents your overall capability.</p>
+              <p className="text-slate-700 text-sm"><strong>Select your current level</strong> by clicking "Set as Current Level" on the level that best represents your overall capability.</p>
             </div>
             <div className="flex items-start gap-3">
               <svg className="w-5 h-5 text-amber-600 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
               </svg>
               <p className="text-slate-700 text-sm">Your progress is <strong>saved automatically</strong> to your browser. You can leave and come back anytime.</p>
-            </div>
-            <div className="flex items-start gap-3">
-              <svg className="w-5 h-5 text-amber-600 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-              </svg>
-              <p className="text-slate-700 text-sm">Use the navigation at the bottom to move between capabilities, or use "Jump to Capability" dropdown.</p>
             </div>
           </div>
         </div>
@@ -133,9 +137,9 @@ export default function HowToUsePage() {
               <span className="text-green-700 font-bold">3</span>
             </div>
             <div>
-              <h2 className="text-xl font-bold text-slate-900 mb-2">Build Your Development Plan</h2>
+              <h2 className="text-xl font-bold text-slate-900 mb-2">Add Development Notes</h2>
               <p className="text-slate-600 leading-relaxed">
-                Based on your self-assessment, identify specific areas you want to develop and create an actionable plan.
+                Add reflection and action notes for the development focus items you selected during self-assessment.
               </p>
             </div>
           </div>
@@ -145,19 +149,7 @@ export default function HowToUsePage() {
               <svg className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
               </svg>
-              <p className="text-slate-700 text-sm">Go to "Development Plan" from the self-assessment page or homepage.</p>
-            </div>
-            <div className="flex items-start gap-3">
-              <svg className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-              </svg>
-              <p className="text-slate-700 text-sm"><strong>Select capabilities</strong> you want to focus on developing. You can choose as many as you need.</p>
-            </div>
-            <div className="flex items-start gap-3">
-              <svg className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-              </svg>
-              <p className="text-slate-700 text-sm"><strong>Choose development focus areas</strong> – these are descriptors you haven't demonstrated yet that you want to work on.</p>
+              <p className="text-slate-700 text-sm">Go to "Development Plan" – it will show the descriptors you marked as "Want to develop".</p>
             </div>
             <div className="flex items-start gap-3">
               <svg className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -169,7 +161,13 @@ export default function HowToUsePage() {
               <svg className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
               </svg>
-              <p className="text-slate-700 text-sm">If you selected multiple capabilities, use the <strong>tabs</strong> to switch between them.</p>
+              <p className="text-slate-700 text-sm">Focus on <strong>1–2 specific development actions</strong> per capability. These notes will form the basis of your manager conversation.</p>
+            </div>
+            <div className="flex items-start gap-3">
+              <svg className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+              </svg>
+              <p className="text-slate-700 text-sm">If you have multiple capabilities with development focus, use the <strong>tabs</strong> to switch between them.</p>
             </div>
           </div>
         </div>
