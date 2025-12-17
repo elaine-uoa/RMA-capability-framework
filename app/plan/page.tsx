@@ -106,32 +106,35 @@ export default function PlanPage() {
   }, 0);
 
   return (
-    <div className="w-full min-h-screen bg-[#f8f9fa] flex flex-col items-center">
+    <div className="w-full min-h-screen bg-[#F1F1F1] flex flex-col items-center">
       {/* Header */}
-      <header className="w-full bg-white border-b border-slate-200 flex justify-center">
-        <div className="w-full max-w-4xl px-8 sm:px-12 lg:px-16 py-8">
+      <header className="w-full bg-white border-b border-[#CCCCCC] flex justify-center">
+        <div className="w-full max-w-[1140px] px-6 py-8">
           {/* Mode indicator */}
           <div className="flex items-center justify-between mb-6 no-print">
-            <div className="bg-green-50 border border-green-100 text-green-900 rounded-lg px-4 py-2">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#00877C]/10 border border-[#00877C]/20 text-[#00877C] rounded-lg">
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+              </svg>
               <span className="font-semibold text-sm">Development Plan</span>
             </div>
           </div>
 
-          <div className="bg-green-50 border border-green-100 text-green-900 rounded-lg p-4 mb-6 no-print">
-            <div className="font-semibold flex items-center gap-2">
+          <div className="bg-[#00877C]/10 border border-[#00877C]/20 text-[#333333] rounded-lg p-4 mb-6 no-print">
+            <div className="font-semibold flex items-center gap-2 text-[#00877C]">
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
               </svg>
               Add Reflection & Action Notes
             </div>
-            <p className="text-sm text-green-800 mt-1">
+            <p className="text-sm text-[#333333] mt-1">
               Write development notes for your included capabilities. Add specific actions, resources, or support needed to discuss with your manager.
             </p>
           </div>
 
           <div>
-            <h1 className="text-4xl font-bold text-slate-900 mb-2">Development Plan</h1>
-            <p className="text-slate-600">
+            <h1 className="text-3xl md:text-4xl font-bold text-[#333333] mb-2">Development Plan</h1>
+            <p className="text-[#666666]">
               {allIncludedCapabilities.length > 0 ? (
                 <>{allIncludedCapabilities.length} capabilit{allIncludedCapabilities.length !== 1 ? 'ies' : 'y'} included
                 {totalFocusItems > 0 && <> • {totalFocusItems} development focus item{totalFocusItems !== 1 ? 's' : ''}</>}
@@ -146,23 +149,23 @@ export default function PlanPage() {
 
       {/* Main Content */}
       <main className="w-full flex justify-center">
-        <div className="w-full max-w-4xl px-8 sm:px-12 lg:px-16 py-12">
+        <div className="w-full max-w-[1140px] px-6 py-10">
         
         {allIncludedCapabilities.length === 0 ? (
           <div className="space-y-8">
-            <div className="bg-white rounded-lg border border-slate-200 p-12 text-center">
-              <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-4">
-                <svg className="w-8 h-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <div className="bg-white rounded-lg border border-[#CCCCCC] p-12 text-center">
+              <div className="w-16 h-16 rounded-full bg-[#00877C]/10 flex items-center justify-center mx-auto mb-4">
+                <svg className="w-8 h-8 text-[#00877C]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
-              <h2 className="text-2xl font-bold text-slate-900 mb-2">No Capabilities Included Yet</h2>
-              <p className="text-slate-600 mb-6 max-w-md mx-auto">
+              <h2 className="text-2xl font-bold text-[#333333] mb-2">No Capabilities Included Yet</h2>
+              <p className="text-[#666666] mb-6 max-w-md mx-auto">
                 Go to the self-assessment page to assess capabilities or include them in your development plan.
               </p>
               <Link
                 href="/assess"
-                className="inline-flex items-center gap-2 px-6 py-3 bg-amber-600 text-white rounded-lg font-medium hover:bg-amber-700 transition-colors"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-[#00457D] text-white rounded-lg font-semibold hover:bg-[#003561] transition-colors"
               >
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -173,9 +176,9 @@ export default function PlanPage() {
             
             {/* Quick add capabilities section */}
             {unassessedCapabilities.length > 0 && (
-              <div className="bg-slate-50 rounded-lg border border-slate-200 p-6">
-                <h3 className="text-lg font-semibold text-slate-900 mb-3">Or Add Capabilities Directly</h3>
-                <p className="text-sm text-slate-600 mb-4">Include capabilities to write development notes for:</p>
+              <div className="bg-[#F1F1F1] rounded-lg border border-[#E5E5E5] p-6">
+                <h3 className="text-lg font-semibold text-[#333333] mb-3">Or Add Capabilities Directly</h3>
+                <p className="text-sm text-[#666666] mb-4">Include capabilities to write development notes for:</p>
                 <div className="flex flex-wrap gap-2">
                   {unassessedCapabilities.slice(0, 8).map(cap => (
                     <button
@@ -189,9 +192,9 @@ export default function PlanPage() {
                           developmentFocus: [],
                         });
                       }}
-                      className="inline-flex items-center gap-2 px-3 py-1.5 bg-white border border-slate-300 text-slate-700 rounded-lg text-sm font-medium hover:bg-slate-100 hover:border-slate-400 transition-colors"
+                      className="inline-flex items-center gap-2 px-3 py-1.5 bg-white border border-[#CCCCCC] text-[#333333] rounded-lg text-sm font-medium hover:bg-[#F1F1F1] hover:border-[#0098C3] transition-colors"
                     >
-                      <svg className="w-4 h-4 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <svg className="w-4 h-4 text-[#666666]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
                       </svg>
                       {cap.name}
@@ -199,8 +202,8 @@ export default function PlanPage() {
                   ))}
                 </div>
                 {unassessedCapabilities.length > 8 && (
-                  <p className="text-xs text-slate-500 mt-3 italic">
-                    + {unassessedCapabilities.length - 8} more capabilities available. Use the "Manage All Capabilities" section on the Self-Assessment page to see all.
+                  <p className="text-xs text-[#666666] mt-3 italic">
+                    + {unassessedCapabilities.length - 8} more capabilities available.
                   </p>
                 )}
               </div>
@@ -224,17 +227,17 @@ export default function PlanPage() {
                       className={`
                         px-4 py-2 rounded-lg text-sm font-medium transition-all
                         ${isActive 
-                          ? 'bg-green-600 text-white' 
-                          : 'bg-white border border-slate-200 text-slate-700 hover:border-slate-300 hover:bg-slate-50'}
+                          ? 'bg-[#00877C] text-white' 
+                          : 'bg-white border border-[#CCCCCC] text-[#333333] hover:border-[#0098C3] hover:text-[#0098C3]'}
                       `}
                     >
                       {cap.name}
                       {hasFocus ? (
-                        <span className={`ml-2 px-1.5 py-0.5 rounded text-xs ${isActive ? 'bg-green-500' : 'bg-green-100 text-green-700'}`}>
+                        <span className={`ml-2 px-1.5 py-0.5 rounded text-xs ${isActive ? 'bg-white/20' : 'bg-[#00877C]/10 text-[#00877C]'}`}>
                           {focusCount}
                         </span>
                       ) : (
-                        <span className={`ml-2 px-1.5 py-0.5 rounded text-xs ${isActive ? 'bg-green-400/50' : 'bg-slate-100 text-slate-500'}`}>
+                        <span className={`ml-2 px-1.5 py-0.5 rounded text-xs ${isActive ? 'bg-white/20' : 'bg-[#F1F1F1] text-[#666666]'}`}>
                           notes
                         </span>
                       )}
@@ -267,20 +270,20 @@ export default function PlanPage() {
               });
 
               return (
-                <div key={cap.id} className="bg-white rounded-lg border border-slate-200 overflow-hidden mb-8">
+                <div key={cap.id} className="bg-white rounded-lg border border-[#CCCCCC] overflow-hidden mb-8">
                   {/* Capability Header */}
-                  <div className={`p-6 border-b border-slate-200 ${hasFocus ? 'bg-slate-50' : 'bg-indigo-50'}`}>
+                  <div className={`p-6 border-b border-[#E5E5E5] ${hasFocus ? 'bg-[#F1F1F1]' : 'bg-[#0098C3]/10'}`}>
                     <div className="flex items-start justify-between">
                       <div>
                         <div className="flex items-center gap-2 mb-1">
-                          <h2 className="text-xl font-bold text-slate-900">{cap.name}</h2>
+                          <h2 className="text-xl font-bold text-[#333333]">{cap.name}</h2>
                           {!hasFocus && (
-                            <span className="text-xs bg-indigo-200 text-indigo-700 px-2 py-0.5 rounded-full">
+                            <span className="text-xs bg-[#0098C3]/20 text-[#0098C3] px-2 py-0.5 rounded-full font-medium">
                               No focus selected
                             </span>
                           )}
                         </div>
-                        <p className="text-sm text-slate-600">
+                        <p className="text-sm text-[#666666]">
                           Current level: {getLevelLabel(response?.currentLevel || null)}
                           {demonstratedDescriptors.length > 0 && <> • {demonstratedDescriptors.length} demonstrated</>}
                           {developmentFocus.length > 0 && <> • {developmentFocus.length} to develop</>}
@@ -288,7 +291,7 @@ export default function PlanPage() {
                       </div>
                       <Link
                         href={`/assess?capability=${cap.id}`}
-                        className="text-sm text-indigo-600 hover:text-indigo-700 font-medium flex items-center gap-1"
+                        className="text-sm text-[#0098C3] hover:text-[#00457D] font-medium flex items-center gap-1"
                       >
                         {hasFocus ? 'Edit' : 'Add focus items'}
                         <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -303,8 +306,8 @@ export default function PlanPage() {
                     {/* Development Focus Items - only show if there are focus items */}
                     {hasFocus && (
                       <>
-                        <h3 className="text-sm font-semibold text-slate-700 mb-4 flex items-center gap-2">
-                          <span className="w-3 h-3 rounded bg-green-500"></span>
+                        <h3 className="text-sm font-semibold text-[#333333] mb-4 flex items-center gap-2">
+                          <span className="w-3 h-3 rounded bg-[#00877C]"></span>
                           Development Focus Areas
                         </h3>
                         
@@ -314,14 +317,14 @@ export default function PlanPage() {
                             if (levelFocus.length === 0) return null;
 
                             return (
-                              <div key={level} className="bg-green-50 rounded-lg p-4 border border-green-100">
-                                <h4 className="text-sm font-semibold text-green-800 mb-3">
+                              <div key={level} className="bg-[#00877C]/10 rounded-lg p-4 border border-[#00877C]/20">
+                                <h4 className="text-sm font-semibold text-[#00877C] mb-3">
                                   {level.charAt(0) + level.slice(1).toLowerCase()} Level
                                 </h4>
                                 <ul className="space-y-2">
                                   {levelFocus.map((f, idx) => (
-                                    <li key={idx} className="flex gap-2 text-sm text-slate-700">
-                                      <span className="text-green-600 mt-1 flex-shrink-0">→</span>
+                                    <li key={idx} className="flex gap-2 text-sm text-[#333333]">
+                                      <span className="text-[#00877C] mt-1 flex-shrink-0">→</span>
                                       <span>{getDescriptorText(cap.id, f.level, f.descriptorIndex)}</span>
                                     </li>
                                   ))}
@@ -335,8 +338,8 @@ export default function PlanPage() {
 
                     {/* Message for capabilities without focus */}
                     {!hasFocus && (
-                      <div className="bg-indigo-50 rounded-lg p-4 border border-indigo-100 mb-6">
-                        <p className="text-sm text-indigo-800">
+                      <div className="bg-[#0098C3]/10 rounded-lg p-4 border border-[#0098C3]/20 mb-6">
+                        <p className="text-sm text-[#333333]">
                           <strong>No specific development focus selected yet.</strong> You can still write reflection notes below. 
                           To select specific descriptors to develop, click "Add focus items" above.
                         </p>
@@ -346,15 +349,15 @@ export default function PlanPage() {
                     {/* Already Demonstrated */}
                     {demonstratedDescriptors.length > 0 && (
                       <div className="mb-6">
-                        <h3 className="text-sm font-semibold text-slate-600 mb-3 flex items-center gap-2">
-                          <span className="w-3 h-3 rounded bg-amber-400"></span>
+                        <h3 className="text-sm font-semibold text-[#333333] mb-3 flex items-center gap-2">
+                          <span className="w-3 h-3 rounded bg-[#EAAB00]"></span>
                           Already demonstrated ({demonstratedDescriptors.length} descriptor{demonstratedDescriptors.length !== 1 ? 's' : ''})
                         </h3>
-                        <div className="bg-amber-50 rounded-lg p-4 border border-amber-100">
+                        <div className="bg-[#EAAB00]/10 rounded-lg p-4 border border-[#EAAB00]/30">
                           <ul className="space-y-1">
                             {demonstratedDescriptors.map((d, idx) => (
-                              <li key={idx} className="text-sm text-slate-600 flex gap-2">
-                                <span className="text-amber-600">✓</span>
+                              <li key={idx} className="text-sm text-[#333333] flex gap-2">
+                                <span className="text-[#9a7100]">✓</span>
                                 <span>{getDescriptorText(cap.id, d.level, d.descriptorIndex)}</span>
                               </li>
                             ))}
@@ -365,10 +368,10 @@ export default function PlanPage() {
 
                     {/* Development Notes - ALWAYS shown for all included capabilities */}
                     <div>
-                      <label className="block text-sm font-semibold text-slate-700 mb-2">
+                      <label className="block text-sm font-semibold text-[#333333] mb-2">
                         Development Actions & Reflection Notes
                       </label>
-                      <p className="text-xs text-slate-500 mb-3">
+                      <p className="text-xs text-[#666666] mb-3">
                         {hasFocus 
                           ? 'Add specific actions, training, shadowing opportunities, or conversations with your manager'
                           : 'Write your thoughts on this capability - goals, aspirations, or areas you want to explore'}
@@ -379,7 +382,7 @@ export default function PlanPage() {
                         placeholder={hasFocus 
                           ? "e.g., Shadow colleague on grant applications\nAttend funder roadshow in Q2\nAsk manager about leading next team meeting\nComplete online training module on..."
                           : "e.g., I'd like to develop this capability because...\nMy goals for this area are...\nI plan to explore opportunities in..."}
-                        className="w-full px-4 py-3 border border-slate-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 resize-y min-h-[120px] text-sm"
+                        className="w-full px-4 py-3 border border-[#CCCCCC] rounded-lg focus:ring-2 focus:ring-[#0098C3] focus:border-[#0098C3] resize-y min-h-[120px] text-sm text-[#333333] placeholder:text-[#999999]"
                       />
                     </div>
                   </div>
@@ -388,21 +391,21 @@ export default function PlanPage() {
             })}
 
             {/* Summary & Actions */}
-            <div className="bg-white rounded-lg border border-slate-200 p-6">
+            <div className="bg-white rounded-lg border border-[#CCCCCC] p-6">
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                 <div>
-                  <p className="text-sm text-slate-600 mb-1">
+                  <p className="text-sm text-[#333333] mb-1">
                     {allIncludedCapabilities.length} capabilit{allIncludedCapabilities.length !== 1 ? 'ies' : 'y'} included
                     {totalFocusItems > 0 && <> • {totalFocusItems} development focus item{totalFocusItems !== 1 ? 's' : ''}</>}
                   </p>
-                  <p className="text-xs text-slate-500">
+                  <p className="text-xs text-[#666666]">
                     View the Summary page to print or save your full assessment and development plan.
                   </p>
                 </div>
                 <div className="flex items-center gap-3">
                   <button
                     onClick={handleSave}
-                    className="px-4 py-2 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition-colors text-sm flex items-center gap-2"
+                    className="px-4 py-2 bg-[#00877C] text-white rounded-lg font-semibold hover:bg-[#006b62] transition-colors text-sm flex items-center gap-2"
                   >
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
@@ -411,7 +414,7 @@ export default function PlanPage() {
                   </button>
                   <Link
                     href="/summary"
-                    className="px-6 py-2 bg-slate-900 text-white rounded-lg font-medium hover:bg-slate-800 transition-colors text-sm inline-flex items-center gap-2"
+                    className="px-5 py-2 bg-[#00457D] text-white rounded-lg font-semibold hover:bg-[#003561] transition-colors text-sm inline-flex items-center gap-2"
                   >
                     View Summary
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -424,8 +427,8 @@ export default function PlanPage() {
 
             {/* Add More Capabilities */}
             {unassessedCapabilities.length > 0 && (
-              <div className="mt-8 bg-slate-50 rounded-lg border border-slate-200 p-6">
-                <h3 className="text-sm font-semibold text-slate-700 mb-3">Add More Capabilities</h3>
+              <div className="mt-8 bg-[#F1F1F1] rounded-lg border border-[#E5E5E5] p-6">
+                <h3 className="text-sm font-semibold text-[#333333] mb-3">Add More Capabilities</h3>
                 <div className="flex flex-wrap gap-2">
                   {unassessedCapabilities.slice(0, 6).map(cap => (
                     <button
@@ -440,9 +443,9 @@ export default function PlanPage() {
                         });
                         setActiveCapabilityTab(cap.id);
                       }}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-300 text-slate-700 rounded-lg text-sm font-medium hover:bg-slate-100 hover:border-slate-400 transition-colors"
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border border-[#CCCCCC] text-[#333333] rounded-lg text-sm font-medium hover:bg-[#F1F1F1] hover:border-[#0098C3] transition-colors"
                     >
-                      <svg className="w-3.5 h-3.5 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <svg className="w-3.5 h-3.5 text-[#666666]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
                       </svg>
                       {cap.name}
@@ -451,7 +454,7 @@ export default function PlanPage() {
                   {unassessedCapabilities.length > 6 && (
                     <Link
                       href="/assess"
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 text-indigo-600 text-sm font-medium hover:text-indigo-700"
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 text-[#0098C3] text-sm font-medium hover:text-[#00457D]"
                     >
                       +{unassessedCapabilities.length - 6} more
                       <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -467,7 +470,7 @@ export default function PlanPage() {
             <div className="mt-8 text-center no-print">
               <Link
                 href="/assess"
-                className="inline-flex items-center gap-2 text-slate-600 hover:text-slate-900 transition-colors font-medium"
+                className="inline-flex items-center gap-2 text-[#666666] hover:text-[#00457D] transition-colors font-medium"
               >
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M11 17l-5-5m0 0l5-5m-5 5h12" />
@@ -481,9 +484,9 @@ export default function PlanPage() {
       </main>
 
       {/* Footer */}
-      <footer className="w-full border-t border-slate-200 bg-white mt-20 flex justify-center">
-        <div className="w-full max-w-4xl px-8 sm:px-12 lg:px-16 py-8">
-          <p className="text-sm text-slate-500 text-center">
+      <footer className="w-full border-t border-[#CCCCCC] bg-white mt-20 flex justify-center">
+        <div className="w-full max-w-[1140px] px-6 py-8">
+          <p className="text-sm text-[#666666] text-center">
             RMA Capability Framework • Development Plan
           </p>
         </div>

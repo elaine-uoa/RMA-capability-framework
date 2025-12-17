@@ -9,7 +9,6 @@ import { DescriptorAlignment, CapabilityLevel } from "@/types";
 const FRAMEWORK_LINKS: Record<string, string> = {
   "Te Tiriti o Waitangi": "https://nzhistory.govt.nz/politics/treaty-of-waitangi",
   "Whāia Te Hihiri": "https://www.journal.mai.ac.nz/content/te-hihiri-process-coming-know",
-  // Ngā Taumata Tutuki - link to be added when available
 };
 
 const RESEARCH_HUB_URL = "https://research-hub.auckland.ac.nz/induction-skills-and-development/research-management-and-administration-rma-staff-development";
@@ -39,12 +38,12 @@ function DescriptorReadOnly({
   }, [showAlignment]);
 
   return (
-    <div className="relative bg-white border border-slate-200 rounded-lg p-3">
-      <div className="flex items-start gap-3">
-        <span className="flex-shrink-0 w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center text-xs font-medium text-slate-600 mt-0.5">
+    <div className="relative bg-[#F8F9FA] border border-[#E5E5E5] rounded-xl p-5 hover:border-[#0098C3] hover:shadow-md transition-all">
+      <div className="flex items-start gap-4">
+        <span className="flex-shrink-0 w-8 h-8 rounded-full bg-[#00457D] flex items-center justify-center text-sm font-bold text-white shadow-sm">
           {index + 1}
         </span>
-        <div className="flex-1 text-slate-700 leading-relaxed">{point}</div>
+        <div className="flex-1 text-[#333333] leading-relaxed">{point}</div>
         {alignment && (
           <button
             type="button"
@@ -52,12 +51,12 @@ function DescriptorReadOnly({
               e.stopPropagation();
               setShowAlignment(!showAlignment);
             }}
-            className="flex-shrink-0 ml-2 p-1.5 rounded-full hover:bg-green-100 transition-colors group"
+            className="flex-shrink-0 ml-2 p-1.5 rounded-full hover:bg-[#00877C]/10 transition-colors group"
             title="View Māori alignment & framework references"
             aria-label="View alignment information"
           >
             <svg
-              className={`w-4 h-4 ${showAlignment ? "text-green-700" : "text-green-600"} group-hover:text-green-700`}
+              className={`w-4 h-4 ${showAlignment ? "text-[#00877C]" : "text-[#00877C]/70"} group-hover:text-[#00877C]`}
               fill="currentColor"
               viewBox="0 0 20 20"
             >
@@ -74,11 +73,11 @@ function DescriptorReadOnly({
       {alignment && showAlignment && (
         <div
           ref={alignmentRef}
-          className="absolute z-50 mt-2 left-0 right-0 bg-white border-2 border-green-200 rounded-lg shadow-lg p-4"
+          className="absolute z-50 mt-2 left-0 right-0 bg-white border-2 border-[#00877C]/30 rounded-lg shadow-lg p-4"
           onClick={(e) => e.stopPropagation()}
         >
           <div className="flex items-start justify-between mb-2">
-            <h5 className="font-semibold text-green-900 text-sm flex items-center gap-2">
+            <h5 className="font-semibold text-[#00877C] text-sm flex items-center gap-2">
               <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                 <path
                   fillRule="evenodd"
@@ -90,7 +89,7 @@ function DescriptorReadOnly({
             </h5>
             <button
               onClick={() => setShowAlignment(false)}
-              className="text-slate-400 hover:text-slate-600 transition-colors"
+              className="text-[#666666] hover:text-[#333333] transition-colors"
               aria-label="Close"
             >
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -98,10 +97,10 @@ function DescriptorReadOnly({
               </svg>
             </button>
           </div>
-          <p className="text-slate-700 text-sm leading-relaxed mb-3 italic">{alignment.alignmentText}</p>
+          <p className="text-[#333333] text-sm leading-relaxed mb-3 italic">{alignment.alignmentText}</p>
           {alignment.frameworks && alignment.frameworks.length > 0 && (
-            <div className="pt-3 border-t border-green-100">
-              <p className="text-xs font-medium text-green-800 mb-1.5">Aligned to:</p>
+            <div className="pt-3 border-t border-[#00877C]/20">
+              <p className="text-xs font-medium text-[#00877C] mb-1.5">Aligned to:</p>
               <div className="flex flex-wrap gap-2">
                 {alignment.frameworks.map((framework, idx) => {
                   const url = FRAMEWORK_LINKS[framework];
@@ -112,7 +111,7 @@ function DescriptorReadOnly({
                         href={url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-green-50 text-green-700 text-xs font-medium border border-green-200 hover:bg-green-100 hover:border-green-300 transition-colors"
+                        className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-[#00877C]/10 text-[#00877C] text-xs font-medium border border-[#00877C]/20 hover:bg-[#00877C]/20 transition-colors"
                       >
                         {framework}
                         <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -124,7 +123,7 @@ function DescriptorReadOnly({
                   return (
                     <span
                       key={idx}
-                      className="inline-flex items-center px-2.5 py-1 rounded-md bg-green-50 text-green-700 text-xs font-medium border border-green-200"
+                      className="inline-flex items-center px-2.5 py-1 rounded-md bg-[#00877C]/10 text-[#00877C] text-xs font-medium border border-[#00877C]/20"
                     >
                       {framework}
                     </span>
@@ -153,49 +152,86 @@ function LevelTabsReadOnly({
   const [selectedTab, setSelectedTab] = useState<CapabilityLevel>("FOUNDATION");
   const activeLevelData = capabilityLevels.find((l) => l.level === selectedTab);
 
-  const getLevelBgColor = (level: CapabilityLevel, isActive: boolean) => {
-    if (isActive) {
-      return "bg-slate-900 text-white border-slate-900";
-    }
-    return "bg-white text-slate-600 border-slate-200 hover:border-slate-300 hover:bg-slate-50";
+  // Color-coded levels for visual interest
+  const levelColors: Record<CapabilityLevel, string> = {
+    FOUNDATION: '#4F2D7F',
+    INTERMEDIATE: '#0098C3',
+    ADVANCED: '#00877C',
+    EXEMPLAR: '#00457D',
   };
 
   return (
-    <div className="mt-8">
+    <div className="mt-6">
+      {/* Color-coded Level Tabs with proper contrast */}
       <div className="flex flex-wrap gap-3 mb-8">
-        {levelOrder.map((level) => {
+        {levelOrder.map((level, idx) => {
           const isActive = selectedTab === level;
+          const color = levelColors[level];
           return (
             <button
               key={level}
               onClick={() => setSelectedTab(level)}
+              style={isActive ? { backgroundColor: color, borderColor: color } : undefined}
               className={`
-                relative px-6 py-3 rounded-lg font-medium text-sm border
-                transition-all duration-200
-                ${getLevelBgColor(level, isActive)}
+                px-5 py-3 rounded-xl font-semibold text-sm border-2 transition-all duration-200 shadow-sm hover:shadow-md
+                ${isActive
+                  ? "text-white"
+                  : "bg-white text-[#333333] border-[#E5E5E5] hover:border-[#0098C3]"}
               `}
             >
-              {level.charAt(0) + level.slice(1).toLowerCase()}
+              <span className="flex items-center gap-2">
+                {/* Number badge with proper contrast */}
+                <span 
+                  className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold ${
+                    isActive ? 'bg-white text-[#333333]' : 'text-white'
+                  }`} 
+                  style={!isActive ? { backgroundColor: color } : undefined}
+                >
+                  {idx + 1}
+                </span>
+                {level.charAt(0) + level.slice(1).toLowerCase()}
+              </span>
             </button>
           );
         })}
       </div>
 
-      <div className="bg-white rounded-lg border border-slate-200 p-8">
-        <div className="flex justify-between items-start gap-6 mb-6">
-          <div>
-            <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">{selectedTab} Level</div>
-            <h3 className="text-2xl font-bold text-slate-900">{selectedTab.charAt(0) + selectedTab.slice(1).toLowerCase()}</h3>
-            <p className="text-sm text-slate-500 mt-1">Read-only view of descriptors</p>
-          </div>
+      {/* Tab Content */}
+      <div className="bg-white rounded-2xl border border-[#E5E5E5] shadow-sm overflow-hidden">
+        {/* Header with level color accent */}
+        <div 
+          className="px-6 md:px-8 py-5 border-b-4"
+          style={{ borderColor: levelColors[selectedTab] }}
+        >
+          <div className="flex flex-col md:flex-row justify-between items-start gap-4">
+            <div className="flex items-center gap-3">
+              <span 
+                className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold shadow-sm"
+                style={{ backgroundColor: levelColors[selectedTab] }}
+              >
+                {levelOrder.indexOf(selectedTab) + 1}
+              </span>
+              <div>
+                <h3 className="text-xl font-bold text-[#333333]">
+                  {selectedTab.charAt(0) + selectedTab.slice(1).toLowerCase()} Level
+                </h3>
+                <p className="text-sm text-[#666666]">
+                  {activeLevelData?.bulletPoints.length || 0} descriptors
+                </p>
+              </div>
+            </div>
 
-          <div className="flex flex-col gap-2 text-sm text-slate-600 text-right">
-            <span className="font-medium text-slate-800">Explore only</span>
-            <span>Switch tabs to view descriptors at each level.</span>
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#F1F1F1] rounded-lg text-sm text-[#666666]">
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+              </svg>
+              <span className="font-medium">Explore mode</span>
+            </div>
           </div>
         </div>
 
-        <div className="space-y-3">
+        <div className="p-6 md:p-8 space-y-4">
           {activeLevelData?.bulletPoints.map((point: string, idx: number) => {
             const descriptorAlignment = activeLevelData?.descriptorAlignments?.find(
               (da: DescriptorAlignment) => da.descriptorIndex === idx
@@ -205,18 +241,18 @@ function LevelTabsReadOnly({
         </div>
 
         {/* Training Resources */}
-        <div className="mt-6 bg-slate-50 rounded-lg p-6 border border-slate-200">
-          <div className="flex items-start justify-between">
+        <div className="mt-6 bg-[#F1F1F1] rounded-lg p-5 border border-[#E5E5E5]">
+          <div className="flex items-start justify-between gap-4">
             <div>
-              <h4 className="font-semibold text-slate-900 mb-2">Training & Development Resources</h4>
-              <p className="text-slate-600 text-sm mb-3">
+              <h4 className="font-semibold text-[#333333] mb-2">Training & Development Resources</h4>
+              <p className="text-[#666666] text-sm mb-3">
                 Access training materials, courses, and development resources for RMA staff.
               </p>
               <a
                 href={RESEARCH_HUB_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-sm font-medium text-indigo-600 hover:text-indigo-700 transition-colors"
+                className="inline-flex items-center gap-2 text-sm font-medium text-[#0098C3] hover:text-[#00457D] transition-colors"
               >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
@@ -228,8 +264,8 @@ function LevelTabsReadOnly({
               </a>
             </div>
             {activeLevelData?.descriptorAlignments && activeLevelData.descriptorAlignments.length > 0 && (
-              <span className="text-xs text-slate-500 bg-white px-2 py-1 rounded border border-slate-200 flex-shrink-0">
-                {activeLevelData.descriptorAlignments.length} descriptor{activeLevelData.descriptorAlignments.length !== 1 ? "s" : ""} with alignment info
+              <span className="text-xs text-[#666666] bg-white px-2 py-1 rounded border border-[#CCCCCC] flex-shrink-0">
+                {activeLevelData.descriptorAlignments.length} with alignment info
               </span>
             )}
           </div>
@@ -248,14 +284,15 @@ function ExploreContent() {
   const nextCapability = currentIndex < capabilities.length - 1 ? capabilities[currentIndex + 1] : null;
 
   return (
-    <div className="w-full min-h-screen bg-[#f8f9fa] flex flex-col items-center">
-      <header className="w-full bg-white border-b border-slate-200 flex justify-center">
-        <div className="w-full max-w-4xl px-8 sm:px-12 lg:px-16 py-8">
-          {/* Capability selector and mode indicator */}
-          <div className="flex items-center justify-between mb-6">
-            <div className="bg-indigo-50 border border-indigo-100 text-indigo-900 rounded-lg px-4 py-2">
-              <span className="font-semibold text-sm">Explore mode</span>
-              <span className="text-indigo-700 text-sm ml-2">Read-only view</span>
+    <div className="w-full min-h-screen bg-[#FAFAFA]">
+      <header className="w-full bg-white border-b border-[#eaeaea]">
+        <div className="max-w-[1100px] mx-auto px-6 lg:px-8 py-8">
+          {/* Breadcrumb and capability selector */}
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+            <div className="flex items-center gap-2 text-sm">
+              <a href="/" className="text-[#666] hover:text-[#00457D]">Home</a>
+              <span className="text-[#ccc]">/</span>
+              <span className="text-[#00457D] font-medium">Explore</span>
             </div>
             <select
               value={capability.id}
@@ -263,7 +300,7 @@ function ExploreContent() {
                 const targetId = e.target.value;
                 window.location.href = `/explore?capability=${targetId}`;
               }}
-              className="px-4 py-2 bg-white border border-slate-200 rounded-lg text-sm font-medium text-slate-700 hover:border-slate-300 transition-colors"
+              className="px-4 py-2.5 bg-white border border-[#ddd] rounded-lg text-sm font-medium text-[#333] hover:border-[#00457D] focus:border-[#00457D] focus:ring-2 focus:ring-[#00457D]/10 transition-all outline-none cursor-pointer"
             >
               {capabilities.map((cap) => (
                 <option key={cap.id} value={cap.id}>
@@ -274,97 +311,97 @@ function ExploreContent() {
           </div>
 
           <div>
-            <h1 className="text-4xl font-bold text-slate-900 mb-4 tracking-tight">{capability.name}</h1>
-            <p className="text-lg text-slate-600 leading-relaxed">{capability.description}</p>
+            <h1 className="text-3xl md:text-4xl font-black text-[#1a1a1a] mb-3 tracking-tight">{capability.name}</h1>
+            <p className="text-lg text-[#555] leading-relaxed max-w-3xl">{capability.description}</p>
           </div>
         </div>
       </header>
 
-      <main className="w-full flex justify-center">
-        <div className="w-full max-w-4xl px-8 sm:px-12 lg:px-16 py-12">
-        <LevelTabsReadOnly capabilityLevels={capability.levels} />
+      <main className="w-full">
+        <div className="max-w-[1100px] mx-auto px-6 lg:px-8 py-10">
+          <LevelTabsReadOnly capabilityLevels={capability.levels} />
 
-        {/* Self-Assessment CTA */}
-        <div className="mt-12 bg-amber-50 border border-amber-200 rounded-xl p-8">
-          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-            <div>
-              <h3 className="text-xl font-bold text-amber-900 mb-2">Ready to assess yourself?</h3>
-              <p className="text-amber-800 text-sm">
-                Start the self-assessment for this capability. Mark behaviours you can competently demonstrate 
-                (including from previous roles/experiences) and identify your proficiency level.
-              </p>
+          {/* Self-Assessment CTA */}
+          <div className="mt-10 bg-[#00457D] rounded-lg p-6 md:p-8">
+            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+              <div>
+                <h3 className="text-xl font-bold text-white mb-2">Ready to assess yourself?</h3>
+                <p className="text-white text-sm leading-relaxed">
+                  Start the self-assessment for this capability. Mark behaviours you can competently demonstrate 
+                  (including from previous roles/experiences) and identify your proficiency level.
+                </p>
+              </div>
+              <a
+                href={`/assess?capability=${capability.id}`}
+                className="flex-shrink-0 inline-flex items-center gap-2 px-6 py-3 bg-white text-[#00457D] rounded-lg font-semibold hover:bg-[#F1F1F1] transition-colors"
+              >
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                Start Self-Assessment
+              </a>
             </div>
-            <a
-              href={`/assess?capability=${capability.id}`}
-              className="flex-shrink-0 inline-flex items-center gap-2 px-6 py-3 bg-amber-600 text-white rounded-lg font-medium hover:bg-amber-700 transition-colors shadow-sm"
-            >
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              Start Self-Assessment
-            </a>
           </div>
-        </div>
 
-        {/* Capability Navigation */}
-        <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
-          {prevCapability ? (
-            <a
-              href={`/explore?capability=${prevCapability.id}`}
-              className="group bg-white rounded-lg border border-slate-200 p-6 hover:border-slate-300 hover:shadow-sm transition-all duration-200"
-            >
-              <div className="flex items-center gap-4">
-                <div className="flex-shrink-0 w-10 h-10 rounded bg-slate-100 group-hover:bg-slate-200 flex items-center justify-center transition-colors">
-                  <svg className="w-5 h-5 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-                  </svg>
+          {/* Capability Navigation */}
+          <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
+            {prevCapability ? (
+              <a
+                href={`/explore?capability=${prevCapability.id}`}
+                className="group bg-white rounded-lg border border-[#CCCCCC] p-5 hover:border-[#0098C3] hover:shadow-md transition-all duration-200"
+              >
+                <div className="flex items-center gap-4">
+                  <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-[#F1F1F1] group-hover:bg-[#0098C3]/10 flex items-center justify-center transition-colors">
+                    <svg className="w-5 h-5 text-[#666666] group-hover:text-[#0098C3]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                    </svg>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="text-xs font-semibold text-[#666666] uppercase tracking-wider mb-1">Previous</div>
+                    <div className="text-sm font-semibold text-[#333333] truncate">{prevCapability.name}</div>
+                  </div>
                 </div>
-                <div className="flex-1 min-w-0">
-                  <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Previous</div>
-                  <div className="text-sm font-semibold text-slate-900 truncate">{prevCapability.name}</div>
-                </div>
-              </div>
-            </a>
-          ) : (
-            <div className="hidden md:block" />
-          )}
+              </a>
+            ) : (
+              <div className="hidden md:block" />
+            )}
 
-          {nextCapability ? (
-            <a
-              href={`/explore?capability=${nextCapability.id}`}
-              className="group bg-white rounded-lg border border-slate-200 p-6 hover:border-slate-300 hover:shadow-sm transition-all duration-200 md:col-start-2"
-            >
-              <div className="flex items-center gap-4">
-                <div className="flex-1 min-w-0 text-right">
-                  <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Next</div>
-                  <div className="text-sm font-semibold text-slate-900 truncate">{nextCapability.name}</div>
+            {nextCapability ? (
+              <a
+                href={`/explore?capability=${nextCapability.id}`}
+                className="group bg-white rounded-lg border border-[#CCCCCC] p-5 hover:border-[#0098C3] hover:shadow-md transition-all duration-200 md:col-start-2"
+              >
+                <div className="flex items-center gap-4">
+                  <div className="flex-1 min-w-0 text-right">
+                    <div className="text-xs font-semibold text-[#666666] uppercase tracking-wider mb-1">Next</div>
+                    <div className="text-sm font-semibold text-[#333333] truncate">{nextCapability.name}</div>
+                  </div>
+                  <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-[#F1F1F1] group-hover:bg-[#0098C3]/10 flex items-center justify-center transition-colors">
+                    <svg className="w-5 h-5 text-[#666666] group-hover:text-[#0098C3]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                  </div>
                 </div>
-                <div className="flex-shrink-0 w-10 h-10 rounded bg-slate-100 group-hover:bg-slate-200 flex items-center justify-center transition-colors">
-                  <svg className="w-5 h-5 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                  </svg>
+              </a>
+            ) : (
+              <a
+                href="/"
+                className="group bg-white rounded-lg border border-[#CCCCCC] p-5 hover:border-[#0098C3] hover:shadow-md transition-all duration-200 md:col-start-2"
+              >
+                <div className="flex items-center gap-4">
+                  <div className="flex-1 min-w-0 text-right">
+                    <div className="text-xs font-semibold text-[#666666] uppercase tracking-wider mb-1">Done exploring</div>
+                    <div className="text-sm font-semibold text-[#333333]">Back to all capabilities</div>
+                  </div>
+                  <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-[#F1F1F1] group-hover:bg-[#0098C3]/10 flex items-center justify-center transition-colors">
+                    <svg className="w-5 h-5 text-[#666666] group-hover:text-[#0098C3]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                    </svg>
+                  </div>
                 </div>
-              </div>
-            </a>
-          ) : (
-            <a
-              href="/"
-              className="group bg-white rounded-lg border border-slate-200 p-6 hover:border-slate-300 hover:shadow-sm transition-all duration-200 md:col-start-2"
-            >
-              <div className="flex items-center gap-4">
-                <div className="flex-1 min-w-0 text-right">
-                  <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Done exploring</div>
-                  <div className="text-sm font-semibold text-slate-900">Back to all capabilities</div>
-                </div>
-                <div className="flex-shrink-0 w-10 h-10 rounded bg-slate-100 group-hover:bg-slate-200 flex items-center justify-center transition-colors">
-                  <svg className="w-5 h-5 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                  </svg>
-                </div>
-              </div>
-            </a>
-          )}
-        </div>
+              </a>
+            )}
+          </div>
         </div>
       </main>
     </div>
@@ -375,8 +412,8 @@ export default function ExplorePage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen flex items-center justify-center bg-[#f8f9fa]">
-          <div className="text-slate-600">Loading...</div>
+        <div className="min-h-screen flex items-center justify-center bg-[#F1F1F1]">
+          <div className="text-[#666666]">Loading...</div>
         </div>
       }
     >

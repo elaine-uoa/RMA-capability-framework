@@ -11,7 +11,7 @@ export function CapabilitySelector({ currentCapabilityId }: { currentCapabilityI
     <div className="relative z-50">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-50 hover:border-slate-300 transition-colors"
+        className="flex items-center gap-2 px-4 py-2 bg-white border border-[#CCCCCC] rounded-lg text-sm font-medium text-[#333333] hover:bg-[#F1F1F1] hover:border-[#0098C3] transition-colors"
       >
         <span>Jump to Capability</span>
         <svg 
@@ -31,7 +31,7 @@ export function CapabilitySelector({ currentCapabilityId }: { currentCapabilityI
             className="fixed inset-0 z-10" 
             onClick={() => setIsOpen(false)} 
           />
-          <div className="absolute right-0 mt-2 w-80 bg-white border border-slate-200 rounded-lg shadow-xl overflow-hidden z-20">
+          <div className="absolute right-0 mt-2 w-80 bg-white border border-[#CCCCCC] rounded-lg shadow-xl overflow-hidden z-20">
             <div className="max-h-[400px] overflow-y-auto p-2">
               {capabilities.map((cap, index) => {
                 const isCurrent = cap.id === currentCapabilityId;
@@ -45,11 +45,13 @@ export function CapabilitySelector({ currentCapabilityId }: { currentCapabilityI
                       w-full text-left px-4 py-3 rounded-lg transition-all duration-200 
                       flex items-center gap-3 group
                       ${isCurrent 
-                        ? 'bg-slate-100 text-slate-900' 
-                        : 'hover:bg-slate-50 text-slate-700'}
+                        ? 'bg-[#00457D]/10 text-[#00457D]' 
+                        : 'hover:bg-[#F1F1F1] text-[#333333]'}
                     `}
                   >
-                    <div className="flex-shrink-0 w-6 h-6 rounded bg-slate-100 flex items-center justify-center text-xs font-semibold text-slate-600">
+                    <div className={`flex-shrink-0 w-6 h-6 rounded flex items-center justify-center text-xs font-semibold ${
+                      isCurrent ? 'bg-[#00457D] text-white' : 'bg-[#F1F1F1] text-[#666666]'
+                    }`}>
                       {index + 1}
                     </div>
                     <div className="flex-1 min-w-0">
@@ -58,7 +60,7 @@ export function CapabilitySelector({ currentCapabilityId }: { currentCapabilityI
                       </div>
                     </div>
                     {isCurrent && (
-                      <div className="w-2 h-2 rounded-full bg-slate-900" />
+                      <div className="w-2 h-2 rounded-full bg-[#00457D]" />
                     )}
                   </Link>
                 );

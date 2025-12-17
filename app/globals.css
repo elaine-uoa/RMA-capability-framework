@@ -1,7 +1,88 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@300;400;500;600;700&display=swap');
 
 @import "tailwindcss";
 
+/* ============================================
+   University of Auckland Design Tokens
+   ============================================ */
+:root {
+  /* Primary Brand Colors */
+  --uoa-navy: #00457D;
+  --uoa-blue: #0098C3;
+  --uoa-blue-light: #E6F4F9;
+  
+  /* Neutral Colors */
+  --uoa-text: #333333;
+  --uoa-text-muted: #666666;
+  --uoa-bg: #F1F1F1;
+  --uoa-bg-white: #FFFFFF;
+  --uoa-border: #CCCCCC;
+  --uoa-border-light: #E5E5E5;
+  
+  /* Accent Colors (use sparingly for badges/tags) */
+  --uoa-gold: #EAAB00;
+  --uoa-orange: #D2492A;
+  --uoa-red: #A71930;
+  --uoa-purple: #4F2D7F;
+  --uoa-teal: #00877C;
+  --uoa-green: #A8B400;
+  
+  /* Semantic Colors */
+  --color-success: #00877C;
+  --color-warning: #EAAB00;
+  --color-error: #A71930;
+  --color-info: #0098C3;
+  
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+  
+  /* Border Radius */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  
+  /* Spacing scale */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
+  --space-3xl: 64px;
+  
+  /* Typography */
+  --font-sans: 'Source Sans 3', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: 1.5rem;
+  --font-size-3xl: 1.875rem;
+  --font-size-4xl: 2.25rem;
+  
+  /* Container */
+  --container-max: 1140px;
+  --container-padding: 24px;
+}
+
+/* Dark mode support (for future) */
+@media (prefers-color-scheme: dark) {
+  :root.dark-mode {
+    --uoa-bg: #1a1a2e;
+    --uoa-bg-white: #16213e;
+    --uoa-text: #E5E5E5;
+    --uoa-text-muted: #A0A0A0;
+    --uoa-border: #3a3a5c;
+    --uoa-border-light: #2a2a4c;
+  }
+}
+
+/* ============================================
+   Base Styles
+   ============================================ */
 * {
   margin: 0;
   padding: 0;
@@ -14,17 +95,14 @@ html {
 }
 
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  background: #f8f9fa;
-  color: #2d3748;
+  font-family: var(--font-sans);
+  background: #FAFAFA;
+  color: var(--uoa-text);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   width: 100%;
   min-width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
 }
 
 /* Ensure all direct children of body take full width */
@@ -32,26 +110,223 @@ body > * {
   width: 100%;
 }
 
-/* Custom scrollbar - minimal style */
+/* ============================================
+   Typography
+   ============================================ */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--uoa-text);
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+h1 { font-size: var(--font-size-4xl); }
+h2 { font-size: var(--font-size-3xl); }
+h3 { font-size: var(--font-size-2xl); }
+h4 { font-size: var(--font-size-xl); }
+h5 { font-size: var(--font-size-lg); }
+h6 { font-size: var(--font-size-base); }
+
+p {
+  color: var(--uoa-text-muted);
+  line-height: 1.7;
+}
+
+a {
+  color: var(--uoa-blue);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  color: var(--uoa-navy);
+}
+
+/* ============================================
+   Focus States (Accessibility)
+   ============================================ */
+:focus-visible {
+  outline: 2px solid var(--uoa-blue);
+  outline-offset: 2px;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--uoa-blue);
+  outline-offset: 2px;
+}
+
+/* ============================================
+   Custom Scrollbar
+   ============================================ */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: transparent;
+  background: var(--uoa-bg);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 3px;
+  background: var(--uoa-border);
+  border-radius: var(--radius-sm);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: var(--uoa-text-muted);
 }
 
-/* Print styles */
+/* ============================================
+   Utility Classes
+   ============================================ */
+.uoa-container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding-left: var(--container-padding);
+  padding-right: var(--container-padding);
+}
+
+/* Card base styles */
+.uoa-card {
+  background: var(--uoa-bg-white);
+  border: 1px solid var(--uoa-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.uoa-card:hover {
+  box-shadow: var(--shadow-md);
+  border-color: var(--uoa-border);
+}
+
+.uoa-card-interactive:hover {
+  box-shadow: var(--shadow-md);
+  border-color: var(--uoa-blue);
+}
+
+/* Button base styles */
+.uoa-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 20px;
+  font-family: var(--font-sans);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  border-radius: var(--radius-md);
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.uoa-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.uoa-btn-primary {
+  background: var(--uoa-navy);
+  color: white;
+}
+
+.uoa-btn-primary:hover:not(:disabled) {
+  background: #003561;
+}
+
+.uoa-btn-secondary {
+  background: white;
+  color: var(--uoa-navy);
+  border: 1px solid var(--uoa-border);
+}
+
+.uoa-btn-secondary:hover:not(:disabled) {
+  background: var(--uoa-bg);
+  border-color: var(--uoa-navy);
+}
+
+.uoa-btn-ghost {
+  background: transparent;
+  color: var(--uoa-navy);
+}
+
+.uoa-btn-ghost:hover:not(:disabled) {
+  background: var(--uoa-bg);
+}
+
+/* Badge styles */
+.uoa-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  border-radius: 9999px;
+  border: 1px solid transparent;
+}
+
+.uoa-badge-navy {
+  background: rgba(0, 69, 125, 0.1);
+  color: var(--uoa-navy);
+  border-color: rgba(0, 69, 125, 0.2);
+}
+
+.uoa-badge-blue {
+  background: rgba(0, 152, 195, 0.1);
+  color: var(--uoa-blue);
+  border-color: rgba(0, 152, 195, 0.2);
+}
+
+.uoa-badge-teal {
+  background: rgba(0, 135, 124, 0.1);
+  color: var(--uoa-teal);
+  border-color: rgba(0, 135, 124, 0.2);
+}
+
+.uoa-badge-gold {
+  background: rgba(234, 171, 0, 0.1);
+  color: #9a7100;
+  border-color: rgba(234, 171, 0, 0.3);
+}
+
+.uoa-badge-red {
+  background: rgba(167, 25, 48, 0.1);
+  color: var(--uoa-red);
+  border-color: rgba(167, 25, 48, 0.2);
+}
+
+/* Form input styles */
+.uoa-input {
+  width: 100%;
+  padding: 10px 14px;
+  font-family: var(--font-sans);
+  font-size: var(--font-size-sm);
+  color: var(--uoa-text);
+  background: white;
+  border: 1px solid var(--uoa-border);
+  border-radius: var(--radius-md);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.uoa-input:focus {
+  border-color: var(--uoa-blue);
+  box-shadow: 0 0 0 3px rgba(0, 152, 195, 0.15);
+  outline: none;
+}
+
+.uoa-input::placeholder {
+  color: var(--uoa-text-muted);
+}
+
+/* ============================================
+   Print Styles
+   ============================================ */
 @media print {
   @page {
     margin: 1cm;
@@ -67,5 +342,10 @@ body > * {
   
   .print-break {
     page-break-after: always;
+  }
+  
+  .uoa-card {
+    box-shadow: none !important;
+    border: 1px solid #ddd !important;
   }
 }

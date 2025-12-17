@@ -1,10 +1,14 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Source_Sans_3 } from "next/font/google";
 import "./globals.css";
 import { AssessmentProvider } from "@/contexts/AssessmentContext";
 import { Navbar } from "@/components/Navbar";
 
-const inter = Inter({ subsets: ["latin"] });
+const sourceSans = Source_Sans_3({ 
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
+  variable: "--font-sans",
+});
 
 export const metadata: Metadata = {
   title: "RMA Capability Framework | University of Auckland",
@@ -18,17 +22,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="w-full">
-      <body className={`${inter.className} w-full flex flex-col items-center`}>
+      <body className={`${sourceSans.className} w-full flex flex-col items-center`}>
         <AssessmentProvider>
           <div className="w-full flex flex-col items-center">
             <Navbar />
-            <div className="w-full">
+            <main className="w-full">
               {children}
-            </div>
+            </main>
           </div>
         </AssessmentProvider>
       </body>
     </html>
   );
 }
-
