@@ -286,7 +286,7 @@ function ExploreContent() {
   return (
     <div className="w-full min-h-screen bg-[#FAFAFA]">
       <header className="w-full bg-white border-b border-[#eaeaea]">
-        <div className="max-w-[1100px] mx-auto px-6 lg:px-8 py-8">
+        <div className="max-w-[1100px] mx-auto px-8 lg:px-12 py-8">
           {/* Breadcrumb and capability selector */}
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
             <div className="flex items-center gap-2 text-sm">
@@ -318,7 +318,7 @@ function ExploreContent() {
       </header>
 
       <main className="w-full">
-        <div className="max-w-[1100px] mx-auto px-6 lg:px-8 py-10">
+        <div className="max-w-[1100px] mx-auto px-8 lg:px-12 py-10">
           <LevelTabsReadOnly capabilityLevels={capability.levels} />
 
           {/* Self-Assessment CTA */}

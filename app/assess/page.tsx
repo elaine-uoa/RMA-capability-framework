@@ -561,7 +561,7 @@ function AssessmentInner({ capability, capabilityId, getResponse, updateResponse
     <div className="w-full min-h-screen bg-[#FAFAFA]">
       {/* Header */}
       <header className="w-full bg-white border-b border-[#eaeaea]">
-        <div className="max-w-[1100px] mx-auto px-6 lg:px-8 py-6">
+        <div className="max-w-[1100px] mx-auto px-8 lg:px-12 py-6">
           {/* Breadcrumb and capability selector */}
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-5">
             <div className="flex items-center gap-2 text-sm">
@@ -632,7 +632,7 @@ function AssessmentInner({ capability, capabilityId, getResponse, updateResponse
 
       {/* Main Content */}
       <main className="w-full flex justify-center">
-        <div className="max-w-[1100px] mx-auto px-6 lg:px-8 py-10">
+        <div className="max-w-[1100px] mx-auto px-8 lg:px-12 py-10">
         <LevelTabs 
           levels={capability.levels}
           currentLevel={currentLevel}

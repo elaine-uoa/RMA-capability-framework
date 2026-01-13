@@ -23,10 +23,21 @@ export default function PlanPage() {
     return response?.developmentFocus && response.developmentFocus.length > 0;
   });
 
-  // Get capabilities NOT yet in assessment set (for adding new ones)
+  // Get capabilities NOT yet assessed (user hasn't ticked any descriptors)
+  // A capability is unassessed if:
+  // - Not explicitly included in the plan
+  // - No demonstrated descriptors ticked
+  // - No development focus descriptors ticked
   const unassessedCapabilities = capabilities.filter((cap) => {
     const response = assessmentState.responses[cap.id];
-    return !response || (response.currentLevel === null && response.isIncluded !== true);
+    // If explicitly included, it's already in the plan
+    if (response?.isIncluded === true) return false;
+    // If user has ticked any "I can do this" descriptors, it's assessed
+    if (response?.demonstratedDescriptors && response.demonstratedDescriptors.length > 0) return false;
+    // If user has ticked any "Want to develop" descriptors, it's assessed
+    if (response?.developmentFocus && response.developmentFocus.length > 0) return false;
+    // Otherwise, it's unassessed
+    return true;
   });
 
   // Development notes per capability
@@ -109,7 +120,7 @@ export default function PlanPage() {
     <div className="w-full min-h-screen bg-[#F1F1F1] flex flex-col items-center">
       {/* Header */}
       <header className="w-full bg-white border-b border-[#CCCCCC] flex justify-center">
-        <div className="w-full max-w-[1140px] px-6 py-8">
+        <div className="w-full max-w-[1140px] px-8 lg:px-12 py-8">
           {/* Mode indicator */}
           <div className="flex items-center justify-between mb-6 no-print">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#00877C]/10 border border-[#00877C]/20 text-[#00877C] rounded-lg">
@@ -149,7 +160,7 @@ export default function PlanPage() {
 
       {/* Main Content */}
       <main className="w-full flex justify-center">
-        <div className="w-full max-w-[1140px] px-6 py-10">
+        <div className="w-full max-w-[1140px] px-8 lg:px-12 py-10">
         
         {allIncludedCapabilities.length === 0 ? (
           <div className="space-y-8">
@@ -180,7 +191,7 @@ export default function PlanPage() {
                 <h3 className="text-lg font-semibold text-[#333333] mb-3">Or Add Capabilities Directly</h3>
                 <p className="text-sm text-[#666666] mb-4">Include capabilities to write development notes for:</p>
                 <div className="flex flex-wrap gap-2">
-                  {unassessedCapabilities.slice(0, 8).map(cap => (
+                  {unassessedCapabilities.map(cap => (
                     <button
                       key={cap.id}
                       onClick={() => {
@@ -201,11 +212,6 @@ export default function PlanPage() {
                     </button>
                   ))}
                 </div>
-                {unassessedCapabilities.length > 8 && (
-                  <p className="text-xs text-[#666666] mt-3 italic">
-                    + {unassessedCapabilities.length - 8} more capabilities available.
-                  </p>
-                )}
               </div>
             )}
           </div>
@@ -429,8 +435,11 @@ export default function PlanPage() {
             {unassessedCapabilities.length > 0 && (
               <div className="mt-8 bg-[#F1F1F1] rounded-lg border border-[#E5E5E5] p-6">
                 <h3 className="text-sm font-semibold text-[#333333] mb-3">Add More Capabilities</h3>
+                <p className="text-xs text-[#666666] mb-4">
+                  Capabilities you haven't assessed yet. Click to add them to your development plan.
+                </p>
                 <div className="flex flex-wrap gap-2">
-                  {unassessedCapabilities.slice(0, 6).map(cap => (
+                  {unassessedCapabilities.map(cap => (
                     <button
                       key={cap.id}
                       onClick={() => {
@@ -451,17 +460,6 @@ export default function PlanPage() {
                       {cap.name}
                     </button>
                   ))}
-                  {unassessedCapabilities.length > 6 && (
-                    <Link
-                      href="/assess"
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 text-[#0098C3] text-sm font-medium hover:text-[#00457D]"
-                    >
-                      +{unassessedCapabilities.length - 6} more
-                      <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                      </svg>
-                    </Link>
-                  )}
                 </div>
               </div>
             )}
@@ -485,7 +483,7 @@ export default function PlanPage() {
 
       {/* Footer */}
       <footer className="w-full border-t border-[#CCCCCC] bg-white mt-20 flex justify-center">
-        <div className="w-full max-w-[1140px] px-6 py-8">
+        <div className="w-full max-w-[1140px] px-8 lg:px-12 py-8">
           <p className="text-sm text-[#666666] text-center">
             RMA Capability Framework • Development Plan
           </p>

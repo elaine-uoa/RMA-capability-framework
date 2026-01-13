@@ -105,7 +105,7 @@ export default function Home() {
     <div className="w-full min-h-screen bg-[#FAFAFA]">
       {/* Hero Section - Aligned with card grid center column */}
       <section className="w-full bg-[#F5F5F5] border-b border-[#eaeaea]">
-        <div className="max-w-[1100px] mx-auto px-6 lg:px-8 py-20 md:py-28">
+        <div className="max-w-[1100px] mx-auto px-8 lg:px-12 py-20 md:py-28">
           <div className="flex flex-col items-center text-center">
             <h1 className="text-[2.75rem] md:text-[3.5rem] font-black text-[#1a1a1a] mb-6 leading-[1.1] tracking-tight">
               RMA Capability Framework
@@ -120,7 +120,7 @@ export default function Home() {
 
       {/* Filter/Action Bar - Fully centered */}
       <section className="w-full bg-white border-b border-[#eaeaea]">
-        <div className="max-w-[1100px] mx-auto px-6 lg:px-8 py-4">
+        <div className="max-w-[1100px] mx-auto px-8 lg:px-12 py-4">
           <div className="flex items-center justify-center gap-4 flex-wrap">
             <span className="text-sm font-medium text-[#666]">Quick actions:</span>
             <Link 
@@ -145,7 +145,7 @@ export default function Home() {
 
       {/* Capabilities Grid - Fully centered heading */}
       <section className="w-full">
-        <div className="max-w-[1100px] mx-auto px-6 lg:px-8 py-12">
+        <div className="max-w-[1100px] mx-auto px-8 lg:px-12 py-12">
           {/* Section heading - fully centered */}
           <div className="text-center mb-10">
             <h2 className="text-2xl md:text-3xl font-bold text-[#1a1a1a] mb-2">10 Core Capabilities</h2>
@@ -202,7 +202,7 @@ export default function Home() {
 
       {/* Bottom CTA Section - Aligned with card grid center column */}
       <section className="w-full bg-white border-t border-[#eaeaea]">
-        <div className="max-w-[1100px] mx-auto px-6 lg:px-8 py-16">
+        <div className="max-w-[1100px] mx-auto px-8 lg:px-12 py-16">
           <div className="flex flex-col items-center text-center">
             <h2 className="text-2xl font-bold text-[#1a1a1a] mb-3">Ready to assess your capabilities?</h2>
             <p className="text-[#666] mb-8 max-w-md">
@@ -231,7 +231,7 @@ export default function Home() {
 
       {/* Footer - Fully centered */}
       <footer className="w-full bg-[#FAFAFA] border-t border-[#eaeaea]">
-        <div className="max-w-[1100px] mx-auto px-6 lg:px-8 py-6">
+        <div className="max-w-[1100px] mx-auto px-8 lg:px-12 py-6">
           <div className="flex flex-col items-center justify-center gap-4 text-sm text-[#888] text-center">
             <span>Version 1.5 · University of Auckland · Developed by The Skills Group</span>
             <div className="flex items-center gap-6">

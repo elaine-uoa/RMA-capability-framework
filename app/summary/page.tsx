@@ -94,7 +94,7 @@ export default function SummaryPage() {
     <div className="w-full min-h-screen bg-[#F1F1F1] flex flex-col items-center">
       {/* Header */}
       <header className="w-full bg-white border-b border-[#CCCCCC] flex justify-center">
-        <div className="w-full max-w-[1140px] px-6 py-8">
+        <div className="w-full max-w-[1140px] px-8 lg:px-12 py-8">
           {/* Action buttons */}
           <div className="flex items-center justify-end gap-3 mb-6 no-print">
             <button
@@ -135,7 +135,7 @@ export default function SummaryPage() {
 
       {/* Main Content */}
       <main className="w-full flex justify-center">
-        <div className="w-full max-w-[1140px] px-6 py-10">
+        <div className="w-full max-w-[1140px] px-8 lg:px-12 py-10">
         {completedCapabilities.length === 0 ? (
           <div className="bg-white rounded-lg border border-[#CCCCCC] p-12 text-center">
             <div className="w-16 h-16 rounded-full bg-[#F1F1F1] flex items-center justify-center mx-auto mb-4">
@@ -217,9 +217,9 @@ export default function SummaryPage() {
                 <table className="w-full">
                   <thead>
                     <tr className="bg-[#F1F1F1] border-b border-[#E5E5E5]">
-                      <th className="text-left py-4 px-6 font-semibold text-[#333333] text-sm">Capability</th>
-                      <th className="text-left py-4 px-6 font-semibold text-[#333333] text-sm">Current</th>
-                      <th className="text-left py-4 px-6 font-semibold text-[#333333] text-sm">Target</th>
+                      <th className="text-left py-4 px-4 lg:px-6 font-semibold text-[#333333] text-sm">Capability</th>
+                      <th className="text-left py-4 px-4 lg:px-6 font-semibold text-[#333333] text-sm">Current</th>
+                      <th className="text-left py-4 px-4 lg:px-6 font-semibold text-[#333333] text-sm">Target</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -230,7 +230,7 @@ export default function SummaryPage() {
                           key={capability.id}
                           className="border-b border-[#E5E5E5] hover:bg-[#F1F1F1] transition-colors"
                         >
-                          <td className="py-4 px-6">
+                          <td className="py-4 px-4 lg:px-6">
                             <Link
                               href={`/assess?capability=${capability.id}`}
                               className="font-medium text-[#333333] hover:text-[#0098C3] transition-colors inline-flex items-center gap-1.5"
@@ -241,12 +241,12 @@ export default function SummaryPage() {
                               </svg>
                             </Link>
                           </td>
-                          <td className="py-4 px-6">
+                          <td className="py-4 px-4 lg:px-6">
                             <span className="inline-flex px-3 py-1 rounded-lg text-sm font-medium bg-[#F1F1F1] text-[#333333]">
                               {getLevelLabel(response?.currentLevel || null)}
                             </span>
                           </td>
-                          <td className="py-4 px-6">
+                          <td className="py-4 px-4 lg:px-6">
                             {(() => {
                               const targetLevel = getInferredTargetLevel(capability.id);
                               return targetLevel ? (

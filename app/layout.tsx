@@ -21,10 +21,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="w-full">
-      <body className={`${sourceSans.className} w-full flex flex-col items-center`}>
+    <html lang="en" className="w-full overflow-x-hidden">
+      <body className={`${sourceSans.className} w-full`}>
         <AssessmentProvider>
-          <div className="w-full flex flex-col items-center">
+          <div className="w-full">
             <Navbar />
             <main className="w-full">
               {children}

@@ -24,7 +24,7 @@ export function Navbar() {
 
   return (
     <nav className="w-full bg-[#00457D] sticky top-0 z-50 no-print">
-      <div className="max-w-[1200px] mx-auto px-6 lg:px-8">
+      <div className="max-w-[1200px] mx-auto px-8 lg:px-12">
         <div className="flex items-center justify-between h-16">
           {/* Logo - Display as-is, resized to navbar height */}
           <Link href="/" className="flex items-center hover:opacity-90 transition-opacity">
