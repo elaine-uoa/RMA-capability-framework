@@ -1,12 +1,47 @@
-@import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@300;400;500;600;700&display=swap');
-
 @import "tailwindcss";
 
 /* ============================================
+   University of Auckland - Inter Font Family
+   Official UoA Corporate Branding Font
+   ============================================ */
+@font-face {
+  font-family: 'Inter';
+  src: url('/uoa_corporate_branding/Inter-Font-2025-1/Inter-Regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Inter';
+  src: url('/uoa_corporate_branding/Inter-Font-2025-1/Inter-Medium.otf') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Inter';
+  src: url('/uoa_corporate_branding/Inter-Font-2025-1/Inter-Bold.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Inter';
+  src: url('/uoa_corporate_branding/Inter-Font-2025-1/Inter-Italic.otf') format('opentype');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* ============================================
    University of Auckland Design Tokens
+   Based on UoA Corporate Brand Guidelines
    ============================================ */
 :root {
-  /* Primary Brand Colors */
+  /* Primary Brand Colors - UoA Official */
   --uoa-navy: #00457D;
   --uoa-blue: #0098C3;
   --uoa-blue-light: #E6F4F9;
@@ -14,12 +49,12 @@
   /* Neutral Colors */
   --uoa-text: #333333;
   --uoa-text-muted: #666666;
-  --uoa-bg: #F1F1F1;
+  --uoa-bg: #F5F5F5;
   --uoa-bg-white: #FFFFFF;
   --uoa-border: #CCCCCC;
   --uoa-border-light: #E5E5E5;
   
-  /* Accent Colors (use sparingly for badges/tags) */
+  /* Accent Colors - UoA Brand Palette */
   --uoa-gold: #EAAB00;
   --uoa-orange: #D2492A;
   --uoa-red: #A71930;
@@ -52,8 +87,8 @@
   --space-2xl: 48px;
   --space-3xl: 64px;
   
-  /* Typography */
-  --font-sans: 'Source Sans 3', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  /* Typography - UoA Inter Font */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --font-size-xs: 0.75rem;
   --font-size-sm: 0.875rem;
   --font-size-base: 1rem;
@@ -99,7 +134,7 @@ body {
   font-family: var(--font-sans);
   background: #FAFAFA;
   color: var(--uoa-text);
-  line-height: 1.6;
+  line-height: 1.75;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   width: 100%;
@@ -107,6 +142,7 @@ body {
   margin: 0;
   padding: 0;
   overflow-x: hidden;
+  letter-spacing: 0.01em;
 }
 
 /* Ensure all direct children of body take full width */
@@ -134,7 +170,12 @@ h6 { font-size: var(--font-size-base); }
 
 p {
   color: var(--uoa-text-muted);
-  line-height: 1.7;
+  line-height: 1.8;
+  margin-bottom: 1rem;
+}
+
+p:last-child {
+  margin-bottom: 0;
 }
 
 a {
@@ -206,6 +247,90 @@ select:focus-visible {
 section {
   width: 100%;
   display: block;
+}
+
+/* ============================================
+   Content Spacing & Readability
+   ============================================ */
+/* Improved spacing for content sections */
+.content-section {
+  padding-top: 4rem;
+  padding-bottom: 4rem;
+}
+
+@media (min-width: 768px) {
+  .content-section {
+    padding-top: 6rem;
+    padding-bottom: 6rem;
+  }
+}
+
+/* Better spacing between content blocks */
+.content-block + .content-block {
+  margin-top: 3rem;
+}
+
+@media (min-width: 768px) {
+  .content-block + .content-block {
+    margin-top: 4rem;
+  }
+}
+
+/* Descriptor items spacing */
+.descriptor-item {
+  padding: 1.75rem 2rem;
+  margin-bottom: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .descriptor-item {
+    padding: 2rem 2.5rem;
+    margin-bottom: 2rem;
+  }
+}
+
+.descriptor-item:last-child {
+  margin-bottom: 0;
+}
+
+/* Section spacing improvements */
+section + section {
+  margin-top: 4rem;
+}
+
+@media (min-width: 768px) {
+  section + section {
+    margin-top: 6rem;
+  }
+}
+
+/* Light text on dark backgrounds for accessibility */
+.dark-bg {
+  background-color: var(--uoa-navy);
+  color: white;
+}
+
+.dark-bg p,
+.dark-bg span,
+.dark-bg li {
+  color: #B3D4E8;
+}
+
+.dark-bg h1,
+.dark-bg h2,
+.dark-bg h3,
+.dark-bg h4,
+.dark-bg h5,
+.dark-bg h6 {
+  color: white;
+}
+
+.dark-bg a {
+  color: #B3D4E8;
+}
+
+.dark-bg a:hover {
+  color: white;
 }
 
 /* Card base styles */

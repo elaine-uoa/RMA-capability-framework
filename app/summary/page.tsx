@@ -135,7 +135,7 @@ export default function SummaryPage() {
 
       {/* Main Content */}
       <main className="w-full flex justify-center">
-        <div className="w-full max-w-[1140px] px-8 lg:px-12 py-10">
+        <div className="w-full max-w-[1140px] px-8 lg:px-12 py-12 md:py-16">
         {completedCapabilities.length === 0 ? (
           <div className="bg-white rounded-lg border border-[#CCCCCC] p-12 text-center">
             <div className="w-16 h-16 rounded-full bg-[#F1F1F1] flex items-center justify-center mx-auto mb-4">
@@ -149,7 +149,8 @@ export default function SummaryPage() {
             </p>
             <Link
               href="/assess"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-[#00457D] text-white rounded-lg font-semibold hover:bg-[#003561] transition-colors"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-[#0098C3] rounded-lg font-semibold hover:bg-[#007A9C] transition-colors"
+              style={{ color: 'white' }}
             >
               Start Assessment
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -208,8 +209,8 @@ export default function SummaryPage() {
             </div>
 
             {/* Assessment Table */}
-            <div className="bg-white rounded-lg border border-[#CCCCCC] overflow-hidden mb-10">
-              <div className="p-6 border-b border-[#E5E5E5]">
+            <div className="bg-white rounded-lg border border-[#CCCCCC] overflow-hidden mb-12">
+              <div className="p-7 md:p-8 border-b border-[#E5E5E5]">
                 <h2 className="text-xl font-bold text-[#333333]">Assessment Overview</h2>
               </div>
               
@@ -217,9 +218,9 @@ export default function SummaryPage() {
                 <table className="w-full">
                   <thead>
                     <tr className="bg-[#F1F1F1] border-b border-[#E5E5E5]">
-                      <th className="text-left py-4 px-4 lg:px-6 font-semibold text-[#333333] text-sm">Capability</th>
-                      <th className="text-left py-4 px-4 lg:px-6 font-semibold text-[#333333] text-sm">Current</th>
-                      <th className="text-left py-4 px-4 lg:px-6 font-semibold text-[#333333] text-sm">Target</th>
+                      <th className="text-left py-5 px-6 lg:px-8 font-semibold text-[#333333] text-sm">Capability</th>
+                      <th className="text-left py-5 px-6 lg:px-8 font-semibold text-[#333333] text-sm">Current</th>
+                      <th className="text-left py-5 px-6 lg:px-8 font-semibold text-[#333333] text-sm">Target</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -230,7 +231,7 @@ export default function SummaryPage() {
                           key={capability.id}
                           className="border-b border-[#E5E5E5] hover:bg-[#F1F1F1] transition-colors"
                         >
-                          <td className="py-4 px-4 lg:px-6">
+                          <td className="py-5 px-6 lg:px-8">
                             <Link
                               href={`/assess?capability=${capability.id}`}
                               className="font-medium text-[#333333] hover:text-[#0098C3] transition-colors inline-flex items-center gap-1.5"
@@ -241,12 +242,12 @@ export default function SummaryPage() {
                               </svg>
                             </Link>
                           </td>
-                          <td className="py-4 px-4 lg:px-6">
+                          <td className="py-5 px-6 lg:px-8">
                             <span className="inline-flex px-3 py-1 rounded-lg text-sm font-medium bg-[#F1F1F1] text-[#333333]">
                               {getLevelLabel(response?.currentLevel || null)}
                             </span>
                           </td>
-                          <td className="py-4 px-4 lg:px-6">
+                          <td className="py-5 px-6 lg:px-8">
                             {(() => {
                               const targetLevel = getInferredTargetLevel(capability.id);
                               return targetLevel ? (
@@ -439,7 +440,8 @@ export default function SummaryPage() {
                 </p>
                 <Link
                   href="/assess"
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-[#00457D] text-white rounded-lg font-semibold hover:bg-[#003561] transition-colors"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-[#0098C3] rounded-lg font-semibold hover:bg-[#007A9C] transition-colors"
+                  style={{ color: 'white' }}
                 >
                   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />

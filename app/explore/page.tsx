@@ -13,6 +13,20 @@ const FRAMEWORK_LINKS: Record<string, string> = {
 
 const RESEARCH_HUB_URL = "https://research-hub.auckland.ac.nz/induction-skills-and-development/research-management-and-administration-rma-staff-development";
 
+// Map capabilities to their key area colors (from homepage)
+const CAPABILITY_COLORS: Record<string, string> = {
+  "research-engagement": "#00457D",        // Research Engagement and Impact (Navy)
+  "maximising-impact": "#00457D",          // Research Engagement and Impact (Navy)
+  "researcher-development": "#00877C",     // Researcher Development and Culture (Teal)
+  "environment-culture": "#00877C",        // Researcher Development and Culture (Teal)
+  "funding-opportunities": "#0098C3",      // Research Proposal Development (Blue)
+  "proposal-support": "#0098C3",           // Research Proposal Development (Blue)
+  "initiation": "#D97706",                 // Research Project and Risk Management (Orange)
+  "projects-initiatives": "#D97706",       // Research Project and Risk Management (Orange)
+  "monitoring-reporting": "#4F2D7F",       // Research Policy and Strategy (Purple)
+  "policy-strategy": "#4F2D7F",            // Research Policy and Strategy (Purple)
+};
+
 function DescriptorReadOnly({
   point,
   index,
@@ -38,8 +52,8 @@ function DescriptorReadOnly({
   }, [showAlignment]);
 
   return (
-    <div className="relative bg-[#F8F9FA] border border-[#E5E5E5] rounded-xl p-5 hover:border-[#0098C3] hover:shadow-md transition-all">
-      <div className="flex items-start gap-4">
+    <div className="relative bg-[#F8F9FA] border border-[#E5E5E5] rounded-xl p-7 md:p-8 hover:border-[#0098C3] hover:shadow-md transition-all">
+      <div className="flex items-start gap-6">
         <span className="flex-shrink-0 w-8 h-8 rounded-full bg-[#00457D] flex items-center justify-center text-sm font-bold text-white shadow-sm">
           {index + 1}
         </span>
@@ -173,16 +187,16 @@ function LevelTabsReadOnly({
               onClick={() => setSelectedTab(level)}
               style={isActive ? { backgroundColor: color, borderColor: color } : undefined}
               className={`
-                px-5 py-3 rounded-xl font-semibold text-sm border-2 transition-all duration-200 shadow-sm hover:shadow-md
+                px-8 py-5 rounded-xl font-semibold text-base border-2 transition-all duration-200 shadow-sm hover:shadow-md
                 ${isActive
                   ? "text-white"
                   : "bg-white text-[#333333] border-[#E5E5E5] hover:border-[#0098C3]"}
               `}
             >
-              <span className="flex items-center gap-2">
+              <span className="flex items-center gap-3">
                 {/* Number badge with proper contrast */}
                 <span 
-                  className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold ${
+                  className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
                     isActive ? 'bg-white text-[#333333]' : 'text-white'
                   }`} 
                   style={!isActive ? { backgroundColor: color } : undefined}
@@ -231,17 +245,19 @@ function LevelTabsReadOnly({
           </div>
         </div>
 
-        <div className="p-6 md:p-8 space-y-4">
-          {activeLevelData?.bulletPoints.map((point: string, idx: number) => {
-            const descriptorAlignment = activeLevelData?.descriptorAlignments?.find(
-              (da: DescriptorAlignment) => da.descriptorIndex === idx
-            );
-            return <DescriptorReadOnly key={idx} point={point} index={idx} alignment={descriptorAlignment} />;
-          })}
+        <div className="p-8 md:p-12">
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
+            {activeLevelData?.bulletPoints.map((point: string, idx: number) => {
+              const descriptorAlignment = activeLevelData?.descriptorAlignments?.find(
+                (da: DescriptorAlignment) => da.descriptorIndex === idx
+              );
+              return <DescriptorReadOnly key={idx} point={point} index={idx} alignment={descriptorAlignment} />;
+            })}
+          </div>
         </div>
 
         {/* Training Resources */}
-        <div className="mt-6 bg-[#F1F1F1] rounded-lg p-5 border border-[#E5E5E5]">
+        <div className="mt-10 bg-[#F1F1F1] rounded-lg p-6 md:p-7 border border-[#E5E5E5]">
           <div className="flex items-start justify-between gap-4">
             <div>
               <h4 className="font-semibold text-[#333333] mb-2">Training & Development Resources</h4>
@@ -282,17 +298,24 @@ function ExploreContent() {
   const currentIndex = capabilities.findIndex((c) => c.id === capability.id);
   const prevCapability = currentIndex > 0 ? capabilities[currentIndex - 1] : null;
   const nextCapability = currentIndex < capabilities.length - 1 ? capabilities[currentIndex + 1] : null;
+  
+  // Get the key area color for this capability
+  const capabilityColor = CAPABILITY_COLORS[capability.id] || "#00457D";
 
   return (
     <div className="w-full min-h-screen bg-[#FAFAFA]">
-      <header className="w-full bg-white border-b border-[#eaeaea]">
-        <div className="max-w-[1100px] mx-auto px-8 lg:px-12 py-8">
-          {/* Breadcrumb and capability selector */}
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+      {/* Header with key area color background */}
+      <header 
+        className="w-full"
+        style={{ backgroundColor: capabilityColor }}
+      >
+        <div className="max-w-[1100px] mx-auto px-8 lg:px-12 py-10 md:py-14">
+          {/* Breadcrumb and capability selector - top row */}
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
             <div className="flex items-center gap-2 text-sm">
-              <a href="/" className="text-[#666] hover:text-[#00457D]">Home</a>
-              <span className="text-[#ccc]">/</span>
-              <span className="text-[#00457D] font-medium">Explore</span>
+              <a href="/" className="text-white hover:text-white/80 transition-colors" style={{ color: '#FFFFFF' }}>Home</a>
+              <span className="text-white" style={{ color: '#FFFFFF' }}>/</span>
+              <span className="text-white font-medium" style={{ color: '#FFFFFF' }}>Explore</span>
             </div>
             <select
               value={capability.id}
@@ -300,40 +323,50 @@ function ExploreContent() {
                 const targetId = e.target.value;
                 window.location.href = `/explore?capability=${targetId}`;
               }}
-              className="px-4 py-2.5 bg-white border border-[#ddd] rounded-lg text-sm font-medium text-[#333] hover:border-[#00457D] focus:border-[#00457D] focus:ring-2 focus:ring-[#00457D]/10 transition-all outline-none cursor-pointer"
+              className="px-4 py-2.5 bg-white/20 border border-white/30 rounded-lg text-sm font-medium text-white hover:bg-white/30 focus:bg-white/30 focus:ring-2 focus:ring-white/50 transition-all outline-none cursor-pointer backdrop-blur-sm"
+              style={{ color: '#FFFFFF' }}
             >
               {capabilities.map((cap) => (
-                <option key={cap.id} value={cap.id}>
+                <option key={cap.id} value={cap.id} style={{ color: '#333333' }}>
                   {cap.name}
                 </option>
               ))}
             </select>
           </div>
 
-          <div>
-            <h1 className="text-3xl md:text-4xl font-black text-[#1a1a1a] mb-3 tracking-tight">{capability.name}</h1>
-            <p className="text-lg text-[#555] leading-relaxed max-w-3xl">{capability.description}</p>
+          {/* Centered capability title and description */}
+          <div className="text-center max-w-[800px] mx-auto">
+            <h1 className="text-3xl md:text-4xl font-bold mb-4 tracking-tight" style={{ color: '#FFFFFF' }}>
+              {capability.name}
+            </h1>
+            <p className="text-lg leading-relaxed" style={{ color: '#FFFFFF' }}>
+              {capability.description}
+            </p>
           </div>
         </div>
       </header>
 
       <main className="w-full">
-        <div className="max-w-[1100px] mx-auto px-8 lg:px-12 py-10">
+        <div className="max-w-[1100px] mx-auto px-8 lg:px-12 py-12 md:py-16">
           <LevelTabsReadOnly capabilityLevels={capability.levels} />
 
-          {/* Self-Assessment CTA */}
-          <div className="mt-10 bg-[#00457D] rounded-lg p-6 md:p-8">
-            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-              <div>
-                <h3 className="text-xl font-bold text-white mb-2">Ready to assess yourself?</h3>
-                <p className="text-white text-sm leading-relaxed">
+          {/* Self-Assessment CTA - using capability color */}
+          <div 
+            className="mt-12 rounded-lg"
+            style={{ backgroundColor: capabilityColor, padding: '48px' }}
+          >
+            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
+              <div className="flex-1">
+                <h3 className="text-xl font-bold mb-3" style={{ color: '#FFFFFF' }}>Ready to assess yourself?</h3>
+                <p className="text-base leading-relaxed" style={{ color: '#FFFFFF' }}>
                   Start the self-assessment for this capability. Mark behaviours you can competently demonstrate 
                   (including from previous roles/experiences) and identify your proficiency level.
                 </p>
               </div>
               <a
                 href={`/assess?capability=${capability.id}`}
-                className="flex-shrink-0 inline-flex items-center gap-2 px-6 py-3 bg-white text-[#00457D] rounded-lg font-semibold hover:bg-[#F1F1F1] transition-colors"
+                className="flex-shrink-0 inline-flex items-center gap-2 px-8 py-4 bg-white rounded-lg font-semibold hover:bg-gray-50 transition-colors whitespace-nowrap"
+                style={{ color: capabilityColor }}
               >
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />

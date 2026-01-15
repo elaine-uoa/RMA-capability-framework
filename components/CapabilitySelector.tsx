@@ -11,7 +11,8 @@ export function CapabilitySelector({ currentCapabilityId }: { currentCapabilityI
     <div className="relative z-50">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 px-4 py-2 bg-white border border-[#CCCCCC] rounded-lg text-sm font-medium text-[#333333] hover:bg-[#F1F1F1] hover:border-[#0098C3] transition-colors"
+        className="flex items-center gap-2 px-4 py-2.5 bg-white/20 border border-white/30 rounded-lg text-sm font-medium text-white hover:bg-white/30 transition-colors backdrop-blur-sm"
+        style={{ color: '#FFFFFF' }}
       >
         <span>Jump to Capability</span>
         <svg 

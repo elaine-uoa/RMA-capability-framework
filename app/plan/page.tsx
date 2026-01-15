@@ -160,10 +160,10 @@ export default function PlanPage() {
 
       {/* Main Content */}
       <main className="w-full flex justify-center">
-        <div className="w-full max-w-[1140px] px-8 lg:px-12 py-10">
+        <div className="w-full max-w-[1140px] px-8 lg:px-12 py-12 md:py-16">
         
         {allIncludedCapabilities.length === 0 ? (
-          <div className="space-y-8">
+          <div className="space-y-12">
             <div className="bg-white rounded-lg border border-[#CCCCCC] p-12 text-center">
               <div className="w-16 h-16 rounded-full bg-[#00877C]/10 flex items-center justify-center mx-auto mb-4">
                 <svg className="w-8 h-8 text-[#00877C]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -176,7 +176,8 @@ export default function PlanPage() {
               </p>
               <Link
                 href="/assess"
-                className="inline-flex items-center gap-2 px-6 py-3 bg-[#00457D] text-white rounded-lg font-semibold hover:bg-[#003561] transition-colors"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-[#0098C3] rounded-lg font-semibold hover:bg-[#007A9C] transition-colors"
+                style={{ color: 'white' }}
               >
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -420,7 +421,8 @@ export default function PlanPage() {
                   </button>
                   <Link
                     href="/summary"
-                    className="px-5 py-2 bg-[#00457D] text-white rounded-lg font-semibold hover:bg-[#003561] transition-colors text-sm inline-flex items-center gap-2"
+                    className="px-5 py-2 bg-[#0098C3] rounded-lg font-semibold hover:bg-[#007A9C] transition-colors text-sm inline-flex items-center gap-2"
+                    style={{ color: 'white' }}
                   >
                     View Summary
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>

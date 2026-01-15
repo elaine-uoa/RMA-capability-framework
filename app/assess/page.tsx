@@ -18,6 +18,20 @@ const FRAMEWORK_LINKS: Record<string, string> = {
 
 const RESEARCH_HUB_URL = "https://research-hub.auckland.ac.nz/induction-skills-and-development/research-management-and-administration-rma-staff-development";
 
+// Map capabilities to their key area colors (from homepage)
+const CAPABILITY_COLORS: Record<string, string> = {
+  "research-engagement": "#00457D",        // Research Engagement and Impact (Navy)
+  "maximising-impact": "#00457D",          // Research Engagement and Impact (Navy)
+  "researcher-development": "#00877C",     // Researcher Development and Culture (Teal)
+  "environment-culture": "#00877C",        // Researcher Development and Culture (Teal)
+  "funding-opportunities": "#0098C3",      // Research Proposal Development (Blue)
+  "proposal-support": "#0098C3",           // Research Proposal Development (Blue)
+  "initiation": "#D97706",                 // Research Project and Risk Management (Orange)
+  "projects-initiatives": "#D97706",       // Research Project and Risk Management (Orange)
+  "monitoring-reporting": "#4F2D7F",       // Research Policy and Strategy (Purple)
+  "policy-strategy": "#4F2D7F",            // Research Policy and Strategy (Purple)
+};
+
 // Component for individual descriptor with DUAL checkboxes: "I can do" + "Want to develop"
 function DescriptorItem({
   point,
@@ -67,21 +81,17 @@ function DescriptorItem({
 
   return (
     <div className="relative">
-      <div className={`p-5 rounded-xl transition-all shadow-sm hover:shadow-md ${getBgClass()}`}>
-        <div className="flex items-start gap-4">
+      <div className={`p-7 md:p-8 rounded-xl transition-all shadow-sm hover:shadow-md ${getBgClass()}`}>
+        <div className="flex items-start gap-6">
           <span className="flex-shrink-0 w-8 h-8 rounded-full bg-[#00457D] flex items-center justify-center text-sm font-bold text-white shadow-sm">
             {index + 1}
           </span>
           <div className="flex-1 min-w-0">
-            <p className="text-[#333333] leading-relaxed mb-4">{point}</p>
+            <p className="text-[#333333] leading-relaxed mb-6">{point}</p>
             
-            {/* Dual checkbox row with visual pill styling */}
-            <div className="flex flex-wrap items-center gap-3">
-              <label className={`flex items-center gap-2.5 cursor-pointer px-4 py-2.5 rounded-full transition-all ${
-                isDemonstrated 
-                  ? 'bg-[#EAAB00]/20 border-2 border-[#EAAB00]/50' 
-                  : 'bg-white border-2 border-[#E5E5E5] hover:border-[#EAAB00]/50'
-              }`}>
+            {/* Dual checkbox row - simple layout without outer containers */}
+            <div className="flex flex-wrap items-center gap-6">
+              <label className="flex items-center gap-2.5 cursor-pointer">
                 <input
                   type="checkbox"
                   checked={isDemonstrated}
@@ -93,11 +103,7 @@ function DescriptorItem({
                 </span>
               </label>
               
-              <label className={`flex items-center gap-2.5 cursor-pointer px-4 py-2.5 rounded-full transition-all ${
-                isWantToDevelop 
-                  ? 'bg-[#00877C]/20 border-2 border-[#00877C]/50' 
-                  : 'bg-white border-2 border-[#E5E5E5] hover:border-[#00877C]/50'
-              }`}>
+              <label className="flex items-center gap-2.5 cursor-pointer">
                 <input
                   type="checkbox"
                   checked={isWantToDevelop}
@@ -263,17 +269,17 @@ function LevelTabs({
               onClick={() => setSelectedTab(level)}
               style={isActive ? { backgroundColor: colors.bg, borderColor: colors.border } : undefined}
               className={`
-                relative px-5 py-3 rounded-xl font-semibold text-sm border-2 shadow-sm
+                relative px-8 py-5 rounded-xl font-semibold text-base border-2 shadow-sm
                 transition-all duration-200 hover:shadow-md
                 ${isActive 
                   ? 'text-white' 
                   : 'bg-white text-[#333333] border-[#E5E5E5] hover:border-[#0098C3]'}
               `}
             >
-              <span className="flex items-center gap-2">
+              <span className="flex items-center gap-3">
                 {/* Number badge with proper contrast - white text on colored bg when active */}
                 <span 
-                  className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold ${
+                  className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
                     isActive ? 'bg-white text-[#333333]' : 'text-white'
                   }`} 
                   style={!isActive ? { backgroundColor: colors.bg } : undefined}
@@ -338,8 +344,9 @@ function LevelTabs({
                 transition-all duration-200 shadow-sm
                 ${currentLevel === selectedTab 
                   ? "bg-[#00877C]/10 text-[#00877C] border-2 border-[#00877C]/30" 
-                  : "bg-[#00457D] text-white hover:bg-[#003561]"}
+                  : "bg-[#0098C3] hover:bg-[#007A9C]"}
               `}
+              style={currentLevel !== selectedTab ? { color: 'white' } : undefined}
             >
               {currentLevel === selectedTab ? (
                 <span className="flex items-center gap-2">
@@ -356,9 +363,9 @@ function LevelTabs({
         </div>
 
         {/* Descriptors Section */}
-        <div className="p-6 md:p-8">
+        <div className="p-8 md:p-12">
           {/* Mini Legend */}
-          <div className="flex flex-wrap items-center gap-4 mb-6 pb-5 border-b border-[#E5E5E5]">
+          <div className="flex flex-wrap items-center gap-4 mb-8 pb-6 border-b border-[#E5E5E5]">
             <span className="text-xs font-medium text-[#666666] uppercase tracking-wide">Select status:</span>
             <div className="flex items-center gap-2">
               <span className="w-4 h-4 rounded-full bg-[#EAAB00]/30 border-2 border-[#EAAB00]/50"></span>
@@ -370,7 +377,7 @@ function LevelTabs({
             </div>
           </div>
           
-          <div className="space-y-4">
+          <div className="space-y-8">
             {activeLevelData?.bulletPoints.map((point: string, idx: number) => {
               const isDemonstrated = demonstratedDescriptors.some(
                 d => d.level === selectedTab && d.descriptorIndex === idx
@@ -457,6 +464,9 @@ function AssessPageContent() {
 
 function AssessmentInner({ capability, capabilityId, getResponse, updateResponse }: any) {
   const response = getResponse(capabilityId);
+  
+  // Get the key area color for this capability
+  const capabilityColor = CAPABILITY_COLORS[capabilityId] || "#00457D";
   
   const [currentLevel, setCurrentLevel] = useState<CapabilityLevel | null>(response?.currentLevel || null);
   const [selectedTab, setSelectedTab] = useState<CapabilityLevel>(response?.currentLevel || "FOUNDATION");
@@ -559,45 +569,50 @@ function AssessmentInner({ capability, capabilityId, getResponse, updateResponse
 
   return (
     <div className="w-full min-h-screen bg-[#FAFAFA]">
-      {/* Header */}
-      <header className="w-full bg-white border-b border-[#eaeaea]">
-        <div className="max-w-[1100px] mx-auto px-8 lg:px-12 py-6">
-          {/* Breadcrumb and capability selector */}
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-5">
+      {/* Header with key area color background */}
+      <header 
+        className="w-full"
+        style={{ backgroundColor: capabilityColor }}
+      >
+        <div className="max-w-[1100px] mx-auto px-8 lg:px-12 py-10 md:py-14">
+          {/* Breadcrumb and capability selector - top row */}
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
             <div className="flex items-center gap-2 text-sm">
-              <a href="/" className="text-[#666] hover:text-[#00457D]">Home</a>
-              <span className="text-[#ccc]">/</span>
-              <span className="text-[#00457D] font-medium">Self-Assessment</span>
+              <a href="/" className="text-white hover:text-white/80 transition-colors" style={{ color: '#FFFFFF' }}>Home</a>
+              <span className="text-white" style={{ color: '#FFFFFF' }}>/</span>
+              <span className="text-white font-medium" style={{ color: '#FFFFFF' }}>Self-Assessment</span>
             </div>
-            <CapabilitySelector currentCapabilityId={capabilityId} />
+            <div className="relative">
+              <CapabilitySelector currentCapabilityId={capabilityId} />
+            </div>
           </div>
 
-          {/* Capability Title - Prominent */}
-          <div className="mb-5">
-            <h1 className="text-2xl md:text-3xl font-bold text-[#333333] mb-2">
+          {/* Centered capability title and description */}
+          <div className="text-center max-w-[800px] mx-auto mb-8">
+            <h1 className="text-3xl md:text-4xl font-bold mb-4 tracking-tight" style={{ color: '#FFFFFF' }}>
               {capability.name}
             </h1>
-            <p className="text-[#666666] leading-relaxed">
+            <p className="text-lg leading-relaxed" style={{ color: '#FFFFFF' }}>
               {capability.description}
             </p>
           </div>
 
           {/* Collapsible Guidance - Click to expand */}
-          <div className="bg-gradient-to-r from-[#0098C3]/5 to-[#00877C]/5 border border-[#0098C3]/20 rounded-xl overflow-hidden">
+          <div className="bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl overflow-hidden">
             <button
               onClick={() => setShowGuidance(!showGuidance)}
-              className="w-full px-5 py-4 flex items-center justify-between text-left hover:bg-[#0098C3]/10 transition-colors"
+              className="w-full px-5 py-4 flex items-center justify-between text-left hover:bg-white/20 transition-colors"
             >
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-[#0098C3]/20 flex items-center justify-center">
-                  <svg className="w-4 h-4 text-[#0098C3]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
+                  <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 </div>
-                <span className="font-semibold text-[#00457D]">How to assess yourself</span>
+                <span className="font-semibold text-white">How to assess yourself</span>
               </div>
               <svg 
-                className={`w-5 h-5 text-[#0098C3] transition-transform duration-200 ${showGuidance ? 'rotate-180' : ''}`} 
+                className={`w-5 h-5 text-white transition-transform duration-200 ${showGuidance ? 'rotate-180' : ''}`} 
                 fill="none" 
                 viewBox="0 0 24 24" 
                 stroke="currentColor" 
@@ -608,21 +623,21 @@ function AssessmentInner({ capability, capabilityId, getResponse, updateResponse
             </button>
             
             {showGuidance && (
-              <div className="px-5 pb-5 pt-2 border-t border-[#0098C3]/20">
+              <div className="px-5 pb-5 pt-2 border-t border-white/30">
                 <div className="flex flex-wrap gap-4 mb-4">
-                  <div className="flex items-center gap-2 px-3 py-2 bg-[#EAAB00]/10 rounded-lg border border-[#EAAB00]/30">
-                    <span className="w-4 h-4 rounded bg-[#EAAB00]/30 border border-[#EAAB00]/50"></span>
-                    <span className="text-sm font-medium text-[#9a7100]">"I can do this"</span>
-                    <span className="text-xs text-[#666666]">— behaviours you can demonstrate</span>
+                  <div className="flex items-center gap-2 px-3 py-2 bg-[#EAAB00]/90 rounded-lg border border-[#EAAB00]">
+                    <span className="w-4 h-4 rounded bg-[#EAAB00] border border-white/50"></span>
+                    <span className="text-sm font-medium text-white">"I can do this"</span>
+                    <span className="text-xs text-white/90">— behaviours you can demonstrate</span>
                   </div>
-                  <div className="flex items-center gap-2 px-3 py-2 bg-[#00877C]/10 rounded-lg border border-[#00877C]/30">
-                    <span className="w-4 h-4 rounded bg-[#00877C]/30 border border-[#00877C]/50"></span>
-                    <span className="text-sm font-medium text-[#00877C]">"Want to develop"</span>
-                    <span className="text-xs text-[#666666]">— areas for your development plan</span>
+                  <div className="flex items-center gap-2 px-3 py-2 bg-[#00877C]/90 rounded-lg border border-[#00877C]">
+                    <span className="w-4 h-4 rounded bg-[#00877C] border border-white/50"></span>
+                    <span className="text-sm font-medium text-white">"Want to develop"</span>
+                    <span className="text-xs text-white/90">— areas for your development plan</span>
                   </div>
                 </div>
-                <p className="text-sm text-[#666666] leading-relaxed">
-                  <strong className="text-[#333333]">This is a holistic assessment:</strong> If you have genuinely demonstrated a behaviour before and could still do it (even if not currently in your role), you can tick "I can do this". Previous roles and experiences count. This tool is for development conversations, not performance reviews.
+                <p className="text-sm text-white leading-relaxed">
+                  <strong className="text-white">This is a holistic assessment:</strong> If you have genuinely demonstrated a behaviour before and could still do it (even if not currently in your role), you can tick "I can do this". Previous roles and experiences count. This tool is for development conversations, not performance reviews.
                 </p>
               </div>
             )}
@@ -632,7 +647,7 @@ function AssessmentInner({ capability, capabilityId, getResponse, updateResponse
 
       {/* Main Content */}
       <main className="w-full flex justify-center">
-        <div className="max-w-[1100px] mx-auto px-8 lg:px-12 py-10">
+        <div className="max-w-[1100px] mx-auto px-8 lg:px-12 py-12 md:py-16">
         <LevelTabs 
           levels={capability.levels}
           currentLevel={currentLevel}
@@ -678,7 +693,7 @@ function AssessmentInner({ capability, capabilityId, getResponse, updateResponse
             </div>
           </div>
           
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pt-6 border-t border-[#E5E5E5]">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 pt-8 border-t border-[#E5E5E5]">
             <div className="flex items-center gap-3">
               <button
                 onClick={handleSave}
@@ -703,7 +718,8 @@ function AssessmentInner({ capability, capabilityId, getResponse, updateResponse
               </Link>
               <Link
                 href="/plan"
-                className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#00877C] text-white rounded-lg font-semibold hover:bg-[#006b62] transition-colors"
+                className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#0098C3] rounded-lg font-semibold hover:bg-[#007A9C] transition-colors"
+                style={{ color: 'white' }}
               >
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />

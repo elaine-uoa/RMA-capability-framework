@@ -1,18 +1,12 @@
 import type { Metadata } from "next";
-import { Source_Sans_3 } from "next/font/google";
 import "./globals.css";
 import { AssessmentProvider } from "@/contexts/AssessmentContext";
 import { Navbar } from "@/components/Navbar";
-
-const sourceSans = Source_Sans_3({ 
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
-  variable: "--font-sans",
-});
+import { Footer } from "@/components/Footer";
 
 export const metadata: Metadata = {
-  title: "RMA Capability Framework | University of Auckland",
-  description: "Self-assessment tool for Research Management & Administration staff",
+  title: "RMA Capability Framework | Waipapa Taumata Rau - University of Auckland",
+  description: "Self-assessment tool for Research Management & Administration staff at the University of Auckland",
 };
 
 export default function RootLayout({
@@ -22,13 +16,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="w-full overflow-x-hidden">
-      <body className={`${sourceSans.className} w-full`}>
+      <body className="w-full min-h-screen flex flex-col" style={{ fontFamily: "var(--font-sans)" }}>
         <AssessmentProvider>
-          <div className="w-full">
+          <div className="w-full flex flex-col min-h-screen">
             <Navbar />
-            <main className="w-full">
+            <main className="w-full flex-1">
               {children}
             </main>
+            <Footer />
           </div>
         </AssessmentProvider>
       </body>
