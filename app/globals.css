@@ -472,11 +472,20 @@ section + section {
    ============================================ */
 @media print {
   @page {
-    margin: 1cm;
+    margin: 1.5cm 1.2cm;
+    size: A4;
+  }
+  
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
   }
   
   body {
     background: white !important;
+    margin: 0 !important;
+    padding: 0 !important;
   }
   
   .no-print {
@@ -487,8 +496,406 @@ section + section {
     page-break-after: always;
   }
   
-  .uoa-card {
+  /* Force all containers to be visible - use outline for borders */
+  .uoa-card,
+  div[class*="rounded-lg"],
+  div[class*="rounded-xl"] {
     box-shadow: none !important;
-    border: 1px solid #ddd !important;
+    overflow: visible !important;
+  }
+  
+  /* Stats boxes - using outline for reliable borders */
+  div[class*="grid-cols"] > div {
+    border: none !important;
+    outline: 2px solid #999999 !important;
+    outline-offset: 0 !important;
+    background: white !important;
+  }
+  
+  /* Table with strong borders - using outline */
+  table {
+    border-collapse: collapse !important;
+    border: none !important;
+    outline: 2px solid #999999 !important;
+    outline-offset: 0 !important;
+  }
+  
+  thead {
+    display: table-header-group;
+    background: #F1F1F1 !important;
+  }
+  
+  tr {
+    page-break-inside: avoid;
+    border-bottom: 1px solid #E5E5E5 !important;
+  }
+  
+  th, td {
+    border: 1px solid #E5E5E5 !important;
+    padding: 12px 16px !important;
+  }
+  
+  th {
+    background: #F1F1F1 !important;
+    font-weight: 600 !important;
+  }
+  
+  /* Ensure proper spacing and no overflow */
+  header, main, section, div {
+    overflow: visible !important;
+  }
+  
+  /* Fix for full-width containers */
+  div[class*="w-full"] {
+    width: 100% !important;
+    overflow: visible !important;
+  }
+  
+  /* Fix for max-width containers - ensure space for borders/outlines */
+  div[class*="max-w-[1140px]"] {
+    max-width: 100% !important;
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+  
+  /* Main content area needs padding for outlines */
+  main > div {
+    padding-left: 4px !important;
+    padding-right: 4px !important;
+  }
+  
+  /* Ensure proper box sizing for all print elements */
+  div, section, header, main, article {
+    box-sizing: border-box !important;
+    -webkit-box-sizing: border-box !important;
+  }
+  
+  /* Header section - ensure border shows */
+  header[class*="bg-white"] {
+    border-bottom: 2px solid #CCCCCC !important;
+    background: white !important;
+  }
+  
+  /* Main capability cards - using outline for reliable all-side borders */
+  main div[class*="bg-white"][class*="rounded-lg"] {
+    border: none !important;
+    border-radius: 0 !important;
+    margin-bottom: 24px !important;
+    margin-left: 4px !important;
+    margin-right: 4px !important;
+    overflow: visible !important;
+    background: white !important;
+    outline: 2px solid #666666 !important;
+    outline-offset: 0 !important;
+  }
+  
+  /* Prevent orphaned headers */
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid;
+    page-break-inside: avoid;
+  }
+  
+  /* Allow page breaks after sections to prevent content loss */
+  h2, h3, h4 {
+    orphans: 3;
+    widows: 3;
+  }
+  
+  /* Ensure padding is preserved */
+  * {
+    box-sizing: border-box !important;
+  }
+  
+  /* Summary page specific print fixes */
+  /* Stats grid */
+  div[class*="grid-cols"] {
+    display: grid !important;
+    gap: 16px !important;
+  }
+  
+  /* Capability detail sections */
+  div[style*="gap: 32px"] {
+    gap: 24px !important;
+  }
+  
+  /* Ensure all colored background sections maintain their styling */
+  div[style*="backgroundColor"] {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    border: 2px solid #999999 !important;
+  }
+  
+  /* Capability header with colored background */
+  div[class*="border-b"][style*="backgroundColor"] {
+    border: 2px solid #999999 !important;
+    border-bottom: 2px solid #999999 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  
+  /* Level boxes (demonstrated) - golden/yellow - using outline */
+  div[class*="bg-[#EAAB00]"] {
+    background-color: rgba(234, 171, 0, 0.15) !important;
+    border: none !important;
+    outline: 2px solid #C4940A !important;
+    outline-offset: 0 !important;
+    padding: 20px !important;
+    margin-bottom: 16px !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    overflow: visible !important;
+  }
+  
+  /* Level boxes (development focus) - teal - using outline */
+  div[class*="bg-[#00877C]"] {
+    background-color: rgba(0, 135, 124, 0.15) !important;
+    border: none !important;
+    outline: 2px solid #006B62 !important;
+    outline-offset: 0 !important;
+    padding: 20px !important;
+    margin-bottom: 16px !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    overflow: visible !important;
+  }
+  
+  /* Notes section - gray background - using outline for reliable borders */
+  div[class*="bg-[#F1F1F1]"] {
+    background-color: #F1F1F1 !important;
+    padding: 20px !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    display: block !important;
+    visibility: visible !important;
+  }
+  
+  /* Allow list items to break if needed, but try to keep together */
+  li {
+    orphans: 2;
+    widows: 2;
+  }
+  
+  /* Remove rounded corners for most elements - cleaner look */
+  div[class*="rounded-lg"],
+  div[class*="rounded-xl"],
+  div[class*="rounded"] {
+    border-radius: 0 !important;
+  }
+  
+  /* Fix for nested containers */
+  div[class*="rounded"] div[class*="rounded"] {
+    overflow: visible !important;
+  }
+  
+  /* Ensure all content is visible - no height restrictions */
+  * {
+    max-height: none !important;
+    height: auto !important;
+  }
+  
+  /* Force visibility of all non-hidden elements */
+  body * {
+    visibility: visible !important;
+  }
+  
+  body .no-print {
+    display: none !important;
+    visibility: hidden !important;
+  }
+  
+  /* Ensure proper width containment */
+  div[class*="max-w-"] {
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+  
+  /* Badges and pills - clear borders */
+  span[class*="rounded-full"],
+  span[class*="inline-flex"][class*="border"] {
+    border: 2px solid #999999 !important;
+    border-radius: 20px !important;
+    page-break-inside: avoid !important;
+    padding: 6px 14px !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  
+  /* Notes section */
+  div[class*="whitespace-pre-wrap"] {
+    white-space: pre-wrap !important;
+    word-wrap: break-word !important;
+  }
+  
+  /* Remove any min-height restrictions that could hide content */
+  body, main, section, div, article {
+    min-height: 0 !important;
+  }
+  
+  /* Ensure proper page sizing and margins */
+  html, body {
+    width: 100% !important;
+    height: auto !important;
+  }
+  
+  /* Prevent content from being pushed off page */
+  main, article, section {
+    position: relative !important;
+    display: block !important;
+  }
+  
+  /* Links should be normal text color in print */
+  a {
+    text-decoration: none !important;
+    color: inherit !important;
+  }
+  
+  /* Ensure icons and checkmarks are visible */
+  svg, span[class*="text-"] {
+    color: inherit !important;
+  }
+  
+  /* List styling */
+  ul, ol {
+    margin: 0 !important;
+    padding-left: 0 !important;
+  }
+  
+  li {
+    margin-bottom: 8px !important;
+    list-style-position: inside !important;
+  }
+  
+  /* Ensure proper text rendering */
+  p, span, div {
+    text-rendering: optimizeLegibility !important;
+  }
+  
+  /* Capability section headings */
+  h3[class*="font-bold"] {
+    color: inherit !important;
+    page-break-after: avoid !important;
+    margin-bottom: 16px !important;
+  }
+  
+  /* Section headers with icons */
+  h4[class*="font-semibold"] {
+    page-break-after: avoid !important;
+    margin-bottom: 12px !important;
+  }
+  
+  /* ========================================
+     CRITICAL: Content Visibility First
+     ======================================== */
+  
+  /* Remove ALL page-break-inside: avoid that could hide content */
+  .notes-section-container,
+  .demonstrated-section-container,
+  .focus-section-container {
+    page-break-inside: auto !important;
+    break-inside: auto !important;
+    display: block !important;
+    visibility: visible !important;
+    overflow: visible !important;
+  }
+  
+  /* Ensure notes content box is always visible */
+  .notes-section-container div[class*="bg-[#F1F1F1]"] {
+    display: block !important;
+    visibility: visible !important;
+    overflow: visible !important;
+    background-color: #F1F1F1 !important;
+    border: 2px solid #999999 !important;
+    padding: 20px !important;
+    margin: 0 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  
+  /* Ensure paragraph inside notes is visible */
+  .notes-section-container p {
+    display: block !important;
+    visibility: visible !important;
+    overflow: visible !important;
+  }
+  
+  /* ========================================
+     Fix Border Rendering on All Containers
+     ======================================== */
+  
+  /* Main capability card container - EXPLICIT borders on all 4 sides */
+  div[class*="bg-white"][class*="border"][class*="rounded-lg"] {
+    border: none !important;
+    outline: 2px solid #999999 !important;
+    outline-offset: -2px !important;
+    box-shadow: none !important;
+  }
+  
+  /* Alternative: use box-shadow for borders (more reliable in print) */
+  main div[class*="overflow-hidden"] {
+    box-shadow: inset 0 0 0 2px #999999 !important;
+    border: none !important;
+  }
+
+  /* Stats boxes with proper borders */
+  div[class*="grid-cols"] > div[class*="bg-white"] {
+    outline: 2px solid #CCCCCC !important;
+    outline-offset: -2px !important;
+    border: none !important;
+  }
+  
+  /* Notes section gray box */
+  div[class*="bg-[#F1F1F1]"][class*="rounded-lg"] {
+    outline: 2px solid #999999 !important;
+    outline-offset: -2px !important;
+    border: none !important;
+    background-color: #F1F1F1 !important;
+  }
+  
+  /* Level boxes - demonstrated (gold) */
+  div[class*="bg-[#EAAB00]"] {
+    outline: 2px solid rgba(234, 171, 0, 0.6) !important;
+    outline-offset: -2px !important;
+    border: none !important;
+    background-color: rgba(234, 171, 0, 0.15) !important;
+  }
+  
+  /* Level boxes - focus (teal) */
+  div[class*="bg-[#00877C]"] {
+    outline: 2px solid rgba(0, 135, 124, 0.6) !important;
+    outline-offset: -2px !important;
+    border: none !important;
+    background-color: rgba(0, 135, 124, 0.15) !important;
+  }
+  
+  /* Table container */
+  div[class*="overflow-x-auto"] {
+    overflow: visible !important;
+  }
+  
+  table {
+    outline: 2px solid #CCCCCC !important;
+    border: none !important;
+  }
+  
+  /* ========================================
+     Gentle Page Break Suggestions (won't hide content)
+     ======================================== */
+  
+  /* Prefer breaks BEFORE capability cards */
+  main > div > div > div[class*="bg-white"] {
+    page-break-before: auto;
+  }
+  
+  /* Try to avoid orphaned headers */
+  h4 {
+    page-break-after: avoid;
+  }
+  
+  /* Basic typography control */
+  p, li {
+    orphans: 2;
+    widows: 2;
   }
 }

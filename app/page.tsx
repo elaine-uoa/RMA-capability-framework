@@ -280,7 +280,7 @@ export default function Home() {
       {/* Hero Section - UoA Navy background with clean white text */}
       <section className="w-full bg-[#00457D] text-white">
         <div className="max-w-[1140px] mx-auto px-6 lg:px-8 py-16 md:py-20">
-          <div className="max-w-[800px] mx-auto text-center">
+          <div className="max-w-full mx-auto text-center">
             <h1 className="text-3xl md:text-4xl font-bold mb-5 leading-tight" style={{ color: '#FFFFFF' }}>
               RMA Capability Framework
             </h1>
@@ -288,22 +288,35 @@ export default function Home() {
               A professional development tool for Research Management & Administration staff at Waipapa Taumata Rau, University of Auckland. 
               Explore capabilities, assess your skills, and create personalized development plans.
             </p>
-            <div className="flex items-center justify-center gap-6 flex-wrap mb-8">
+            <div className="flex items-center justify-center gap-4 flex-wrap xl:flex-nowrap mb-8">
               <Link 
                 href="/assess" 
-                className="inline-flex items-center justify-center gap-4 min-w-[320px] px-10 py-5 bg-white text-[#00457D] font-semibold text-base rounded-xl hover:bg-[#F5F5F5] transition-all shadow-md hover:shadow-lg"
+                className="inline-flex items-center justify-center gap-3 min-w-[260px] px-10 py-5 bg-white text-[#00457D] font-semibold text-lg rounded-xl hover:bg-[#F5F5F5] transition-all shadow-lg hover:shadow-xl"
               >
                 Start Self-Assessment
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
                 </svg>
               </Link>
+              
+              {/* Download Framework Button */}
+              <a 
+                href="/api/download" 
+                download
+                className="inline-flex items-center justify-center gap-3 min-w-[280px] px-12 py-5 bg-[#EAAB00] text-white font-semibold text-lg rounded-xl hover:bg-[#C4940A] transition-all shadow-lg hover:shadow-xl"
+              >
+                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                Download the Framework
+              </a>
+              
               <Link 
                 href="/how-to-use" 
-                className="inline-flex items-center justify-center gap-4 min-w-[320px] px-10 py-5 bg-white text-[#00457D] font-semibold text-base rounded-xl hover:bg-[#F5F5F5] transition-all shadow-md hover:shadow-lg"
+                className="inline-flex items-center justify-center gap-3 min-w-[260px] px-10 py-5 bg-white text-[#00457D] font-semibold text-lg rounded-xl hover:bg-[#F5F5F5] transition-all shadow-lg hover:shadow-xl"
               >
                 How to use this tool
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
                 </svg>
               </Link>

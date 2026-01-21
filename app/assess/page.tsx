@@ -267,9 +267,15 @@ function LevelTabs({
             <button
               key={level}
               onClick={() => setSelectedTab(level)}
-              style={isActive ? { backgroundColor: colors.bg, borderColor: colors.border } : undefined}
+              style={{
+                ...(isActive ? { backgroundColor: colors.bg, borderColor: colors.border } : {}),
+                paddingLeft: '36px',
+                paddingRight: '36px',
+                paddingTop: '18px',
+                paddingBottom: '18px'
+              }}
               className={`
-                relative px-8 py-5 rounded-xl font-semibold text-base border-2 shadow-sm
+                relative rounded-xl font-semibold text-base border-2 shadow-sm
                 transition-all duration-200 hover:shadow-md
                 ${isActive 
                   ? 'text-white' 
@@ -377,7 +383,7 @@ function LevelTabs({
             </div>
           </div>
           
-          <div className="space-y-8">
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
             {activeLevelData?.bulletPoints.map((point: string, idx: number) => {
               const isDemonstrated = demonstratedDescriptors.some(
                 d => d.level === selectedTab && d.descriptorIndex === idx
@@ -598,7 +604,10 @@ function AssessmentInner({ capability, capabilityId, getResponse, updateResponse
           </div>
 
           {/* Collapsible Guidance - Click to expand */}
-          <div className="bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl overflow-hidden">
+          <div 
+            className="bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl overflow-hidden"
+            style={{ marginBottom: '40px' }}
+          >
             <button
               onClick={() => setShowGuidance(!showGuidance)}
               className="w-full px-5 py-4 flex items-center justify-between text-left hover:bg-white/20 transition-colors"
@@ -625,19 +634,19 @@ function AssessmentInner({ capability, capabilityId, getResponse, updateResponse
             {showGuidance && (
               <div className="px-5 pb-5 pt-2 border-t border-white/30">
                 <div className="flex flex-wrap gap-4 mb-4">
-                  <div className="flex items-center gap-2 px-3 py-2 bg-[#EAAB00]/90 rounded-lg border border-[#EAAB00]">
-                    <span className="w-4 h-4 rounded bg-[#EAAB00] border border-white/50"></span>
+                  <div className="flex items-center gap-2 px-3 py-2 bg-white/20 backdrop-blur-sm rounded-lg border border-white/40">
+                    <span className="w-4 h-4 rounded bg-[#EAAB00] border border-white/60 shadow-sm"></span>
                     <span className="text-sm font-medium text-white">"I can do this"</span>
-                    <span className="text-xs text-white/90">— behaviours you can demonstrate</span>
+                    <span className="text-xs text-white/95">— behaviours you can demonstrate</span>
                   </div>
-                  <div className="flex items-center gap-2 px-3 py-2 bg-[#00877C]/90 rounded-lg border border-[#00877C]">
-                    <span className="w-4 h-4 rounded bg-[#00877C] border border-white/50"></span>
+                  <div className="flex items-center gap-2 px-3 py-2 bg-white/20 backdrop-blur-sm rounded-lg border border-white/40">
+                    <span className="w-4 h-4 rounded bg-[#00877C] border border-white/60 shadow-sm"></span>
                     <span className="text-sm font-medium text-white">"Want to develop"</span>
-                    <span className="text-xs text-white/90">— areas for your development plan</span>
+                    <span className="text-xs text-white/95">— areas for your development plan</span>
                   </div>
                 </div>
-                <p className="text-sm text-white leading-relaxed">
-                  <strong className="text-white">This is a holistic assessment:</strong> If you have genuinely demonstrated a behaviour before and could still do it (even if not currently in your role), you can tick "I can do this". Previous roles and experiences count. This tool is for development conversations, not performance reviews.
+                <p className="text-sm leading-relaxed" style={{ color: '#FFFFFF' }}>
+                  <strong style={{ color: '#FFFFFF' }}>This is a holistic assessment:</strong> If you have genuinely demonstrated a behaviour before and could still do it (even if not currently in your role), you can tick "I can do this". Previous roles and experiences count. This tool is for development conversations, not performance reviews.
                 </p>
               </div>
             )}
@@ -664,28 +673,28 @@ function AssessmentInner({ capability, capabilityId, getResponse, updateResponse
 
         {/* Assessment Summary & Next Steps */}
         <div className="mt-8 bg-white rounded-lg border border-[#CCCCCC] p-6 md:p-8">
-          <h3 className="text-xl font-bold text-[#333333] mb-4">Assessment Summary</h3>
+          <h3 className="text-xl font-bold text-[#333333] mb-4 text-center">Assessment Summary</h3>
           
           <div className="grid md:grid-cols-4 gap-4 mb-6">
-            <div className="bg-[#F1F1F1] rounded-lg p-4 border border-[#E5E5E5]">
+            <div className="bg-[#F1F1F1] rounded-lg p-4 border border-[#E5E5E5] text-center">
               <div className="text-sm text-[#666666] mb-1">Current Level</div>
               <div className="text-lg font-semibold text-[#333333]">
                 {currentLevel ? currentLevel.charAt(0) + currentLevel.slice(1).toLowerCase() : "Not selected"}
               </div>
             </div>
-            <div className="bg-[#EAAB00]/10 rounded-lg p-4 border border-[#EAAB00]/30">
+            <div className="bg-[#EAAB00]/10 rounded-lg p-4 border border-[#EAAB00]/30 text-center">
               <div className="text-sm text-[#9a7100] mb-1">I Can Do</div>
               <div className="text-lg font-semibold text-[#9a7100]">
                 {demonstratedDescriptors.length} descriptor{demonstratedDescriptors.length !== 1 ? 's' : ''}
               </div>
             </div>
-            <div className="bg-[#00877C]/10 rounded-lg p-4 border border-[#00877C]/30">
+            <div className="bg-[#00877C]/10 rounded-lg p-4 border border-[#00877C]/30 text-center">
               <div className="text-sm text-[#00877C] mb-1">Want to Develop</div>
               <div className="text-lg font-semibold text-[#00877C]">
                 {developmentFocus.length} descriptor{developmentFocus.length !== 1 ? 's' : ''}
               </div>
             </div>
-            <div className="bg-[#F1F1F1] rounded-lg p-4 border border-[#E5E5E5]">
+            <div className="bg-[#F1F1F1] rounded-lg p-4 border border-[#E5E5E5] text-center">
               <div className="text-sm text-[#666666] mb-1">Status</div>
               <div className="text-lg font-semibold text-[#333333]">
                 {saveStatus === 'saving' ? 'Saving...' : saveStatus === 'saved' ? 'Saved' : 'Auto-saved'}
@@ -693,8 +702,20 @@ function AssessmentInner({ capability, capabilityId, getResponse, updateResponse
             </div>
           </div>
           
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 pt-8 border-t border-[#E5E5E5]">
-            <div className="flex items-center gap-3">
+          <div 
+            className="border-t border-[#E5E5E5]"
+            style={{ 
+              paddingTop: '32px', 
+              marginTop: '32px',
+              display: 'flex',
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              gap: '24px',
+              flexWrap: 'wrap'
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
               <button
                 onClick={handleSave}
                 className="px-4 py-2 bg-white border border-[#CCCCCC] text-[#333333] rounded-lg font-medium hover:bg-[#F1F1F1] hover:border-[#0098C3] transition-colors text-sm"
@@ -706,10 +727,11 @@ function AssessmentInner({ capability, capabilityId, getResponse, updateResponse
               </p>
             </div>
             
-            <div className="flex items-center gap-3">
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
               <Link
                 href="/summary"
-                className="inline-flex items-center gap-2 px-5 py-2.5 bg-white border border-[#CCCCCC] text-[#333333] rounded-lg font-medium hover:bg-[#F1F1F1] hover:border-[#0098C3] transition-colors text-sm"
+                className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#0098C3] rounded-lg font-semibold hover:bg-[#007A9C] transition-colors"
+                style={{ color: 'white' }}
               >
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />

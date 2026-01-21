@@ -185,9 +185,15 @@ function LevelTabsReadOnly({
             <button
               key={level}
               onClick={() => setSelectedTab(level)}
-              style={isActive ? { backgroundColor: color, borderColor: color } : undefined}
+              style={{
+                ...(isActive ? { backgroundColor: color, borderColor: color } : {}),
+                paddingLeft: '36px',
+                paddingRight: '36px',
+                paddingTop: '18px',
+                paddingBottom: '18px'
+              }}
               className={`
-                px-8 py-5 rounded-xl font-semibold text-base border-2 transition-all duration-200 shadow-sm hover:shadow-md
+                rounded-xl font-semibold text-base border-2 transition-all duration-200 shadow-sm hover:shadow-md
                 ${isActive
                   ? "text-white"
                   : "bg-white text-[#333333] border-[#E5E5E5] hover:border-[#0098C3]"}

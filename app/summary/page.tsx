@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { useAssessment } from "@/contexts/AssessmentContext";
 import { capabilities } from "@/data/capabilities";
 import { CapabilityLevel, SelectedDescriptor } from "@/types";
@@ -8,8 +9,28 @@ import Link from "next/link";
 // Level order for comparison
 const LEVEL_ORDER: CapabilityLevel[] = ["FOUNDATION", "INTERMEDIATE", "ADVANCED", "EXEMPLAR"];
 
+// Color mapping for capabilities based on key areas
+const getCapabilityColor = (capabilityId: string): { solid: string; light: string } => {
+  const colorMap: Record<string, { solid: string; light: string }> = {
+    "research-engagement": { solid: "#00457D", light: "#E8F4FD" },
+    "maximising-impact": { solid: "#00457D", light: "#E8F4FD" },
+    "researcher-development": { solid: "#00877C", light: "#E6F7F5" },
+    "environment-culture": { solid: "#00877C", light: "#E6F7F5" },
+    "funding-opportunities": { solid: "#0098C3", light: "#E6F6FC" },
+    "proposal-support": { solid: "#0098C3", light: "#E6F6FC" },
+    "initiation": { solid: "#D97706", light: "#FEF6E7" },
+    "projects-initiatives": { solid: "#D97706", light: "#FEF6E7" },
+    "monitoring-reporting": { solid: "#4F2D7F", light: "#F3EEF8" },
+    "policy-strategy": { solid: "#4F2D7F", light: "#F3EEF8" }
+  };
+  return colorMap[capabilityId] || { solid: "#333333", light: "#F1F1F1" };
+};
+
 export default function SummaryPage() {
   const { assessmentState, getResponse, clearAssessment } = useAssessment();
+  const [showNameModal, setShowNameModal] = React.useState(false);
+  const [userName, setUserName] = React.useState("");
+  const [tempName, setTempName] = React.useState("");
   
   // Get capabilities with assessments OR development focus
   const completedCapabilities = capabilities.filter((cap) => {
@@ -23,7 +44,23 @@ export default function SummaryPage() {
   });
 
   const handlePrint = () => {
-    window.print();
+    if (!userName) {
+      setTempName("");
+      setShowNameModal(true);
+    } else {
+      window.print();
+    }
+  };
+
+  const handleConfirmName = () => {
+    if (tempName.trim()) {
+      setUserName(tempName.trim());
+      setShowNameModal(false);
+      // Small delay to ensure name renders before print dialog
+      setTimeout(() => {
+        window.print();
+      }, 100);
+    }
   };
 
   const handleClear = () => {
@@ -96,29 +133,59 @@ export default function SummaryPage() {
       <header className="w-full bg-white border-b border-[#CCCCCC] flex justify-center">
         <div className="w-full max-w-[1140px] px-8 lg:px-12 py-8">
           {/* Action buttons */}
-          <div className="flex items-center justify-end gap-3 mb-6 no-print">
+          <div className="flex items-center justify-center gap-4 mb-6 no-print" style={{ marginTop: '24px' }}>
             <button
               onClick={handlePrint}
-              className="flex items-center gap-2 px-4 py-2 bg-white border border-[#CCCCCC] text-[#333333] rounded-lg font-medium hover:bg-[#F1F1F1] hover:border-[#0098C3] transition-colors text-sm"
+              className="flex items-center gap-2 bg-white border border-[#CCCCCC] text-[#333333] rounded-lg font-semibold hover:bg-[#F1F1F1] hover:border-[#0098C3] transition-colors"
+              style={{
+                paddingLeft: '20px',
+                paddingRight: '20px',
+                paddingTop: '12px',
+                paddingBottom: '12px',
+                fontSize: '15px'
+              }}
             >
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
               </svg>
               Print / Save PDF
             </button>
             <button
               onClick={handleClear}
-              className="flex items-center gap-2 px-4 py-2 bg-white border border-[#CCCCCC] text-[#A71930] rounded-lg font-medium hover:bg-[#A71930]/5 hover:border-[#A71930] transition-colors text-sm"
+              className="flex items-center gap-2 bg-white border border-[#CCCCCC] text-[#A71930] rounded-lg font-semibold hover:bg-[#A71930]/5 hover:border-[#A71930] transition-colors"
+              style={{
+                paddingLeft: '20px',
+                paddingRight: '20px',
+                paddingTop: '12px',
+                paddingBottom: '12px',
+                fontSize: '15px'
+              }}
             >
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
               </svg>
               Clear
             </button>
           </div>
 
-          <div>
+          <div className="text-center">
             <h1 className="text-3xl md:text-4xl font-bold text-[#333333] mb-2">Development Summary</h1>
+            {userName && (
+              <div className="mb-3 flex items-center justify-center gap-3">
+                <p className="text-xl font-semibold text-[#00457D]">
+                  {userName}
+                </p>
+                <button
+                  onClick={() => {
+                    setTempName(userName);
+                    setShowNameModal(true);
+                  }}
+                  className="no-print text-sm text-[#0098C3] hover:text-[#00457D] underline"
+                >
+                  Edit Name
+                </button>
+              </div>
+            )}
             <p className="text-[#666666]">
               Last updated on {new Date(assessmentState.lastUpdated).toLocaleDateString('en-NZ', { 
                 year: 'numeric', 
@@ -161,24 +228,24 @@ export default function SummaryPage() {
         ) : (
           <>
             {/* Stats */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-10">
-              <div className="bg-white rounded-lg border border-[#CCCCCC] p-5">
+            <div className="grid grid-cols-1 md:grid-cols-4 mb-10" style={{ gap: '24px', paddingTop: '32px' }}>
+              <div className="bg-white rounded-lg border border-[#CCCCCC] p-5 text-center">
                 <div className="text-3xl font-bold text-[#00457D] mb-1">{completedCapabilities.length}</div>
                 <div className="text-sm text-[#666666]">Capabilities Assessed</div>
               </div>
-              <div className="bg-white rounded-lg border border-[#CCCCCC] p-5">
+              <div className="bg-white rounded-lg border border-[#CCCCCC] p-5 text-center">
                 <div className="text-3xl font-bold text-[#9a7100] mb-1">
                   {completedCapabilities.reduce((sum, c) => sum + getDemonstrated(c.id).length, 0)}
                 </div>
                 <div className="text-sm text-[#666666]">Descriptors Demonstrated</div>
               </div>
-              <div className="bg-white rounded-lg border border-[#CCCCCC] p-5">
+              <div className="bg-white rounded-lg border border-[#CCCCCC] p-5 text-center">
                 <div className="text-3xl font-bold text-[#00877C] mb-1">
                   {completedCapabilities.reduce((sum, c) => sum + getDevelopmentFocus(c.id).length, 0)}
                 </div>
                 <div className="text-sm text-[#666666]">Development Focus Areas</div>
               </div>
-              <div className="bg-white rounded-lg border border-[#CCCCCC] p-5">
+              <div className="bg-white rounded-lg border border-[#CCCCCC] p-5 text-center">
                 <div className="text-3xl font-bold text-[#333333] mb-1">
                   {completedCapabilities.filter(c => getInferredTargetLevel(c.id) !== null).length}
                 </div>
@@ -187,21 +254,35 @@ export default function SummaryPage() {
             </div>
 
             {/* Quick Actions */}
-            <div className="flex flex-wrap gap-4 mb-10 no-print">
+            <div className="flex flex-wrap gap-4 no-print justify-center" style={{ marginBottom: '48px', marginTop: '32px' }}>
               <Link
                 href="/assess"
-                className="inline-flex items-center gap-2 px-4 py-2 bg-[#EAAB00]/10 border border-[#EAAB00]/30 text-[#9a7100] rounded-lg font-medium hover:bg-[#EAAB00]/20 transition-colors text-sm"
+                className="inline-flex items-center gap-2 bg-[#EAAB00]/10 border border-[#EAAB00]/30 text-[#9a7100] rounded-lg font-semibold hover:bg-[#EAAB00]/20 transition-colors"
+                style={{
+                  paddingLeft: '20px',
+                  paddingRight: '20px',
+                  paddingTop: '12px',
+                  paddingBottom: '12px',
+                  fontSize: '15px'
+                }}
               >
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 Continue Assessment
               </Link>
               <Link
                 href="/plan"
-                className="inline-flex items-center gap-2 px-4 py-2 bg-[#00877C]/10 border border-[#00877C]/30 text-[#00877C] rounded-lg font-medium hover:bg-[#00877C]/20 transition-colors text-sm"
+                className="inline-flex items-center gap-2 bg-[#00877C]/10 border border-[#00877C]/30 text-[#00877C] rounded-lg font-semibold hover:bg-[#00877C]/20 transition-colors"
+                style={{
+                  paddingLeft: '20px',
+                  paddingRight: '20px',
+                  paddingTop: '12px',
+                  paddingBottom: '12px',
+                  fontSize: '15px'
+                }}
               >
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                 </svg>
                 Add Development Notes
@@ -209,9 +290,9 @@ export default function SummaryPage() {
             </div>
 
             {/* Assessment Table */}
-            <div className="bg-white rounded-lg border border-[#CCCCCC] overflow-hidden mb-12">
+            <div className="bg-white rounded-lg border border-[#CCCCCC] overflow-hidden" style={{ marginBottom: '56px' }}>
               <div className="p-7 md:p-8 border-b border-[#E5E5E5]">
-                <h2 className="text-xl font-bold text-[#333333]">Assessment Overview</h2>
+                <h2 className="text-xl font-bold text-[#333333] text-center">Assessment Overview</h2>
               </div>
               
               <div className="overflow-x-auto">
@@ -243,7 +324,7 @@ export default function SummaryPage() {
                             </Link>
                           </td>
                           <td className="py-5 px-6 lg:px-8">
-                            <span className="inline-flex px-3 py-1 rounded-lg text-sm font-medium bg-[#F1F1F1] text-[#333333]">
+                            <span className="text-sm font-medium text-[#333333]">
                               {getLevelLabel(response?.currentLevel || null)}
                             </span>
                           </td>
@@ -251,7 +332,7 @@ export default function SummaryPage() {
                             {(() => {
                               const targetLevel = getInferredTargetLevel(capability.id);
                               return targetLevel ? (
-                                <span className="inline-flex px-3 py-1 rounded-lg text-sm font-medium bg-[#00877C]/10 text-[#00877C]">
+                                <span className="text-sm font-medium text-[#00877C]">
                                   {getLevelLabel(targetLevel)}
                                 </span>
                               ) : (
@@ -268,14 +349,14 @@ export default function SummaryPage() {
             </div>
 
             {/* Capability Details - Bundled per capability */}
-            <div className="mb-10">
-              <div className="mb-6">
+            <div style={{ marginBottom: '48px' }}>
+              <div style={{ marginBottom: '32px' }} className="text-center">
                 <h2 className="text-xl font-bold text-[#333333] mb-2">Capability Details</h2>
                 <p className="text-sm text-[#666666]">
                   Your demonstrated competencies, development focus areas, and personal notes for each capability
                 </p>
               </div>
-              <div className="space-y-6">
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
                 {completedCapabilities.map((capability) => {
                   const demonstrated = getDemonstrated(capability.id);
                   const focus = getDevelopmentFocus(capability.id);
@@ -284,6 +365,7 @@ export default function SummaryPage() {
 
                   const demonstratedByLevel = groupByLevel(demonstrated);
                   const focusByLevel = groupByLevel(focus);
+                  const capabilityColor = getCapabilityColor(capability.id);
 
                   return (
                     <div
@@ -291,10 +373,10 @@ export default function SummaryPage() {
                       className="bg-white rounded-lg border border-[#CCCCCC] overflow-hidden"
                     >
                       {/* Capability Header */}
-                      <div className="p-6 bg-[#F1F1F1] border-b border-[#E5E5E5]">
+                      <div className="p-6 border-b border-[#E5E5E5]" style={{ backgroundColor: capabilityColor.light }}>
                         <div className="flex flex-wrap items-center justify-between gap-4">
                           <div>
-                            <h3 className="font-bold text-[#333333] text-lg">{capability.name}</h3>
+                            <h3 className="font-bold text-lg" style={{ color: capabilityColor.solid }}>{capability.name}</h3>
                             <div className="flex flex-wrap items-center gap-4 mt-2 text-sm text-[#666666]">
                               <span>
                                 Current: <span className="font-medium text-[#333333]">{getLevelLabel(response?.currentLevel || null)}</span>
@@ -306,26 +388,26 @@ export default function SummaryPage() {
                               )}
                             </div>
                           </div>
-                          <div className="flex items-center gap-3 text-sm">
-                            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#EAAB00]/10 text-[#9a7100] border border-[#EAAB00]/30">
+                          <div className="flex items-center gap-3">
+                            <span className="inline-flex items-center gap-1.5 rounded-full bg-[#EAAB00]/10 text-[#9a7100] border border-[#EAAB00]/30" style={{ paddingLeft: '16px', paddingRight: '16px', paddingTop: '8px', paddingBottom: '8px', fontSize: '14px' }}>
                               <span className="font-medium">{demonstrated.length}</span> demonstrated
                             </span>
-                            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#00877C]/10 text-[#00877C] border border-[#00877C]/30">
+                            <span className="inline-flex items-center gap-1.5 rounded-full bg-[#00877C]/10 text-[#00877C] border border-[#00877C]/30" style={{ paddingLeft: '16px', paddingRight: '16px', paddingTop: '8px', paddingBottom: '8px', fontSize: '14px' }}>
                               <span className="font-medium">{focus.length}</span> to develop
                             </span>
                           </div>
                         </div>
                       </div>
 
-                      <div className="p-6 space-y-6">
+                      <div style={{ padding: '32px' }}>
                         {/* Demonstrated Competencies */}
                         {demonstrated.length > 0 && (
-                          <div>
-                            <h4 className="font-semibold text-[#333333] mb-3 flex items-center gap-2">
+                          <div className="demonstrated-section-container" style={{ marginBottom: '32px' }}>
+                            <h4 className="font-semibold text-[#333333] flex items-center gap-2" style={{ marginBottom: '20px' }}>
                               <span className="w-5 h-5 rounded-full bg-[#EAAB00]/20 flex items-center justify-center text-[#9a7100] text-xs">✓</span>
                               Demonstrated Competencies
                             </h4>
-                            <div className="space-y-3">
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                               {LEVEL_ORDER.map((level) => {
                                 const descriptors = demonstratedByLevel[level];
                                 if (descriptors.length === 0) return null;
@@ -334,11 +416,11 @@ export default function SummaryPage() {
                                 if (!levelData) return null;
 
                                 return (
-                                  <div key={level} className="bg-[#EAAB00]/10 rounded-lg p-4 border border-[#EAAB00]/30">
-                                    <div className="font-semibold text-[#9a7100] text-sm mb-2">
+                                  <div key={level} className="bg-[#EAAB00]/10 rounded-lg border border-[#EAAB00]/30" style={{ padding: '20px' }}>
+                                    <div className="font-semibold text-[#9a7100] text-sm" style={{ marginBottom: '12px' }}>
                                       {level.charAt(0) + level.slice(1).toLowerCase()} Level
                                     </div>
-                                    <ul className="space-y-1.5">
+                                    <ul style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                                       {descriptors
                                         .sort((a, b) => a.descriptorIndex - b.descriptorIndex)
                                         .map((d) => {
@@ -362,12 +444,12 @@ export default function SummaryPage() {
 
                         {/* Development Focus Areas */}
                         {focus.length > 0 && (
-                          <div>
-                            <h4 className="font-semibold text-[#333333] mb-3 flex items-center gap-2">
+                          <div className="focus-section-container" style={{ marginBottom: '32px' }}>
+                            <h4 className="font-semibold text-[#333333] flex items-center gap-2" style={{ marginBottom: '20px' }}>
                               <span className="w-5 h-5 rounded-full bg-[#00877C]/20 flex items-center justify-center text-[#00877C] text-xs">→</span>
                               Development Focus Areas
                             </h4>
-                            <div className="space-y-3">
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                               {LEVEL_ORDER.map((level) => {
                                 const descriptors = focusByLevel[level];
                                 if (descriptors.length === 0) return null;
@@ -376,11 +458,11 @@ export default function SummaryPage() {
                                 if (!levelData) return null;
 
                                 return (
-                                  <div key={level} className="bg-[#00877C]/10 rounded-lg p-4 border border-[#00877C]/30">
-                                    <div className="font-semibold text-[#00877C] text-sm mb-2">
+                                  <div key={level} className="bg-[#00877C]/10 rounded-lg border border-[#00877C]/30" style={{ padding: '20px' }}>
+                                    <div className="font-semibold text-[#00877C] text-sm" style={{ marginBottom: '12px' }}>
                                       {level.charAt(0) + level.slice(1).toLowerCase()} Level Target
                                     </div>
-                                    <ul className="space-y-1.5">
+                                    <ul style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                                       {descriptors
                                         .sort((a, b) => a.descriptorIndex - b.descriptorIndex)
                                         .map((f) => {
@@ -404,12 +486,12 @@ export default function SummaryPage() {
 
                         {/* Development Notes */}
                         {response?.notes && response.notes.trim().length > 0 && (
-                          <div>
-                            <h4 className="font-semibold text-[#333333] mb-3 flex items-center gap-2">
+                          <div className="notes-section-container" style={{ marginBottom: '32px' }}>
+                            <h4 className="font-semibold text-[#333333] flex items-center gap-2" style={{ marginBottom: '20px' }}>
                               <span className="w-5 h-5 rounded-full bg-[#F1F1F1] flex items-center justify-center text-[#666666] text-xs">📝</span>
                               Personal Reflection Notes
                             </h4>
-                            <div className="bg-[#F1F1F1] rounded-lg p-4 border border-[#E5E5E5]">
+                            <div className="bg-[#F1F1F1] rounded-lg border border-[#E5E5E5]" style={{ padding: '20px' }}>
                               <p className="text-sm text-[#333333] whitespace-pre-wrap leading-relaxed">{response.notes}</p>
                             </div>
                           </div>
@@ -454,6 +536,56 @@ export default function SummaryPage() {
         )}
         </div>
       </main>
+
+      {/* Name Input Modal */}
+      {showNameModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 no-print" style={{ padding: '24px' }}>
+          <div className="bg-white rounded-xl shadow-2xl max-w-lg w-full" style={{ padding: '48px' }}>
+            <h2 className="text-3xl font-bold text-[#333333]" style={{ marginBottom: '16px' }}>
+              Enter Your Name
+            </h2>
+            <p className="text-base text-[#666666] leading-relaxed" style={{ marginBottom: '32px' }}>
+              Your name will appear on the printed report to help identify it.
+            </p>
+            
+            <input
+              type="text"
+              value={tempName}
+              onChange={(e) => setTempName(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  handleConfirmName();
+                }
+              }}
+              placeholder="Enter your full name"
+              autoFocus
+              className="w-full px-5 py-4 border-2 border-[#CCCCCC] rounded-lg text-[#333333] focus:outline-none focus:border-[#0098C3] focus:ring-4 focus:ring-[#0098C3]/20 transition-all"
+              style={{ fontSize: '16px', marginBottom: '40px' }}
+            />
+            
+            <div className="flex justify-end" style={{ gap: '16px' }}>
+              <button
+                onClick={() => {
+                  setShowNameModal(false);
+                  setTempName("");
+                }}
+                className="px-7 py-3.5 border-2 border-[#CCCCCC] text-[#666666] rounded-lg font-semibold hover:bg-[#F1F1F1] hover:border-[#999999] transition-all"
+                style={{ fontSize: '16px' }}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleConfirmName}
+                disabled={!tempName.trim()}
+                className="px-7 py-3.5 bg-[#0098C3] text-white rounded-lg font-semibold hover:bg-[#007A9C] transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-[#0098C3]"
+                style={{ fontSize: '16px' }}
+              >
+                Confirm & Print
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
