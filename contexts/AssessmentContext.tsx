@@ -96,7 +96,11 @@ export function AssessmentProvider({ children }: { children: ReactNode }) {
 
   const clearAssessment = useCallback(() => {
     setAssessmentState(defaultState);
-    localStorage.removeItem(STORAGE_KEY);
+    try {
+      localStorage.removeItem(STORAGE_KEY);
+    } catch (error) {
+      console.error("Error clearing assessment state:", error);
+    }
   }, []);
 
   const getCompletedCount = useCallback((): number => {

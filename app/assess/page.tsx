@@ -40,7 +40,8 @@ function DescriptorItem({
   isWantToDevelop,
   onToggleDemonstrated,
   onToggleWantToDevelop,
-  alignment
+  alignment,
+  levelColor
 }: {
   point: string;
   index: number;
@@ -49,6 +50,7 @@ function DescriptorItem({
   onToggleDemonstrated: () => void;
   onToggleWantToDevelop: () => void;
   alignment?: DescriptorAlignment;
+  levelColor: string;
 }) {
   const [showAlignment, setShowAlignment] = useState(false);
   const alignmentRef = useRef<HTMLDivElement>(null);
@@ -83,7 +85,10 @@ function DescriptorItem({
     <div className="relative">
       <div className={`p-7 md:p-8 rounded-xl transition-all shadow-sm hover:shadow-md ${getBgClass()}`}>
         <div className="flex items-start gap-6">
-          <span className="flex-shrink-0 w-8 h-8 rounded-full bg-[#00457D] flex items-center justify-center text-sm font-bold text-white shadow-sm">
+          <span 
+            className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold text-white shadow-sm"
+            style={{ backgroundColor: levelColor }}
+          >
             {index + 1}
           </span>
           <div className="flex-1 min-w-0">
@@ -237,12 +242,13 @@ function LevelTabs({
     return { demonstrated, wantToDevelop };
   };
 
-  // Different colors for each level
+  // Progressive color scheme: lightest (Foundation) to darkest (Exemplar)
+  // Using green progression for clear visual distinction
   const levelColors: Record<CapabilityLevel, { bg: string; border: string; text: string; light: string }> = {
-    FOUNDATION: { bg: '#4F2D7F', border: '#4F2D7F', text: 'white', light: '#4F2D7F' },
-    INTERMEDIATE: { bg: '#0098C3', border: '#0098C3', text: 'white', light: '#0098C3' },
-    ADVANCED: { bg: '#00877C', border: '#00877C', text: 'white', light: '#00877C' },
-    EXEMPLAR: { bg: '#00457D', border: '#00457D', text: 'white', light: '#00457D' },
+    FOUNDATION: { bg: '#81C784', border: '#81C784', text: 'white', light: '#81C784' },    // Light green - Foundation level
+    INTERMEDIATE: { bg: '#66BB6A', border: '#66BB6A', text: 'white', light: '#66BB6A' },  // Medium-light green
+    ADVANCED: { bg: '#4CAF50', border: '#4CAF50', text: 'white', light: '#4CAF50' },      // Medium-dark green
+    EXEMPLAR: { bg: '#388E3C', border: '#388E3C', text: 'white', light: '#388E3C' },      // Dark green - Exemplar level
   };
 
   const getLevelBgColor = (level: CapabilityLevel, isActive: boolean) => {
@@ -279,8 +285,18 @@ function LevelTabs({
                 transition-all duration-200 hover:shadow-md
                 ${isActive 
                   ? 'text-white' 
-                  : 'bg-white text-[#333333] border-[#E5E5E5] hover:border-[#0098C3]'}
+                  : 'bg-white text-[#333333] border-[#E5E5E5]'}
               `}
+              onMouseEnter={(e) => {
+                if (!isActive) {
+                  e.currentTarget.style.borderColor = colors.border;
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (!isActive) {
+                  e.currentTarget.style.borderColor = '#E5E5E5';
+                }
+              }}
             >
               <span className="flex items-center gap-3">
                 {/* Number badge with proper contrast - white text on colored bg when active */}
@@ -407,6 +423,7 @@ function LevelTabs({
                   onToggleDemonstrated={() => onToggleDemonstrated(selectedTab, idx)}
                   onToggleWantToDevelop={() => onToggleWantToDevelop(selectedTab, idx)}
                   alignment={descriptorAlignment}
+                  levelColor={levelColors[selectedTab].bg}
                 />
               );
             })}

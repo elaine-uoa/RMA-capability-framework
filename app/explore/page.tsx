@@ -31,10 +31,12 @@ function DescriptorReadOnly({
   point,
   index,
   alignment,
+  levelColor,
 }: {
   point: string;
   index: number;
   alignment?: DescriptorAlignment;
+  levelColor: string;
 }) {
   const [showAlignment, setShowAlignment] = useState(false);
   const alignmentRef = useRef<HTMLDivElement>(null);
@@ -54,7 +56,10 @@ function DescriptorReadOnly({
   return (
     <div className="relative bg-[#F8F9FA] border border-[#E5E5E5] rounded-xl p-7 md:p-8 hover:border-[#0098C3] hover:shadow-md transition-all">
       <div className="flex items-start gap-6">
-        <span className="flex-shrink-0 w-8 h-8 rounded-full bg-[#00457D] flex items-center justify-center text-sm font-bold text-white shadow-sm">
+        <span 
+          className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold text-white shadow-sm"
+          style={{ backgroundColor: levelColor }}
+        >
           {index + 1}
         </span>
         <div className="flex-1 text-[#333333] leading-relaxed">{point}</div>
@@ -166,12 +171,13 @@ function LevelTabsReadOnly({
   const [selectedTab, setSelectedTab] = useState<CapabilityLevel>("FOUNDATION");
   const activeLevelData = capabilityLevels.find((l) => l.level === selectedTab);
 
-  // Color-coded levels for visual interest
+  // Progressive color scheme: lightest (Foundation) to darkest (Exemplar)
+  // Using green progression for clear visual distinction
   const levelColors: Record<CapabilityLevel, string> = {
-    FOUNDATION: '#4F2D7F',
-    INTERMEDIATE: '#0098C3',
-    ADVANCED: '#00877C',
-    EXEMPLAR: '#00457D',
+    FOUNDATION: '#81C784',    // Light green - Foundation level
+    INTERMEDIATE: '#66BB6A',  // Medium-light green
+    ADVANCED: '#4CAF50',      // Medium-dark green
+    EXEMPLAR: '#388E3C',      // Dark green - Exemplar level
   };
 
   return (
@@ -196,8 +202,18 @@ function LevelTabsReadOnly({
                 rounded-xl font-semibold text-base border-2 transition-all duration-200 shadow-sm hover:shadow-md
                 ${isActive
                   ? "text-white"
-                  : "bg-white text-[#333333] border-[#E5E5E5] hover:border-[#0098C3]"}
+                  : "bg-white text-[#333333] border-[#E5E5E5]"}
               `}
+              onMouseEnter={(e) => {
+                if (!isActive) {
+                  e.currentTarget.style.borderColor = color;
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (!isActive) {
+                  e.currentTarget.style.borderColor = '#E5E5E5';
+                }
+              }}
             >
               <span className="flex items-center gap-3">
                 {/* Number badge with proper contrast */}
@@ -257,7 +273,7 @@ function LevelTabsReadOnly({
               const descriptorAlignment = activeLevelData?.descriptorAlignments?.find(
                 (da: DescriptorAlignment) => da.descriptorIndex === idx
               );
-              return <DescriptorReadOnly key={idx} point={point} index={idx} alignment={descriptorAlignment} />;
+              return <DescriptorReadOnly key={idx} point={point} index={idx} alignment={descriptorAlignment} levelColor={levelColors[selectedTab]} />;
             })}
           </div>
         </div>
