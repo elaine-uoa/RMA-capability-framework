@@ -20,7 +20,7 @@ export interface Function {
 }
 
 // Real Role Mapping provided by the RMA team (with placeholder data expanded for UI demonstration)
-export const roles: Role[] = [
+const rolesData = [
   {
     id: "research-programme-coordinator",
     name: "Research Programme Coordinator",
@@ -193,10 +193,10 @@ export const roles: Role[] = [
       { capabilityId: "monitoring-reporting", level: "ADVANCED" },
     ]
   },
-].sort((a, b) => a.name.localeCompare(b.name)); // Sort alphabetically
+] satisfies Role[];
 
 // Placeholder functions for demonstration (expanded for UI demonstration)
-export const functions: Function[] = [
+const functionsData = [
   {
     id: "research-operations",
     name: "Research Operations",
@@ -359,7 +359,13 @@ export const functions: Function[] = [
       { capabilityId: "maximising-impact", level: "INTERMEDIATE" },
     ]
   },
-].sort((a, b) => a.name.localeCompare(b.name)); // Sort alphabetically
+] satisfies Function[];
+
+// Sort and export functions
+export const functions: Function[] = [...functionsData].sort((a, b) => a.name.localeCompare(b.name));
+
+// Sort and export roles
+export const roles: Role[] = [...rolesData].sort((a, b) => a.name.localeCompare(b.name));
 
 // Helper function to get all capability IDs for a role
 export function getCapabilityIdsForRole(roleId: string): string[] {
