@@ -313,7 +313,7 @@ function LevelTabs({
                 d => d.level === selectedTab && d.descriptorIndex === idx
               );
               const hasAlignment = activeLevelData?.descriptorAlignments?.some(
-                alignment => alignment.descriptorIndex === idx
+                (alignment: DescriptorAlignment) => alignment.descriptorIndex === idx
               ) || false;
               
               return (

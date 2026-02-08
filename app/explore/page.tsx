@@ -197,7 +197,7 @@ function LevelTabsReadOnly({
           <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
             {activeLevelData?.bulletPoints.map((point: string, idx: number) => {
               const hasAlignment = activeLevelData?.descriptorAlignments?.some(
-                alignment => alignment.descriptorIndex === idx
+                (alignment: DescriptorAlignment) => alignment.descriptorIndex === idx
               ) || false;
               return (
                 <DescriptorReadOnly 
