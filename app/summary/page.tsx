@@ -9,21 +9,24 @@ import Link from "next/link";
 // Level order for comparison
 const LEVEL_ORDER: CapabilityLevel[] = ["FOUNDATION", "INTERMEDIATE", "ADVANCED", "EXEMPLAR"];
 
-// Color mapping for capabilities based on key areas
+// Report content mode
+type ReportMode = "all" | "focus-only";
+
+// Colour mapping for capabilities based on key areas
 const getCapabilityColor = (capabilityId: string): { solid: string; light: string } => {
   const colorMap: Record<string, { solid: string; light: string }> = {
-    "research-engagement": { solid: "#00457D", light: "#E8F4FD" },
-    "maximising-impact": { solid: "#00457D", light: "#E8F4FD" },
+    "research-engagement": { solid: "#0c0c48", light: "#e7e7ed" },
+    "maximising-impact": { solid: "#0c0c48", light: "#e7e7ed" },
     "researcher-development": { solid: "#00877C", light: "#E6F7F5" },
     "environment-culture": { solid: "#00877C", light: "#E6F7F5" },
-    "funding-opportunities": { solid: "#0098C3", light: "#E6F6FC" },
-    "proposal-support": { solid: "#0098C3", light: "#E6F6FC" },
+    "funding-opportunities": { solid: "#1f2bd4", light: "#e7e7ed" },
+    "proposal-support": { solid: "#1f2bd4", light: "#e7e7ed" },
     "initiation": { solid: "#D97706", light: "#FEF6E7" },
     "projects-initiatives": { solid: "#D97706", light: "#FEF6E7" },
     "monitoring-reporting": { solid: "#4F2D7F", light: "#F3EEF8" },
     "policy-strategy": { solid: "#4F2D7F", light: "#F3EEF8" }
   };
-  return colorMap[capabilityId] || { solid: "#333333", light: "#F1F1F1" };
+  return colorMap[capabilityId] || { solid: "#4a4a4c", light: "#f3f3f6" };
 };
 
 export default function SummaryPage() {
@@ -31,6 +34,8 @@ export default function SummaryPage() {
   const [showNameModal, setShowNameModal] = React.useState(false);
   const [userName, setUserName] = React.useState("");
   const [tempName, setTempName] = React.useState("");
+  const [reportMode, setReportMode] = React.useState<ReportMode>("all");
+  const [tempReportMode, setTempReportMode] = React.useState<ReportMode>("all");
   
   // Get capabilities with assessments OR development focus
   const completedCapabilities = capabilities.filter((cap) => {
@@ -44,22 +49,24 @@ export default function SummaryPage() {
   });
 
   const handlePrint = () => {
+    setTempReportMode(reportMode);
     if (!userName) {
       setTempName("");
-      setShowNameModal(true);
     } else {
-      window.print();
+      setTempName(userName);
     }
+    setShowNameModal(true);
   };
 
   const handleConfirmName = () => {
     if (tempName.trim()) {
       setUserName(tempName.trim());
+      setReportMode(tempReportMode);
       setShowNameModal(false);
-      // Small delay to ensure name renders before print dialog
+      // Small delay to ensure state renders before print dialog
       setTimeout(() => {
         window.print();
-      }, 100);
+      }, 150);
     }
   };
 
@@ -67,11 +74,6 @@ export default function SummaryPage() {
     if (confirm("Are you sure you want to clear all your assessment data? This cannot be undone.")) {
       clearAssessment();
     }
-  };
-
-  const getLevelLabel = (level: CapabilityLevel | null): string => {
-    if (!level) return "Not assessed";
-    return level.charAt(0) + level.slice(1).toLowerCase();
   };
 
   // Get demonstrated descriptors (use new field or fallback to legacy)
@@ -84,31 +86,6 @@ export default function SummaryPage() {
   const getDevelopmentFocus = (capabilityId: string): SelectedDescriptor[] => {
     const response = getResponse(capabilityId);
     return response?.developmentFocus || [];
-  };
-
-  // Infer target level from development focus descriptors
-  const getInferredTargetLevel = (capabilityId: string): CapabilityLevel | null => {
-    const response = getResponse(capabilityId);
-    
-    if (response?.desiredLevel) {
-      return response.desiredLevel;
-    }
-    
-    const focus = getDevelopmentFocus(capabilityId);
-    if (focus.length === 0) return null;
-    
-    let highestLevel: CapabilityLevel | null = null;
-    let highestIndex = -1;
-    
-    focus.forEach(f => {
-      const levelIndex = LEVEL_ORDER.indexOf(f.level);
-      if (levelIndex > highestIndex) {
-        highestIndex = levelIndex;
-        highestLevel = f.level;
-      }
-    });
-    
-    return highestLevel;
   };
 
   // Group descriptors by level for display
@@ -127,21 +104,23 @@ export default function SummaryPage() {
     return byLevel;
   };
 
+  // For "focus-only" mode, filter to capabilities that have development focus items
+  const printCapabilities = reportMode === 'focus-only'
+    ? completedCapabilities.filter(cap => getDevelopmentFocus(cap.id).length > 0)
+    : completedCapabilities;
+
   return (
-    <div className="w-full min-h-screen bg-[#F1F1F1] flex flex-col items-center">
+    <div className={`w-full min-h-screen bg-[#f3f3f6] flex flex-col items-center ${reportMode === 'focus-only' ? 'print-focus-only' : 'print-all'}`}>
       {/* Header */}
-      <header className="w-full bg-white border-b border-[#CCCCCC] flex justify-center">
+      <header className="w-full bg-white border-b border-[#d9d9d9] flex justify-center">
         <div className="w-full max-w-[1140px] px-8 lg:px-12 py-8">
           {/* Action buttons */}
           <div className="flex items-center justify-center gap-4 mb-6 no-print" style={{ marginTop: '24px' }}>
             <button
               onClick={handlePrint}
-              className="flex items-center gap-2 bg-white border border-[#CCCCCC] text-[#333333] rounded-lg font-semibold hover:bg-[#F1F1F1] hover:border-[#0098C3] transition-colors"
+              className="flex items-center gap-2 bg-white border border-[#d9d9d9] text-[#4a4a4c] rounded-lg font-semibold hover:bg-[#f3f3f6] hover:border-[#1f2bd4] transition-colors"
               style={{
-                paddingLeft: '20px',
-                paddingRight: '20px',
-                paddingTop: '12px',
-                paddingBottom: '12px',
+                padding: '14px 28px',
                 fontSize: '15px'
               }}
             >
@@ -152,12 +131,9 @@ export default function SummaryPage() {
             </button>
             <button
               onClick={handleClear}
-              className="flex items-center gap-2 bg-white border border-[#CCCCCC] text-[#A71930] rounded-lg font-semibold hover:bg-[#A71930]/5 hover:border-[#A71930] transition-colors"
+              className="flex items-center gap-2 bg-white border border-[#d9d9d9] text-[#A71930] rounded-lg font-semibold hover:bg-[#A71930]/5 hover:border-[#A71930] transition-colors"
               style={{
-                paddingLeft: '20px',
-                paddingRight: '20px',
-                paddingTop: '12px',
-                paddingBottom: '12px',
+                padding: '14px 28px',
                 fontSize: '15px'
               }}
             >
@@ -169,10 +145,12 @@ export default function SummaryPage() {
           </div>
 
           <div className="text-center">
-            <h1 className="text-3xl md:text-4xl font-bold text-[#333333] mb-2">Development Summary</h1>
+            <h1 className="text-3xl md:text-4xl font-bold text-[#4a4a4c] mb-2">
+              {reportMode === 'focus-only' ? 'Development Focus Report' : 'Development Summary'}
+            </h1>
             {userName && (
               <div className="mb-3 flex items-center justify-center gap-3">
-                <p className="text-xl font-semibold text-[#00457D]">
+                <p className="text-xl font-semibold text-[#0c0c48]">
                   {userName}
                 </p>
                 <button
@@ -180,22 +158,28 @@ export default function SummaryPage() {
                     setTempName(userName);
                     setShowNameModal(true);
                   }}
-                  className="no-print text-sm text-[#0098C3] hover:text-[#00457D] underline"
+                  className="no-print text-sm text-[#1f2bd4] hover:text-[#0c0c48] underline"
                 >
-                  Edit Name
+                  Edit
                 </button>
               </div>
             )}
-            <p className="text-[#666666]">
+            <p className="text-[#6d6e71]">
               Last updated on {new Date(assessmentState.lastUpdated).toLocaleDateString('en-NZ', { 
                 year: 'numeric', 
                 month: 'long', 
                 day: 'numeric' 
               })}
             </p>
-            <p className="text-sm text-[#666666] mt-2">
-              Focus on 1–3 capabilities per year for targeted professional development
+            <p className="text-sm text-[#6d6e71] mt-2">
+              Focus on 1–2 capabilities per year for targeted professional development
             </p>
+            {/* Print-only report mode indicator */}
+            {reportMode === 'focus-only' && (
+              <p className="text-xs text-[#1f2bd4] mt-2 hidden print-mode-label">
+                Report type: Development Focus Areas Only
+              </p>
+            )}
           </div>
         </div>
       </header>
@@ -204,19 +188,19 @@ export default function SummaryPage() {
       <main className="w-full flex justify-center">
         <div className="w-full max-w-[1140px] px-8 lg:px-12 py-12 md:py-16">
         {completedCapabilities.length === 0 ? (
-          <div className="bg-white rounded-lg border border-[#CCCCCC] p-12 text-center">
-            <div className="w-16 h-16 rounded-full bg-[#F1F1F1] flex items-center justify-center mx-auto mb-4">
-              <svg className="w-8 h-8 text-[#666666]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <div className="bg-white rounded-lg border border-[#d9d9d9] p-12 text-center">
+            <div className="w-16 h-16 rounded-full bg-[#f3f3f6] flex items-center justify-center mx-auto mb-4">
+              <svg className="w-8 h-8 text-[#6d6e71]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
             </div>
-            <h2 className="text-2xl font-bold text-[#333333] mb-2">No Assessments Yet</h2>
-            <p className="text-[#666666] mb-6">
+            <h2 className="text-2xl font-bold text-[#4a4a4c] mb-2">No Assessments Yet</h2>
+            <p className="text-[#6d6e71] mb-6">
               You haven't completed any capability assessments.
             </p>
             <Link
               href="/assess"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-[#0098C3] rounded-lg font-semibold hover:bg-[#007A9C] transition-colors"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-[#1f2bd4] rounded-lg font-semibold hover:bg-[#1929a8] transition-colors"
               style={{ color: 'white' }}
             >
               Start Assessment
@@ -228,28 +212,34 @@ export default function SummaryPage() {
         ) : (
           <>
             {/* Stats */}
-            <div className="grid grid-cols-1 md:grid-cols-4 mb-10" style={{ gap: '24px', paddingTop: '32px' }}>
-              <div className="bg-white rounded-lg border border-[#CCCCCC] p-5 text-center">
-                <div className="text-3xl font-bold text-[#00457D] mb-1">{completedCapabilities.length}</div>
-                <div className="text-sm text-[#666666]">Capabilities Assessed</div>
-              </div>
-              <div className="bg-white rounded-lg border border-[#CCCCCC] p-5 text-center">
-                <div className="text-3xl font-bold text-[#9a7100] mb-1">
-                  {completedCapabilities.reduce((sum, c) => sum + getDemonstrated(c.id).length, 0)}
+            <div className={`grid grid-cols-1 ${reportMode === 'focus-only' ? 'md:grid-cols-3' : 'md:grid-cols-4'} mb-10`} style={{ gap: '24px', paddingTop: '32px' }}>
+              <div className="bg-white rounded-lg border border-[#d9d9d9] p-5 text-center">
+                <div className="text-3xl font-bold text-[#0c0c48] mb-1">
+                  {reportMode === 'focus-only' ? printCapabilities.length : completedCapabilities.length}
                 </div>
-                <div className="text-sm text-[#666666]">Descriptors Demonstrated</div>
+                <div className="text-sm text-[#6d6e71]">
+                  {reportMode === 'focus-only' ? 'Capabilities with Focus' : 'Capabilities Assessed'}
+                </div>
               </div>
-              <div className="bg-white rounded-lg border border-[#CCCCCC] p-5 text-center">
+              {reportMode !== 'focus-only' && (
+                <div className="bg-white rounded-lg border border-[#d9d9d9] p-5 text-center print-demonstrated-stat">
+                  <div className="text-3xl font-bold text-[#9a7100] mb-1">
+                    {completedCapabilities.reduce((sum, c) => sum + getDemonstrated(c.id).length, 0)}
+                  </div>
+                  <div className="text-sm text-[#6d6e71]">Descriptors Demonstrated</div>
+                </div>
+              )}
+              <div className="bg-white rounded-lg border border-[#d9d9d9] p-5 text-center">
                 <div className="text-3xl font-bold text-[#00877C] mb-1">
-                  {completedCapabilities.reduce((sum, c) => sum + getDevelopmentFocus(c.id).length, 0)}
+                  {printCapabilities.reduce((sum, c) => sum + getDevelopmentFocus(c.id).length, 0)}
                 </div>
-                <div className="text-sm text-[#666666]">Development Focus Areas</div>
+                <div className="text-sm text-[#6d6e71]">Development Focus Areas</div>
               </div>
-              <div className="bg-white rounded-lg border border-[#CCCCCC] p-5 text-center">
-                <div className="text-3xl font-bold text-[#333333] mb-1">
-                  {completedCapabilities.filter(c => getInferredTargetLevel(c.id) !== null).length}
+              <div className="bg-white rounded-lg border border-[#d9d9d9] p-5 text-center">
+                <div className="text-3xl font-bold text-[#4a4a4c] mb-1">
+                  {completedCapabilities.filter(c => getDevelopmentFocus(c.id).length > 0).length}
                 </div>
-                <div className="text-sm text-[#666666]">Growth Targets Set</div>
+                <div className="text-sm text-[#6d6e71]">With Development Focus</div>
               </div>
             </div>
 
@@ -259,10 +249,7 @@ export default function SummaryPage() {
                 href="/assess"
                 className="inline-flex items-center gap-2 bg-[#EAAB00]/10 border border-[#EAAB00]/30 text-[#9a7100] rounded-lg font-semibold hover:bg-[#EAAB00]/20 transition-colors"
                 style={{
-                  paddingLeft: '20px',
-                  paddingRight: '20px',
-                  paddingTop: '12px',
-                  paddingBottom: '12px',
+                  padding: '14px 28px',
                   fontSize: '15px'
                 }}
               >
@@ -275,10 +262,7 @@ export default function SummaryPage() {
                 href="/plan"
                 className="inline-flex items-center gap-2 bg-[#00877C]/10 border border-[#00877C]/30 text-[#00877C] rounded-lg font-semibold hover:bg-[#00877C]/20 transition-colors"
                 style={{
-                  paddingLeft: '20px',
-                  paddingRight: '20px',
-                  paddingTop: '12px',
-                  paddingBottom: '12px',
+                  padding: '14px 28px',
                   fontSize: '15px'
                 }}
               >
@@ -290,55 +274,61 @@ export default function SummaryPage() {
             </div>
 
             {/* Assessment Table */}
-            <div className="bg-white rounded-lg border border-[#CCCCCC] overflow-hidden" style={{ marginBottom: '56px' }}>
-              <div className="p-7 md:p-8 border-b border-[#E5E5E5]">
-                <h2 className="text-xl font-bold text-[#333333] text-center">Assessment Overview</h2>
+            <div className="bg-white rounded-lg border border-[#d9d9d9] overflow-hidden" style={{ marginBottom: '56px' }}>
+              <div className="p-7 md:p-8 border-b border-[#e2e3e4]">
+                <h2 className="text-xl font-bold text-[#4a4a4c] text-center">
+                  {reportMode === 'focus-only' ? 'Development Focus Overview' : 'Assessment Overview'}
+                </h2>
+                {reportMode === 'focus-only' && (
+                  <p className="text-sm text-[#6d6e71] text-center mt-2">Showing capabilities with development focus areas only</p>
+                )}
               </div>
               
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead>
-                    <tr className="bg-[#F1F1F1] border-b border-[#E5E5E5]">
-                      <th className="text-left py-5 px-6 lg:px-8 font-semibold text-[#333333] text-sm">Capability</th>
-                      <th className="text-left py-5 px-6 lg:px-8 font-semibold text-[#333333] text-sm">Current</th>
-                      <th className="text-left py-5 px-6 lg:px-8 font-semibold text-[#333333] text-sm">Target</th>
+                    <tr className="bg-[#f3f3f6] border-b border-[#e2e3e4]">
+                      <th className="text-left py-5 px-6 lg:px-8 font-semibold text-[#4a4a4c] text-sm">Capability</th>
+                      {reportMode !== 'focus-only' && (
+                        <th className="text-left py-5 px-6 lg:px-8 font-semibold text-[#4a4a4c] text-sm">Demonstrated</th>
+                      )}
+                      <th className="text-left py-5 px-6 lg:px-8 font-semibold text-[#4a4a4c] text-sm">To Develop</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {completedCapabilities.map((capability) => {
+                    {(reportMode === 'focus-only' ? printCapabilities : completedCapabilities).map((capability) => {
                       const response = getResponse(capability.id);
                       return (
                         <tr
                           key={capability.id}
-                          className="border-b border-[#E5E5E5] hover:bg-[#F1F1F1] transition-colors"
+                          className="border-b border-[#e2e3e4] hover:bg-[#f3f3f6] transition-colors"
                         >
                           <td className="py-5 px-6 lg:px-8">
                             <Link
                               href={`/assess?capability=${capability.id}`}
-                              className="font-medium text-[#333333] hover:text-[#0098C3] transition-colors inline-flex items-center gap-1.5"
+                              className="font-medium text-[#4a4a4c] hover:text-[#1f2bd4] transition-colors inline-flex items-center gap-1.5"
                             >
                               {capability.name}
-                              <svg className="w-4 h-4 opacity-60" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                              <svg className="w-4 h-4 opacity-60 no-print" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
                               </svg>
                             </Link>
                           </td>
+                          {reportMode !== 'focus-only' && (
+                            <td className="py-5 px-6 lg:px-8">
+                              <span className="text-sm font-medium text-[#9a7100]">
+                                {getDemonstrated(capability.id).length} descriptor{getDemonstrated(capability.id).length !== 1 ? 's' : ''}
+                              </span>
+                            </td>
+                          )}
                           <td className="py-5 px-6 lg:px-8">
-                            <span className="text-sm font-medium text-[#333333]">
-                              {getLevelLabel(response?.currentLevel || null)}
-                            </span>
-                          </td>
-                          <td className="py-5 px-6 lg:px-8">
-                            {(() => {
-                              const targetLevel = getInferredTargetLevel(capability.id);
-                              return targetLevel ? (
-                                <span className="text-sm font-medium text-[#00877C]">
-                                  {getLevelLabel(targetLevel)}
-                                </span>
-                              ) : (
-                                <span className="text-[#999999] text-sm">—</span>
-                              );
-                            })()}
+                            {getDevelopmentFocus(capability.id).length > 0 ? (
+                              <span className="text-sm font-medium text-[#00877C]">
+                                {getDevelopmentFocus(capability.id).length} descriptor{getDevelopmentFocus(capability.id).length !== 1 ? 's' : ''}
+                              </span>
+                            ) : (
+                              <span className="text-[#afafc3] text-sm">—</span>
+                            )}
                           </td>
                         </tr>
                       );
@@ -351,17 +341,21 @@ export default function SummaryPage() {
             {/* Capability Details - Bundled per capability */}
             <div style={{ marginBottom: '48px' }}>
               <div style={{ marginBottom: '32px' }} className="text-center">
-                <h2 className="text-xl font-bold text-[#333333] mb-2">Capability Details</h2>
-                <p className="text-sm text-[#666666]">
-                  Your demonstrated competencies, development focus areas, and personal notes for each capability
+                <h2 className="text-xl font-bold text-[#4a4a4c] mb-2">
+                  {reportMode === 'focus-only' ? 'Development Focus Details' : 'Capability Details'}
+                </h2>
+                <p className="text-sm text-[#6d6e71]">
+                  {reportMode === 'focus-only'
+                    ? 'Your development focus areas and personal notes for targeted capabilities'
+                    : 'Your demonstrated competencies, development focus areas, and personal notes for each capability'
+                  }
                 </p>
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
-                {completedCapabilities.map((capability) => {
+                {(reportMode === 'focus-only' ? printCapabilities : completedCapabilities).map((capability) => {
                   const demonstrated = getDemonstrated(capability.id);
                   const focus = getDevelopmentFocus(capability.id);
                   const response = getResponse(capability.id);
-                  const targetLevel = getInferredTargetLevel(capability.id);
 
                   const demonstratedByLevel = groupByLevel(demonstrated);
                   const focusByLevel = groupByLevel(focus);
@@ -370,29 +364,21 @@ export default function SummaryPage() {
                   return (
                     <div
                       key={capability.id}
-                      className="bg-white rounded-lg border border-[#CCCCCC] overflow-hidden"
+                      className="bg-white rounded-lg border border-[#d9d9d9] overflow-hidden capability-detail-card"
                     >
                       {/* Capability Header */}
-                      <div className="p-6 border-b border-[#E5E5E5]" style={{ backgroundColor: capabilityColor.light }}>
+                      <div className="border-b border-[#e2e3e4] capability-header" style={{ backgroundColor: capabilityColor.light, padding: '28px 32px' }}>
                         <div className="flex flex-wrap items-center justify-between gap-4">
-                          <div>
+                          <div style={{ paddingLeft: '8px' }}>
                             <h3 className="font-bold text-lg" style={{ color: capabilityColor.solid }}>{capability.name}</h3>
-                            <div className="flex flex-wrap items-center gap-4 mt-2 text-sm text-[#666666]">
-                              <span>
-                                Current: <span className="font-medium text-[#333333]">{getLevelLabel(response?.currentLevel || null)}</span>
-                              </span>
-                              {targetLevel && (
-                                <span>
-                                  Target: <span className="font-medium text-[#00877C]">{getLevelLabel(targetLevel)}</span>
-                                </span>
-                              )}
-                            </div>
                           </div>
-                          <div className="flex items-center gap-3">
-                            <span className="inline-flex items-center gap-1.5 rounded-full bg-[#EAAB00]/10 text-[#9a7100] border border-[#EAAB00]/30" style={{ paddingLeft: '16px', paddingRight: '16px', paddingTop: '8px', paddingBottom: '8px', fontSize: '14px' }}>
-                              <span className="font-medium">{demonstrated.length}</span> demonstrated
-                            </span>
-                            <span className="inline-flex items-center gap-1.5 rounded-full bg-[#00877C]/10 text-[#00877C] border border-[#00877C]/30" style={{ paddingLeft: '16px', paddingRight: '16px', paddingTop: '8px', paddingBottom: '8px', fontSize: '14px' }}>
+                          <div className="flex items-center gap-3" style={{ paddingRight: '8px' }}>
+                            {reportMode !== 'focus-only' && (
+                              <span className="inline-flex items-center gap-1.5 rounded-full bg-[#EAAB00]/10 text-[#9a7100] border border-[#EAAB00]/30" style={{ padding: '10px 18px', fontSize: '14px' }}>
+                                <span className="font-medium">{demonstrated.length}</span> demonstrated
+                              </span>
+                            )}
+                            <span className="inline-flex items-center gap-1.5 rounded-full bg-[#00877C]/10 text-[#00877C] border border-[#00877C]/30" style={{ padding: '10px 18px', fontSize: '14px' }}>
                               <span className="font-medium">{focus.length}</span> to develop
                             </span>
                           </div>
@@ -400,10 +386,10 @@ export default function SummaryPage() {
                       </div>
 
                       <div style={{ padding: '32px' }}>
-                        {/* Demonstrated Competencies */}
-                        {demonstrated.length > 0 && (
+                        {/* Demonstrated Competencies — hidden in focus-only mode */}
+                        {reportMode !== 'focus-only' && demonstrated.length > 0 && (
                           <div className="demonstrated-section-container" style={{ marginBottom: '32px' }}>
-                            <h4 className="font-semibold text-[#333333] flex items-center gap-2" style={{ marginBottom: '20px' }}>
+                            <h4 className="font-semibold text-[#4a4a4c] flex items-center gap-2" style={{ marginBottom: '20px' }}>
                               <span className="w-5 h-5 rounded-full bg-[#EAAB00]/20 flex items-center justify-center text-[#9a7100] text-xs">✓</span>
                               Demonstrated Competencies
                             </h4>
@@ -428,7 +414,7 @@ export default function SummaryPage() {
                                           if (!descriptor) return null;
                                           
                                           return (
-                                            <li key={`${d.level}-${d.descriptorIndex}`} className="flex gap-2 text-sm text-[#333333]">
+                                            <li key={`${d.level}-${d.descriptorIndex}`} className="flex gap-2 text-sm text-[#4a4a4c]">
                                               <span className="text-[#9a7100] font-medium shrink-0">✓</span>
                                               <span>{descriptor}</span>
                                             </li>
@@ -445,7 +431,7 @@ export default function SummaryPage() {
                         {/* Development Focus Areas */}
                         {focus.length > 0 && (
                           <div className="focus-section-container" style={{ marginBottom: '32px' }}>
-                            <h4 className="font-semibold text-[#333333] flex items-center gap-2" style={{ marginBottom: '20px' }}>
+                            <h4 className="font-semibold text-[#4a4a4c] flex items-center gap-2" style={{ marginBottom: '20px' }}>
                               <span className="w-5 h-5 rounded-full bg-[#00877C]/20 flex items-center justify-center text-[#00877C] text-xs">→</span>
                               Development Focus Areas
                             </h4>
@@ -470,7 +456,7 @@ export default function SummaryPage() {
                                           if (!descriptor) return null;
                                           
                                           return (
-                                            <li key={`${f.level}-${f.descriptorIndex}`} className="flex gap-2 text-sm text-[#333333]">
+                                            <li key={`${f.level}-${f.descriptorIndex}`} className="flex gap-2 text-sm text-[#4a4a4c]">
                                               <span className="text-[#00877C] font-medium shrink-0">→</span>
                                               <span>{descriptor}</span>
                                             </li>
@@ -487,21 +473,21 @@ export default function SummaryPage() {
                         {/* Development Notes */}
                         {response?.notes && response.notes.trim().length > 0 && (
                           <div className="notes-section-container" style={{ marginBottom: '32px' }}>
-                            <h4 className="font-semibold text-[#333333] flex items-center gap-2" style={{ marginBottom: '20px' }}>
-                              <span className="w-5 h-5 rounded-full bg-[#F1F1F1] flex items-center justify-center text-[#666666] text-xs">📝</span>
+                            <h4 className="font-semibold text-[#4a4a4c] flex items-center gap-2" style={{ marginBottom: '20px' }}>
+                              <span className="w-5 h-5 rounded-full bg-[#f3f3f6] flex items-center justify-center text-[#6d6e71] text-xs">📝</span>
                               Personal Reflection Notes
                             </h4>
-                            <div className="bg-[#F1F1F1] rounded-lg border border-[#E5E5E5]" style={{ padding: '20px' }}>
-                              <p className="text-sm text-[#333333] whitespace-pre-wrap leading-relaxed">{response.notes}</p>
+                            <div className="bg-[#f3f3f6] rounded-lg border border-[#e2e3e4]" style={{ padding: '20px' }}>
+                              <p className="text-sm text-[#4a4a4c] whitespace-pre-wrap leading-relaxed">{response.notes}</p>
                             </div>
                           </div>
                         )}
 
-                        {/* Empty state if no details */}
-                        {demonstrated.length === 0 && focus.length === 0 && (!response?.notes || response.notes.trim().length === 0) && (
-                          <div className="text-center py-4 text-[#666666] text-sm">
+                        {/* Empty state if no details (only in 'all' mode) */}
+                        {reportMode !== 'focus-only' && demonstrated.length === 0 && focus.length === 0 && (!response?.notes || response.notes.trim().length === 0) && (
+                          <div className="text-center py-4 text-[#6d6e71] text-sm no-print">
                             <p>No descriptors assessed or development focus set for this capability yet.</p>
-                            <Link href={`/assess?capability=${capability.id}`} className="text-[#0098C3] hover:text-[#00457D] mt-1 inline-block">
+                            <Link href={`/assess?capability=${capability.id}`} className="text-[#1f2bd4] hover:text-[#0c0c48] mt-1 inline-block">
                               Go to assessment →
                             </Link>
                           </div>
@@ -517,12 +503,12 @@ export default function SummaryPage() {
             {!completedCapabilities.some(c => getDevelopmentFocus(c.id).length > 0) && (
               <div className="bg-[#00877C]/10 rounded-lg border border-[#00877C]/30 p-8 text-center mb-10">
                 <h3 className="text-lg font-semibold text-[#00877C] mb-2">Select Your Development Focus</h3>
-                <p className="text-[#333333] text-sm mb-4">
+                <p className="text-[#4a4a4c] text-sm mb-4">
                   Return to the self-assessment page and tick "Want to develop" for the descriptors you'd like to focus on. Then add development notes on the Plan page.
                 </p>
                 <Link
                   href="/assess"
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-[#0098C3] rounded-lg font-semibold hover:bg-[#007A9C] transition-colors"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-[#1f2bd4] rounded-lg font-semibold hover:bg-[#1929a8] transition-colors"
                   style={{ color: 'white' }}
                 >
                   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -537,17 +523,30 @@ export default function SummaryPage() {
         </div>
       </main>
 
-      {/* Name Input Modal */}
+      {/* Footer */}
+      <footer className="w-full border-t border-[#d9d9d9] bg-white mt-auto flex justify-center print-footer">
+        <div className="w-full max-w-[1140px] px-8 lg:px-12 py-8">
+          <p className="text-sm text-[#6d6e71] text-center">
+            RMA Capability Framework • Development Summary
+          </p>
+        </div>
+      </footer>
+
+      {/* Name & Report Options Modal */}
       {showNameModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 no-print" style={{ padding: '24px' }}>
           <div className="bg-white rounded-xl shadow-2xl max-w-lg w-full" style={{ padding: '48px' }}>
-            <h2 className="text-3xl font-bold text-[#333333]" style={{ marginBottom: '16px' }}>
-              Enter Your Name
+            <h2 className="text-3xl font-bold text-[#4a4a4c]" style={{ marginBottom: '16px' }}>
+              Print / Save Report
             </h2>
-            <p className="text-base text-[#666666] leading-relaxed" style={{ marginBottom: '32px' }}>
-              Your name will appear on the printed report to help identify it.
+            <p className="text-base text-[#6d6e71] leading-relaxed" style={{ marginBottom: '32px' }}>
+              Enter your name and choose what to include in the report.
             </p>
             
+            {/* Name input */}
+            <label className="block text-sm font-semibold text-[#4a4a4c]" style={{ marginBottom: '8px' }}>
+              Your Name
+            </label>
             <input
               type="text"
               value={tempName}
@@ -559,9 +558,62 @@ export default function SummaryPage() {
               }}
               placeholder="Enter your full name"
               autoFocus
-              className="w-full px-5 py-4 border-2 border-[#CCCCCC] rounded-lg text-[#333333] focus:outline-none focus:border-[#0098C3] focus:ring-4 focus:ring-[#0098C3]/20 transition-all"
-              style={{ fontSize: '16px', marginBottom: '40px' }}
+              className="w-full px-5 py-4 border-2 border-[#d9d9d9] rounded-lg text-[#4a4a4c] focus:outline-none focus:border-[#1f2bd4] focus:ring-4 focus:ring-[#1f2bd4]/20 transition-all"
+              style={{ fontSize: '16px', marginBottom: '28px' }}
             />
+
+            {/* Report content selection */}
+            <label className="block text-sm font-semibold text-[#4a4a4c]" style={{ marginBottom: '12px' }}>
+              Report Content
+            </label>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '36px' }}>
+              <label
+                className={`flex items-start gap-4 rounded-lg border-2 cursor-pointer transition-all ${
+                  tempReportMode === 'all'
+                    ? 'border-[#1f2bd4] bg-[#1f2bd4]/5'
+                    : 'border-[#d9d9d9] hover:border-[#afafc3] bg-white'
+                }`}
+                style={{ padding: '16px 20px' }}
+              >
+                <input
+                  type="radio"
+                  name="reportMode"
+                  value="all"
+                  checked={tempReportMode === 'all'}
+                  onChange={() => setTempReportMode('all')}
+                  className="mt-0.5 w-5 h-5 accent-[#1f2bd4] flex-shrink-0"
+                />
+                <div>
+                  <div className="font-semibold text-[#4a4a4c]" style={{ fontSize: '15px' }}>All Descriptors</div>
+                  <div className="text-sm text-[#6d6e71]" style={{ marginTop: '4px' }}>
+                    Include demonstrated competencies, development focus areas, and notes for every assessed capability.
+                  </div>
+                </div>
+              </label>
+              <label
+                className={`flex items-start gap-4 rounded-lg border-2 cursor-pointer transition-all ${
+                  tempReportMode === 'focus-only'
+                    ? 'border-[#00877C] bg-[#00877C]/5'
+                    : 'border-[#d9d9d9] hover:border-[#afafc3] bg-white'
+                }`}
+                style={{ padding: '16px 20px' }}
+              >
+                <input
+                  type="radio"
+                  name="reportMode"
+                  value="focus-only"
+                  checked={tempReportMode === 'focus-only'}
+                  onChange={() => setTempReportMode('focus-only')}
+                  className="mt-0.5 w-5 h-5 accent-[#00877C] flex-shrink-0"
+                />
+                <div>
+                  <div className="font-semibold text-[#4a4a4c]" style={{ fontSize: '15px' }}>Development Focus Areas Only</div>
+                  <div className="text-sm text-[#6d6e71]" style={{ marginTop: '4px' }}>
+                    Only include capabilities with development focus items — ideal for a concise development conversation.
+                  </div>
+                </div>
+              </label>
+            </div>
             
             <div className="flex justify-end" style={{ gap: '16px' }}>
               <button
@@ -569,7 +621,7 @@ export default function SummaryPage() {
                   setShowNameModal(false);
                   setTempName("");
                 }}
-                className="px-7 py-3.5 border-2 border-[#CCCCCC] text-[#666666] rounded-lg font-semibold hover:bg-[#F1F1F1] hover:border-[#999999] transition-all"
+                className="px-7 py-3.5 border-2 border-[#d9d9d9] text-[#6d6e71] rounded-lg font-semibold hover:bg-[#f3f3f6] hover:border-[#afafc3] transition-all"
                 style={{ fontSize: '16px' }}
               >
                 Cancel
@@ -577,7 +629,7 @@ export default function SummaryPage() {
               <button
                 onClick={handleConfirmName}
                 disabled={!tempName.trim()}
-                className="px-7 py-3.5 bg-[#0098C3] text-white rounded-lg font-semibold hover:bg-[#007A9C] transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-[#0098C3]"
+                className="px-7 py-3.5 bg-[#1f2bd4] text-white rounded-lg font-semibold hover:bg-[#1929a8] transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-[#1f2bd4]"
                 style={{ fontSize: '16px' }}
               >
                 Confirm & Print

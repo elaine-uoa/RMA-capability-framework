@@ -686,7 +686,7 @@ export const capabilities: Capability[] = [
           "Lead culturally responsive initiation processes that embed Te Ao Māori values, reflecting Māori Data Sovereignty and Mātauranga Māori, that enables the right of Māori to be equal co-design partners.",
           "Draft, negotiate, and execute complex agreement terms that balance interest-holder perspectives with University requirements.",
           "Advise researchers, kaimahi, or partners on specialised agreement areas such as clinical trials, Māori data sovereignty, intellectual property, or otherwise.",
-          "Develop and implement streamlined approaches to project initiation standardise and enhance project or initiative setup.",
+          "Develop and implement streamlined approaches to project initiation standards and enhance project or initiative setup.",
           "Support the setup of large-scale or strategically important research initiatives.",
           "Develop solutions to complex project challenges, or large-scale or strategically important research initiatives.",
           "Respond to changes in funder requirements collaboratively and in partnership with other Universities or entities."

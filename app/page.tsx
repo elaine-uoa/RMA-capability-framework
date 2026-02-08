@@ -1,11 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { capabilities } from "@/data/capabilities";
+import { roles, functions, getCapabilityIdsForRole, getCapabilityIdsForFunction } from "@/data/roleFilters";
 
 // Key Areas structure mapping capabilities to their key areas
-// ARMA-inspired vibrant colors while staying within UoA brand palette
+// ARMA-inspired vibrant colours while staying within UoA brand palette
 interface KeyArea {
   id: string;
   name: string;
@@ -19,8 +20,8 @@ const keyAreas: KeyArea[] = [
   {
     id: "engagement-impact",
     name: "Research Engagement and Impact",
-    description: "Building relationships, exchanging knowledge, and maximizing research outcomes",
-    color: { solid: "#00457D", hover: "#003561", light: "#E8F4FD" },
+    description: "Building relationships, exchanging knowledge, and maximising research outcomes",
+    color: { solid: "#0c0c48", hover: "#0a0a3a", light: "#e7e7ed" },
     icon: (
       <svg className="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
@@ -32,7 +33,7 @@ const keyAreas: KeyArea[] = [
     id: "development-culture",
     name: "Researcher Development and Culture",
     description: "Supporting researcher capabilities and fostering a positive research environment",
-    color: { solid: "#00877C", hover: "#006B63", light: "#E6F7F5" },
+    color: { solid: "#00877C", hover: "#006B63", light: "#e6f7f5" },
     icon: (
       <svg className="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
@@ -44,7 +45,7 @@ const keyAreas: KeyArea[] = [
     id: "proposal-development",
     name: "Research Proposal Development",
     description: "Identifying funding opportunities and supporting research proposals",
-    color: { solid: "#0098C3", hover: "#007A9C", light: "#E6F6FC" },
+    color: { solid: "#1f2bd4", hover: "#1929a8", light: "#e7e7ed" },
     icon: (
       <svg className="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -56,7 +57,7 @@ const keyAreas: KeyArea[] = [
     id: "project-risk",
     name: "Research Project and Risk Management",
     description: "Managing research projects from initiation through to monitoring and reporting",
-    color: { solid: "#D97706", hover: "#B45309", light: "#FEF6E7" },
+    color: { solid: "#D97706", hover: "#B45309", light: "#fef6e7" },
     icon: (
       <svg className="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 8l2 2 4-4" />
@@ -68,7 +69,7 @@ const keyAreas: KeyArea[] = [
     id: "policy-strategy",
     name: "Research Policy and Strategy",
     description: "Contributing to and implementing research policies and strategic frameworks",
-    color: { solid: "#4F2D7F", hover: "#3D2262", light: "#F3EEF8" },
+    color: { solid: "#4F2D7F", hover: "#3D2262", light: "#f3eef8" },
     icon: (
       <svg className="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
@@ -154,15 +155,26 @@ const capabilityMetadata: Record<string, { icon: React.ReactNode }> = {
 };
 
 // Component for expandable key area card (ARMA-inspired)
-function KeyAreaCard({ area }: { area: KeyArea }) {
+function KeyAreaCard({ area, visibleCapabilityIds, filterType }: { area: KeyArea; visibleCapabilityIds: string[] | null; filterType: 'role' | 'function' | null }) {
   const [isExpanded, setIsExpanded] = useState(true);
+  
+  // Get all capabilities in this area
   const areaCapabilities = capabilities.filter(cap => 
     area.capabilityIds.includes(cap.id)
   );
+  
+  // Check if any are mapped to the filter (if filter is active)
+  const hasMappedCapabilities = visibleCapabilityIds === null || 
+    areaCapabilities.some(cap => visibleCapabilityIds.includes(cap.id));
+  
+  // Don't render the card if no capabilities at all in this area
+  if (areaCapabilities.length === 0) {
+    return null;
+  }
 
   return (
     <div className="overflow-hidden">
-      {/* ARMA-inspired vibrant colored header card - Increased size for prominence */}
+      {/* ARMA-inspired vibrant coloured header card - Increased size for prominence */}
       <div 
         className="rounded-2xl transition-all duration-300 cursor-pointer"
         style={{ 
@@ -217,26 +229,29 @@ function KeyAreaCard({ area }: { area: KeyArea }) {
         >
           {areaCapabilities.map((cap, index) => {
             const metadata = capabilityMetadata[cap.id] || { icon: null };
+            const isMapped = visibleCapabilityIds === null || visibleCapabilityIds.includes(cap.id);
+            const isGreyedOut = !isMapped;
             
             return (
               <Link
                 key={cap.id}
                 href={`/explore?capability=${cap.id}`}
-                className="group flex items-center bg-white hover:bg-gray-50 transition-colors"
+                className={`group flex items-center transition-colors ${
+                  isGreyedOut 
+                    ? 'bg-gray-50 hover:bg-gray-100 opacity-50' 
+                    : 'bg-white hover:bg-gray-50'
+                }`}
                 style={{ 
-                  paddingLeft: '18px',
-                  paddingRight: '18px', 
-                  paddingTop: '16px',
-                  paddingBottom: '16px',
+                  padding: '16px 20px',
                   gap: '14px',
-                  borderBottom: index < areaCapabilities.length - 1 ? '2px solid #E5E5E5' : 'none'
+                  borderBottom: index < areaCapabilities.length - 1 ? '2px solid #e2e3e4' : 'none'
                 }}
               >
                 <div 
                   className="flex-shrink-0 rounded-lg flex items-center justify-center transition-colors"
                   style={{ 
-                    backgroundColor: area.color.light, 
-                    color: area.color.solid,
+                    backgroundColor: isGreyedOut ? '#f2f2f2' : area.color.light, 
+                    color: isGreyedOut ? '#afafc3' : area.color.solid,
                     width: '36px',
                     height: '36px',
                     fontSize: '0.95rem'
@@ -246,17 +261,30 @@ function KeyAreaCard({ area }: { area: KeyArea }) {
                 </div>
                 <div className="flex-1 min-w-0">
                   <h4 
-                    className="font-semibold text-[#333333] group-hover:text-[#00457D] transition-colors"
+                    className={`font-semibold transition-colors ${
+                      isGreyedOut 
+                        ? 'text-[#afafc3]' 
+                        : 'text-[#4a4a4c] group-hover:text-[#0c0c48]'
+                    }`}
                     style={{ fontSize: '0.95rem', lineHeight: '1.4' }}
                   >
                     {cap.name}
+                    {isGreyedOut && (
+                      <span className="ml-2 text-xs font-normal italic text-[#afafc3]">
+                        (not mapped to selected {filterType === 'role' ? 'role' : 'function'})
+                      </span>
+                    )}
                   </h4>
-                  <p className="text-[#666666] line-clamp-1" style={{ fontSize: '0.85rem', marginTop: '2px' }}>
+                  <p className={`line-clamp-1 ${isGreyedOut ? 'text-[#AAAAAA]' : 'text-[#6d6e71]'}`} style={{ fontSize: '0.85rem', marginTop: '2px' }}>
                     {cap.description}
                   </p>
                 </div>
                 <svg 
-                  className="flex-shrink-0 text-[#CCCCCC] group-hover:text-[#00457D] transition-colors"
+                  className={`flex-shrink-0 transition-colors ${
+                    isGreyedOut 
+                      ? 'text-[#d9d9d9]' 
+                      : 'text-[#d9d9d9] group-hover:text-[#0c0c48]'
+                  }`}
                   style={{ width: '18px', height: '18px' }}
                   fill="none" 
                   viewBox="0 0 24 24" 
@@ -275,49 +303,103 @@ function KeyAreaCard({ area }: { area: KeyArea }) {
 }
 
 export default function Home() {
+  const [selectedFilter, setSelectedFilter] = useState<string | null>(null);
+  const [filterType, setFilterType] = useState<'role' | 'function' | null>(null);
+  const [activeTab, setActiveTab] = useState<'role' | 'function'>('role');
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(false);
+      }
+    };
+    
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+  
+  // Determine which capabilities should be visible based on the selected filter
+  const visibleCapabilityIds = selectedFilter && filterType
+    ? filterType === 'role' 
+      ? getCapabilityIdsForRole(selectedFilter)
+      : getCapabilityIdsForFunction(selectedFilter)
+    : null; // null means show all capabilities
+  
+  // Filter roles and functions based on search query
+  const filteredRoles = roles.filter(role => 
+    role.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+  
+  const filteredFunctions = functions.filter(func => 
+    func.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+  
+  const handleFilterSelect = (type: 'role' | 'function', id: string) => {
+    setSelectedFilter(id);
+    setFilterType(type);
+    setIsDropdownOpen(false);
+    setSearchQuery('');
+  };
+  
+  const clearFilter = () => {
+    setSelectedFilter(null);
+    setFilterType(null);
+    setSearchQuery('');
+  };
+  
+  const handleTabChange = (tab: 'role' | 'function') => {
+    setActiveTab(tab);
+    setSearchQuery('');
+  };
+  
   return (
-    <div className="w-full min-h-screen bg-[#F5F5F5]">
+    <div className="w-full min-h-screen bg-[#f2f2f2]">
       {/* Hero Section - UoA Navy background with clean white text */}
-      <section className="w-full bg-[#00457D] text-white">
+      <section className="w-full bg-[#0c0c48] text-white">
         <div className="max-w-[1140px] mx-auto px-6 lg:px-8 py-16 md:py-20">
           <div className="max-w-full mx-auto text-center">
             <h1 className="text-3xl md:text-4xl font-bold mb-5 leading-tight" style={{ color: '#FFFFFF' }}>
               RMA Capability Framework
             </h1>
             <p className="text-lg leading-relaxed mb-8" style={{ color: '#FFFFFF' }}>
-              A professional development tool for Research Management & Administration staff at Waipapa Taumata Rau, University of Auckland. 
-              Explore capabilities, assess your skills, and create personalized development plans.
+              A professional development tool for Research Management &amp; Administration staff at Waipapa Taumata Rau, University of Auckland. 
+              Explore capabilities, assess your skills, and create personalised development plans.
             </p>
             <div className="flex items-center justify-center gap-4 flex-wrap xl:flex-nowrap mb-8">
               <Link 
-                href="/assess" 
-                className="inline-flex items-center justify-center gap-3 min-w-[260px] px-10 py-5 bg-white text-[#00457D] font-semibold text-lg rounded-xl hover:bg-[#F5F5F5] transition-all shadow-lg hover:shadow-xl"
-              >
-                Start Self-Assessment
-                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                </svg>
-              </Link>
-              
-              {/* Download Framework Button */}
-              <a 
-                href="/api/download" 
-                download
-                className="inline-flex items-center justify-center gap-3 min-w-[280px] px-12 py-5 bg-[#EAAB00] text-white font-semibold text-lg rounded-xl hover:bg-[#C4940A] transition-all shadow-lg hover:shadow-xl"
-              >
-                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
-                Download the Framework
-              </a>
-              
-              <Link 
                 href="/how-to-use" 
-                className="inline-flex items-center justify-center gap-3 min-w-[260px] px-10 py-5 bg-white text-[#00457D] font-semibold text-lg rounded-xl hover:bg-[#F5F5F5] transition-all shadow-lg hover:shadow-xl"
+                className="inline-flex items-center justify-center gap-3 min-w-[260px] px-10 py-5 bg-white text-[#0c0c48] font-semibold text-lg rounded-xl hover:bg-[#f2f2f2] transition-all shadow-lg hover:shadow-xl"
               >
                 How to use this tool
                 <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                </svg>
+              </Link>
+              
+              {/* Download Framework Button - dark background with white text for clear contrast */}
+              <a 
+                href="/api/download" 
+                download
+                className="inline-flex items-center justify-center gap-3 min-w-[280px] px-12 py-5 font-semibold text-lg rounded-xl border-2 border-white/50 hover:bg-white/10 transition-all shadow-lg hover:shadow-xl"
+                style={{ backgroundColor: '#0c0c48', color: '#FFFFFF' }}
+              >
+                <svg className="w-6 h-6 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} style={{ color: '#FFFFFF' }}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                <span style={{ color: '#FFFFFF' }}>Download the Framework</span>
+              </a>
+              
+              <Link 
+                href="/assess" 
+                className="inline-flex items-center justify-center gap-3 min-w-[260px] px-10 py-5 bg-white text-[#0c0c48] font-semibold text-lg rounded-xl hover:bg-[#f2f2f2] transition-all shadow-lg hover:shadow-xl"
+              >
+                Start Self-Assessment
+                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
                 </svg>
               </Link>
             </div>
@@ -325,39 +407,329 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Framework Overview Section */}
-      <section className="w-full bg-[#F5F5F5]">
-        <div className="max-w-[1140px] mx-auto px-6 lg:px-8 py-16 md:py-20">
-          {/* Section heading - Increased spacing below */}
-          <div className="text-center" style={{ marginBottom: '60px' }}>
-            <h2 className="text-2xl md:text-3xl font-bold text-[#333333] mb-4">
-              Framework Overview
+      {/* About the Framework Section */}
+      <section className="w-full bg-white border-b border-[#e2e3e4]">
+        <div className="max-w-[1140px] mx-auto px-6 lg:px-8" style={{ paddingTop: '80px', paddingBottom: '80px' }}>
+          <div className="text-center" style={{ marginBottom: '48px' }}>
+            <h2 className="text-2xl md:text-3xl font-bold text-[#4a4a4c] mb-6">
+              About the Framework
             </h2>
-            <p className="text-base md:text-lg text-[#666666] leading-relaxed max-w-[700px] mx-auto">
-              The RMA Capability Framework comprises <strong>10 core capabilities</strong> organized across <strong>5 key functional areas</strong>. 
-              Click on any area below to explore detailed descriptors at Foundation, Intermediate, Advanced, and Exemplar levels.
+            <p className="text-base md:text-lg text-[#6d6e71] leading-relaxed max-w-[900px] mx-auto mb-5">
+              The RMA Capability Framework identifies the core capabilities required for Research Management &amp; Administration staff to perform their roles effectively. It was developed through a consultation process with interest-holders across the University and the RMA function.
             </p>
+            <p className="text-base md:text-lg text-[#6d6e71] leading-relaxed max-w-[900px] mx-auto">
+              The framework comprises <strong>10 core capabilities</strong> organised across <strong>5 key functional areas</strong>. Click on any area below to explore detailed descriptors at Foundation, Intermediate, Advanced, and Exemplar levels.
+            </p>
+          </div>
+
+          {/* Key information cards */}
+          <div className="grid md:grid-cols-3" style={{ gap: '32px', marginBottom: '48px' }}>
+            <div className="bg-[#f2f2f2] rounded-xl border border-[#e2e3e4]" style={{ padding: '40px' }}>
+              <div className="w-12 h-12 rounded-lg bg-[#0c0c48]/10 flex items-center justify-center" style={{ marginBottom: '24px' }}>
+                <svg className="w-6 h-6 text-[#0c0c48]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+              </div>
+              <h3 className="font-bold text-[#4a4a4c] text-lg" style={{ marginBottom: '16px' }}>Who is it for?</h3>
+              <p className="text-base text-[#6d6e71] leading-relaxed">
+                For all RMA staff at all levels, or anyone interested in pursuing a career in RMA. Collectively, RMA staff contribute to the full range of capabilities — no single person is expected to perform all of them.
+              </p>
+            </div>
+            <div className="bg-[#f2f2f2] rounded-xl border border-[#e2e3e4]" style={{ padding: '40px' }}>
+              <div className="w-12 h-12 rounded-lg bg-[#00877C]/10 flex items-center justify-center" style={{ marginBottom: '24px' }}>
+                <svg className="w-6 h-6 text-[#00877C]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <h3 className="font-bold text-[#4a4a4c] text-lg" style={{ marginBottom: '16px' }}>Purpose</h3>
+              <p className="text-base text-[#6d6e71] leading-relaxed">
+                Understand your individual skills, identify capability gaps, and create personalised development plans. This tool supports development conversations — it is not for performance evaluation.
+              </p>
+            </div>
+            <div className="bg-[#f2f2f2] rounded-xl border border-[#e2e3e4]" style={{ padding: '40px' }}>
+              <div className="w-12 h-12 rounded-lg bg-[#1f2bd4]/10 flex items-center justify-center" style={{ marginBottom: '24px' }}>
+                <svg className="w-6 h-6 text-[#1f2bd4]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                </svg>
+              </div>
+              <h3 className="font-bold text-[#4a4a4c] text-lg" style={{ marginBottom: '16px' }}>Māori Alignment</h3>
+              <p className="text-base text-[#6d6e71] leading-relaxed">
+                The framework is aligned to Whāia Te Hihiri and Ngā Taumata Tutukinga, offering culturally responsive behavioural indicators that support Māori-informed research pathways.
+              </p>
+            </div>
+          </div>
+
+          {/* Proficiency Level Descriptors */}
+          <div className="bg-[#f2f2f2] rounded-xl border border-[#e2e3e4]" style={{ padding: '48px' }}>
+            <h3 className="font-bold text-[#4a4a4c] text-center text-xl" style={{ marginBottom: '20px' }}>Proficiency Levels</h3>
+            <p className="text-base text-[#6d6e71] text-center max-w-[800px] mx-auto leading-relaxed" style={{ marginBottom: '40px' }}>
+              Each capability is assessed across four proficiency levels. Not all levels need to be attained — it depends on your role and objectives.
+            </p>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4" style={{ gap: '32px' }}>
+              <div className="bg-white rounded-lg border border-[#e2e3e4]" style={{ padding: '32px' }}>
+                <div className="flex items-center" style={{ gap: '12px', marginBottom: '16px' }}>
+                  <span className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold text-white" style={{ backgroundColor: 'rgba(0,69,125,0.4)' }}>1</span>
+                  <span className="font-semibold text-[#4a4a4c] text-base">Foundation</span>
+                </div>
+                <p className="text-sm text-[#6d6e71] leading-relaxed">Core knowledge and awareness. Beginning to apply skills with guidance and support.</p>
+              </div>
+              <div className="bg-white rounded-lg border border-[#e2e3e4]" style={{ padding: '32px' }}>
+                <div className="flex items-center" style={{ gap: '12px', marginBottom: '16px' }}>
+                  <span className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold text-white" style={{ backgroundColor: 'rgba(0,69,125,0.6)' }}>2</span>
+                  <span className="font-semibold text-[#4a4a4c] text-base">Intermediate</span>
+                </div>
+                <p className="text-sm text-[#6d6e71] leading-relaxed">Working independently with developing expertise. Actively contributing to team outcomes.</p>
+              </div>
+              <div className="bg-white rounded-lg border border-[#e2e3e4]" style={{ padding: '32px' }}>
+                <div className="flex items-center" style={{ gap: '12px', marginBottom: '16px' }}>
+                  <span className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold text-white" style={{ backgroundColor: 'rgba(0,69,125,0.8)' }}>3</span>
+                  <span className="font-semibold text-[#4a4a4c] text-base">Advanced</span>
+                </div>
+                <p className="text-sm text-[#6d6e71] leading-relaxed">Leading and mentoring others. Driving strategy and influencing practice across the organisation.</p>
+              </div>
+              <div className="bg-white rounded-lg border border-[#e2e3e4]" style={{ padding: '32px' }}>
+                <div className="flex items-center" style={{ gap: '12px', marginBottom: '16px' }}>
+                  <span className="w-8 h-8 rounded-full bg-[#0c0c48] flex items-center justify-center text-sm font-bold text-white">4</span>
+                  <span className="font-semibold text-[#4a4a4c] text-base">Exemplar</span>
+                </div>
+                <p className="text-sm text-[#6d6e71] leading-relaxed">Sector-leading expertise. Shaping institutional direction and transforming practice at a systemic level.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Capabilities Section */}
+      <section className="w-full bg-[#f2f2f2]" style={{ marginTop: 0 }}>
+        <div className="max-w-[1140px] mx-auto px-6 lg:px-8" style={{ paddingTop: '56px', paddingBottom: '56px' }}>
+          
+          {/* Role / Function Filter */}
+          <div className="mb-12" style={{ paddingTop: '32px', paddingBottom: '32px' }}>
+            <div className="bg-white rounded-xl border-2 border-[#e2e3e4] shadow-sm" style={{ padding: '36px 48px' }}>
+              {/* Header - Centered */}
+              <div className="text-center" style={{ marginBottom: '32px' }}>
+                <h3 className="text-xl font-semibold text-[#4a4a4c]" style={{ marginBottom: '12px' }}>
+                  Filter by Role or Function
+                </h3>
+                <p className="text-sm text-[#6d6e71] max-w-[600px] mx-auto">
+                  Select a role or function to see relevant capabilities. Click again to show all capabilities.
+                </p>
+              </div>
+              
+              {/* Active filter display - Centered */}
+              {selectedFilter && (
+                <div className="flex items-center justify-center gap-3 p-5 bg-[#E8F4FD] rounded-lg border border-[#1f2bd4] max-w-[700px] mx-auto" style={{ marginBottom: '32px' }}>
+                  <svg className="w-5 h-5 text-[#1f2bd4] flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+                  </svg>
+                  <div className="flex-1 text-center">
+                    <p className="text-sm font-medium text-[#0c0c48]">
+                      Filtering by {filterType === 'role' ? 'Role' : 'Function'}:{' '}
+                      <span className="font-bold">
+                        {filterType === 'role' 
+                          ? roles.find(r => r.id === selectedFilter)?.name 
+                          : functions.find(f => f.id === selectedFilter)?.name}
+                      </span>
+                    </p>
+                  </div>
+                  <button
+                    onClick={clearFilter}
+                    className="bg-white text-[#0c0c48] text-sm font-semibold rounded-lg border border-[#1f2bd4] hover:bg-[#f2f2f2] transition-colors flex-shrink-0"
+                    style={{ padding: '12px 24px' }}
+                  >
+                    Show All
+                  </button>
+                </div>
+              )}
+              
+              {/* Tab Selector for Role vs Function */}
+              <div className="flex justify-center" style={{ marginBottom: '24px' }}>
+                <div className="inline-flex rounded-lg border-2 border-[#d9d9d9] bg-white overflow-hidden">
+                  <button
+                    onClick={() => handleTabChange('role')}
+                    className={`flex items-center gap-2 font-medium text-sm transition-all ${
+                      activeTab === 'role'
+                        ? 'bg-[#0c0c48] text-white'
+                        : 'bg-white text-[#4a4a4c] hover:bg-[#f3f3f6]'
+                    }`}
+                    style={{ padding: '12px 28px' }}
+                  >
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
+                    Roles ({roles.length})
+                  </button>
+                  <button
+                    onClick={() => handleTabChange('function')}
+                    className={`flex items-center gap-2 font-medium text-sm transition-all border-l-2 border-[#d9d9d9] ${
+                      activeTab === 'function'
+                        ? 'bg-[#00877C] text-white'
+                        : 'bg-white text-[#4a4a4c] hover:bg-[#f3f3f6]'
+                    }`}
+                    style={{ padding: '12px 28px' }}
+                  >
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    </svg>
+                    Functions ({functions.length})
+                  </button>
+                </div>
+              </div>
+              
+              {/* Searchable Selector */}
+              <div className="max-w-[600px] mx-auto" ref={dropdownRef}>
+                {/* Search Input */}
+                <div className="relative">
+                  <div className="relative">
+                    <input
+                      type="text"
+                      placeholder={`Search ${activeTab === 'role' ? 'roles' : 'functions'}... (e.g., ${activeTab === 'role' ? 'Research, Grant, Coordinator' : 'Operations, Strategy, Development'})`}
+                      value={searchQuery}
+                      onChange={(e) => {
+                        setSearchQuery(e.target.value);
+                        setIsDropdownOpen(true);
+                      }}
+                      onFocus={() => setIsDropdownOpen(true)}
+                      className="w-full border-2 border-[#d9d9d9] rounded-lg focus:border-[#1f2bd4] focus:ring-2 focus:ring-[#1f2bd4]/20 transition-all text-[#4a4a4c]"
+                      style={{ 
+                        padding: '16px 48px 16px 48px',
+                        fontSize: '16px',
+                      }}
+                    />
+                    <svg 
+                      className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#6d6e71] pointer-events-none" 
+                      fill="none" 
+                      viewBox="0 0 24 24" 
+                      stroke="currentColor" 
+                      strokeWidth={2}
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                    {searchQuery && (
+                      <button
+                        onClick={() => {
+                          setSearchQuery('');
+                          setIsDropdownOpen(false);
+                        }}
+                        className="absolute right-4 top-1/2 -translate-y-1/2 text-[#6d6e71] hover:text-[#4a4a4c] transition-colors"
+                      >
+                        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </button>
+                    )}
+                  </div>
+                  
+                  {/* Dropdown List */}
+                  {isDropdownOpen && (activeTab === 'role' ? filteredRoles.length > 0 : filteredFunctions.length > 0) && (
+                    <div className="absolute z-50 w-full mt-2 bg-white rounded-lg border-2 border-[#d9d9d9] shadow-xl max-h-[400px] overflow-y-auto">
+                      {activeTab === 'role' ? (
+                        filteredRoles.map((role) => (
+                          <button
+                            key={role.id}
+                            onClick={() => handleFilterSelect('role', role.id)}
+                            className={`w-full text-left transition-colors border-b border-[#e2e3e4] last:border-b-0 ${
+                              selectedFilter === role.id && filterType === 'role'
+                                ? 'bg-[#0c0c48] text-white'
+                                : 'hover:bg-[#f3f3f6] text-[#4a4a4c]'
+                            }`}
+                            style={{ padding: '16px 20px' }}
+                          >
+                            <div className="font-medium text-sm">{role.name}</div>
+                            {role.description && (
+                              <div className={`text-xs mt-1 ${
+                                selectedFilter === role.id && filterType === 'role' ? 'text-white/80' : 'text-[#6d6e71]'
+                              }`}>
+                                {role.description}
+                              </div>
+                            )}
+                          </button>
+                        ))
+                      ) : (
+                        filteredFunctions.map((func) => (
+                          <button
+                            key={func.id}
+                            onClick={() => handleFilterSelect('function', func.id)}
+                            className={`w-full text-left transition-colors border-b border-[#e2e3e4] last:border-b-0 ${
+                              selectedFilter === func.id && filterType === 'function'
+                                ? 'bg-[#00877C] text-white'
+                                : 'hover:bg-[#f3f3f6] text-[#4a4a4c]'
+                            }`}
+                            style={{ padding: '16px 20px' }}
+                          >
+                            <div className="font-medium text-sm">{func.name}</div>
+                            {func.description && (
+                              <div className={`text-xs mt-1 ${
+                                selectedFilter === func.id && filterType === 'function' ? 'text-white/80' : 'text-[#6d6e71]'
+                              }`}>
+                                {func.description}
+                              </div>
+                            )}
+                          </button>
+                        ))
+                      )}
+                    </div>
+                  )}
+                  
+                  {/* No results message */}
+                  {isDropdownOpen && searchQuery && (activeTab === 'role' ? filteredRoles.length === 0 : filteredFunctions.length === 0) && (
+                    <div className="absolute z-50 w-full mt-2 bg-white rounded-lg border-2 border-[#d9d9d9] shadow-xl">
+                      <div className="p-6 text-center text-[#6d6e71]">
+                        <svg className="w-8 h-8 mx-auto mb-2 text-[#afafc3]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <p className="text-sm">No {activeTab === 'role' ? 'roles' : 'functions'} found matching &quot;{searchQuery}&quot;</p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+                
+                {/* Hint text */}
+                <p className="text-xs text-[#6d6e71] text-center mt-3">
+                  {activeTab === 'role' ? 'Type to search roles' : 'Type to search functions'} or browse the full list
+                </p>
+              </div>
+            </div>
           </div>
           
           {/* ARMA-inspired Key Area Cards - Vertical layout */}
           <div className="flex flex-col" style={{ gap: '48px' }}>
             {keyAreas.map((area) => (
-              <KeyAreaCard key={area.id} area={area} />
+              <KeyAreaCard key={area.id} area={area} visibleCapabilityIds={visibleCapabilityIds} filterType={filterType} />
             ))}
           </div>
+          
+          {/* Info message when filter is active */}
+          {selectedFilter && (
+            <div className="text-center py-8">
+              <div className="inline-flex flex-col items-center gap-3 p-6 bg-[#E8F4FD] rounded-xl border-2 border-[#1f2bd4]/30">
+                <svg className="w-10 h-10 text-[#1f2bd4]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <div>
+                  <h3 className="text-base font-semibold text-[#0c0c48] mb-1">
+                    Filter Active
+                  </h3>
+                  <p className="text-sm text-[#4a4a4c]">
+                    Capabilities mapped to your selected {filterType === 'role' ? 'role' : 'function'} are shown normally. Other capabilities appear greyed out but are still accessible if needed.
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </section>
 
       {/* Reference Links Section */}
-      <section className="w-full bg-[#F5F5F5] border-t border-[#E5E5E5]">
+      <section className="w-full bg-[#f2f2f2] border-t border-[#e2e3e4]">
         <div className="max-w-[1140px] mx-auto px-6 lg:px-8 py-8">
           <div className="flex flex-wrap items-center justify-center gap-4 text-sm">
-            <span className="text-[#666666]">Related resources:</span>
+            <span className="text-[#6d6e71]">Related resources:</span>
             <a 
               href="https://research-hub.auckland.ac.nz/induction-skills-and-development/research-management-and-administration-rma-staff-development"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-[#0098C3] hover:text-[#00457D] font-medium transition-colors"
+              className="inline-flex items-center gap-1 text-[#1f2bd4] hover:text-[#0c0c48] font-medium transition-colors"
             >
               UoA Research Hub
               <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>

@@ -25,21 +25,20 @@ export function Navbar() {
   };
 
   return (
-    <nav className="w-full bg-[#00457D] sticky top-0 z-50 no-print">
-      {/* Main navbar container */}
-      <div className="max-w-[1200px] mx-auto px-6 lg:px-8">
-        <div className="flex items-center justify-between h-[72px]">
-          {/* Official UoA Logo - Reversed version for dark background */}
-          <Link href="/" className="flex items-center hover:opacity-90 transition-opacity flex-shrink-0">
+    <nav className="w-full bg-[#0c0c48] sticky top-0 z-50 no-print">
+      <div className="w-full">
+        <div className="flex items-center justify-between" style={{ height: '80px' }}>
+          {/* Official UoA Logo */}
+          <Link href="/" className="flex items-center hover:opacity-90 transition-opacity flex-shrink-0" style={{ paddingLeft: '32px' }}>
             <img 
               src="/uoa_corporate_branding/Primary Logo_PNG/Large Primary Logo_PNG/UoA-Logo-Primary-RGB-Reversed-Large.png" 
               alt="Waipapa Taumata Rau - University of Auckland" 
-              className="h-14 w-auto object-contain"
+              style={{ height: '48px', width: 'auto', objectFit: 'contain' }}
             />
           </Link>
           
-          {/* Desktop Navigation - Shows at md breakpoint (768px+) */}
-          <div className="hidden md:flex items-center gap-1">
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center" style={{ paddingRight: '32px', gap: '8px' }}>
             {navItems.map((item) => {
               const active = isActive(item.href);
               return (
@@ -47,13 +46,16 @@ export function Navbar() {
                   key={item.href}
                   href={item.href}
                   className={`
-                    px-3 lg:px-4 py-2 text-sm font-medium transition-all duration-200 whitespace-nowrap
+                    text-sm font-medium transition-all duration-200 whitespace-nowrap rounded-lg
                     ${active
-                      ? "text-white border-b-2 border-white font-semibold"
-                      : "text-white hover:text-white border-b-2 border-transparent hover:border-white/50"
+                      ? "bg-white/20 text-white font-semibold"
+                      : "text-white hover:text-white hover:bg-white/10"
                     }
                   `}
-                  style={{ color: active ? '#FFFFFF' : '#FFFFFF' }}
+                  style={{ 
+                    color: '#FFFFFF',
+                    padding: '10px 20px',
+                  }}
                 >
                   {item.label}
                 </Link>
@@ -61,10 +63,11 @@ export function Navbar() {
             })}
           </div>
 
-          {/* Mobile menu button - Hidden at md breakpoint */}
+          {/* Mobile menu button */}
           <button
             type="button"
-            className="md:hidden p-2 text-white hover:bg-white/10 rounded-lg transition-colors"
+            className="md:hidden text-white hover:bg-white/10 rounded-lg transition-colors"
+            style={{ padding: '10px', marginRight: '24px' }}
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label="Toggle navigation menu"
           >
@@ -81,10 +84,10 @@ export function Navbar() {
         </div>
       </div>
 
-      {/* Mobile Navigation Menu - Hidden at md breakpoint */}
+      {/* Mobile Navigation Menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden bg-[#003561] border-t border-white/10">
-          <div className="px-6 py-4 space-y-1">
+        <div className="md:hidden bg-[#0a0a3a] border-t border-white/10">
+          <div style={{ padding: '16px 24px' }}>
             {navItems.map((item) => {
               const active = isActive(item.href);
               return (
@@ -93,12 +96,13 @@ export function Navbar() {
                   href={item.href}
                   onClick={() => setMobileMenuOpen(false)}
                   className={`
-                    block px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200
+                    block text-sm font-medium rounded-lg transition-all duration-200
                     ${active
                       ? "bg-white/15 text-white font-semibold"
                       : "text-white hover:text-white hover:bg-white/10"
                     }
                   `}
+                  style={{ padding: '14px 20px', marginBottom: '4px' }}
                 >
                   {item.label}
                 </Link>

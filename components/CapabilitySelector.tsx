@@ -11,12 +11,12 @@ export function CapabilitySelector({ currentCapabilityId }: { currentCapabilityI
     <div className="relative z-50">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 px-4 py-2.5 bg-white/20 border border-white/30 rounded-lg text-sm font-medium text-white hover:bg-white/30 transition-colors backdrop-blur-sm"
+        className="flex items-center gap-3 px-6 py-3.5 bg-white/20 border-2 border-white/30 rounded-lg text-lg font-semibold text-white hover:bg-white/30 transition-colors backdrop-blur-sm"
         style={{ color: '#FFFFFF' }}
       >
         <span>Jump to Capability</span>
         <svg 
-          className={`w-4 h-4 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} 
+          className={`w-6 h-6 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} 
           fill="none" 
           viewBox="0 0 24 24" 
           stroke="currentColor"
@@ -32,7 +32,7 @@ export function CapabilitySelector({ currentCapabilityId }: { currentCapabilityI
             className="fixed inset-0 z-10" 
             onClick={() => setIsOpen(false)} 
           />
-          <div className="absolute right-0 mt-2 w-80 bg-white border border-[#CCCCCC] rounded-lg shadow-xl overflow-hidden z-20">
+          <div className="absolute right-0 mt-2 w-80 bg-white border border-[#d9d9d9] rounded-lg shadow-xl overflow-hidden z-20">
             <div className="max-h-[400px] overflow-y-auto p-2">
               {capabilities.map((cap, index) => {
                 const isCurrent = cap.id === currentCapabilityId;
@@ -46,12 +46,12 @@ export function CapabilitySelector({ currentCapabilityId }: { currentCapabilityI
                       w-full text-left px-4 py-3 rounded-lg transition-all duration-200 
                       flex items-center gap-3 group
                       ${isCurrent 
-                        ? 'bg-[#00457D]/10 text-[#00457D]' 
-                        : 'hover:bg-[#F1F1F1] text-[#333333]'}
+                        ? 'bg-[#0c0c48]/10 text-[#0c0c48]' 
+                        : 'hover:bg-[#f3f3f6] text-[#4a4a4c]'}
                     `}
                   >
                     <div className={`flex-shrink-0 w-6 h-6 rounded flex items-center justify-center text-xs font-semibold ${
-                      isCurrent ? 'bg-[#00457D] text-white' : 'bg-[#F1F1F1] text-[#666666]'
+                      isCurrent ? 'bg-[#0c0c48] text-white' : 'bg-[#f3f3f6] text-[#6d6e71]'
                     }`}>
                       {index + 1}
                     </div>
@@ -61,7 +61,7 @@ export function CapabilitySelector({ currentCapabilityId }: { currentCapabilityI
                       </div>
                     </div>
                     {isCurrent && (
-                      <div className="w-2 h-2 rounded-full bg-[#00457D]" />
+                      <div className="w-2 h-2 rounded-full bg-[#0c0c48]" />
                     )}
                   </Link>
                 );

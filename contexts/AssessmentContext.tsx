@@ -7,6 +7,7 @@ interface AssessmentContextType {
   assessmentState: AssessmentState;
   updateResponse: (capabilityId: string, response: Partial<AssessmentResponse>) => void;
   getResponse: (capabilityId: string) => AssessmentResponse | null;
+  removeCapability: (capabilityId: string) => void;
   clearAssessment: () => void;
   getCompletedCount: () => number;
 }
@@ -94,6 +95,18 @@ export function AssessmentProvider({ children }: { children: ReactNode }) {
     return assessmentState.responses[capabilityId] || null;
   }, [assessmentState.responses]);
 
+  const removeCapability = useCallback((capabilityId: string) => {
+    setAssessmentState((prev) => {
+      const newResponses = { ...prev.responses };
+      delete newResponses[capabilityId];
+      
+      return {
+        responses: newResponses,
+        lastUpdated: new Date().toISOString(),
+      };
+    });
+  }, []);
+
   const clearAssessment = useCallback(() => {
     setAssessmentState(defaultState);
     try {
@@ -115,6 +128,7 @@ export function AssessmentProvider({ children }: { children: ReactNode }) {
         assessmentState,
         updateResponse,
         getResponse,
+        removeCapability,
         clearAssessment,
         getCompletedCount,
       }}

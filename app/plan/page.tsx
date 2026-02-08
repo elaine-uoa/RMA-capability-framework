@@ -7,7 +7,7 @@ import { useAssessment } from "@/contexts/AssessmentContext";
 import { CapabilityLevel, SelectedDescriptor } from "@/types";
 
 export default function PlanPage() {
-  const { assessmentState, getResponse, updateResponse } = useAssessment();
+  const { assessmentState, getResponse, updateResponse, removeCapability } = useAssessment();
   
   // Get ALL included capabilities (with or without development focus)
   const allIncludedCapabilities = capabilities.filter((cap) => {
@@ -48,6 +48,9 @@ export default function PlanPage() {
   
   // Save status
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
+  
+  // Confirmation dialog for removing capability
+  const [capabilityToRemove, setCapabilityToRemove] = useState<{ id: string; name: string } | null>(null);
 
   // Load existing notes from assessment state
   useEffect(() => {
@@ -62,7 +65,7 @@ export default function PlanPage() {
     
     setDevelopmentNotes(loadedNotes);
     
-    // Set first included capability as active (prioritize those with focus)
+    // Set first included capability as active (prioritise those with focus)
     if (allIncludedCapabilities.length > 0 && !activeCapabilityTab) {
       const firstWithFocus = allIncludedCapabilities.find(cap => {
         const response = assessmentState.responses[cap.id];
@@ -97,6 +100,21 @@ export default function PlanPage() {
     }, 100);
   };
 
+  const handleRemoveCapability = (capabilityId: string) => {
+    // Remove from context (clears all data: descriptors, notes, etc.)
+    removeCapability(capabilityId);
+    
+    // Clear local notes state
+    setDevelopmentNotes(prev => {
+      const updated = { ...prev };
+      delete updated[capabilityId];
+      return updated;
+    });
+    
+    // Close confirmation dialog
+    setCapabilityToRemove(null);
+  };
+
   const getLevelLabel = (level: CapabilityLevel | null): string => {
     if (!level) return "Not set";
     return level.charAt(0) + level.slice(1).toLowerCase();
@@ -117,25 +135,25 @@ export default function PlanPage() {
   }, 0);
 
   return (
-    <div className="w-full min-h-screen bg-[#F1F1F1] flex flex-col items-center">
+    <div className="w-full min-h-screen bg-[#f3f3f6] flex flex-col items-center">
       {/* Header */}
-      <header className="w-full bg-white border-b border-[#CCCCCC] flex justify-center">
+      <header className="w-full bg-white border-b border-[#d9d9d9] flex justify-center">
         <div className="w-full max-w-[1140px] px-8 lg:px-12 py-8">
-          <div className="bg-[#00877C]/10 border border-[#00877C]/20 text-[#333333] rounded-lg p-4 mb-6 no-print">
+          <div className="bg-[#00877C]/10 border border-[#00877C]/20 text-[#4a4a4c] rounded-lg p-4 mb-6 no-print">
             <div className="font-semibold flex items-center gap-2 text-[#00877C]">
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
               </svg>
               Add Reflection & Action Notes
             </div>
-            <p className="text-sm text-[#333333] mt-1">
-              Write development notes for your included capabilities. Add specific actions, resources, or support needed to discuss with your manager.
+            <p className="text-sm text-[#4a4a4c] mt-1">
+              Write development notes for your included capabilities. Add specific actions, resources, or support needed for your development conversation.
             </p>
           </div>
 
           <div className="text-center">
-            <h1 className="text-3xl md:text-4xl font-bold text-[#333333] mb-2">Development Plan</h1>
-            <p className="text-[#666666]">
+            <h1 className="text-3xl md:text-4xl font-bold text-[#4a4a4c] mb-2">Development Plan</h1>
+            <p className="text-[#6d6e71]">
               {allIncludedCapabilities.length > 0 ? (
                 <>{allIncludedCapabilities.length} capabilit{allIncludedCapabilities.length !== 1 ? 'ies' : 'y'} included
                 {totalFocusItems > 0 && <> • {totalFocusItems} development focus item{totalFocusItems !== 1 ? 's' : ''}</>}
@@ -154,19 +172,19 @@ export default function PlanPage() {
         
         {allIncludedCapabilities.length === 0 ? (
           <div className="space-y-12">
-            <div className="bg-white rounded-lg border border-[#CCCCCC] p-12 text-center">
+            <div className="bg-white rounded-lg border border-[#d9d9d9] p-12 text-center">
               <div className="w-16 h-16 rounded-full bg-[#00877C]/10 flex items-center justify-center mx-auto mb-4">
                 <svg className="w-8 h-8 text-[#00877C]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
-              <h2 className="text-2xl font-bold text-[#333333] mb-2">No Capabilities Included Yet</h2>
-              <p className="text-[#666666] mb-6 max-w-md mx-auto">
+              <h2 className="text-2xl font-bold text-[#4a4a4c] mb-2">No Capabilities Included Yet</h2>
+              <p className="text-[#6d6e71] mb-6 max-w-md mx-auto">
                 Go to the self-assessment page to assess capabilities or include them in your development plan.
               </p>
               <Link
                 href="/assess"
-                className="inline-flex items-center gap-2 px-6 py-3 bg-[#0098C3] rounded-lg font-semibold hover:bg-[#007A9C] transition-colors"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-[#1f2bd4] rounded-lg font-semibold hover:bg-[#1929a8] transition-colors"
                 style={{ color: 'white' }}
               >
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -178,9 +196,9 @@ export default function PlanPage() {
             
             {/* Quick add capabilities section */}
             {unassessedCapabilities.length > 0 && (
-              <div className="bg-[#F1F1F1] rounded-lg border border-[#E5E5E5] p-6">
-                <h3 className="text-lg font-semibold text-[#333333] mb-3">Or Add Capabilities Directly</h3>
-                <p className="text-sm text-[#666666] mb-4">Include capabilities to write development notes for:</p>
+              <div className="bg-[#f3f3f6] rounded-lg border border-[#e2e3e4] p-6">
+                <h3 className="text-lg font-semibold text-[#4a4a4c] mb-3">Or Add Capabilities Directly</h3>
+                <p className="text-sm text-[#6d6e71] mb-4">Include capabilities to write development notes for:</p>
                 <div className="flex flex-wrap gap-3">
                   {unassessedCapabilities.map(cap => (
                     <button
@@ -194,16 +212,13 @@ export default function PlanPage() {
                           developmentFocus: [],
                         });
                       }}
-                      className="inline-flex items-center gap-2 bg-white border border-[#CCCCCC] text-[#333333] rounded-lg font-semibold hover:bg-[#F1F1F1] hover:border-[#0098C3] transition-colors"
+                      className="inline-flex items-center gap-2 bg-white border border-[#d9d9d9] text-[#4a4a4c] rounded-lg font-semibold hover:bg-[#f3f3f6] hover:border-[#1f2bd4] transition-colors"
                       style={{
-                        paddingLeft: '20px',
-                        paddingRight: '20px',
-                        paddingTop: '10px',
-                        paddingBottom: '10px',
+                        padding: '12px 24px',
                         fontSize: '15px'
                       }}
                     >
-                      <svg className="w-4 h-4 text-[#666666]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <svg className="w-4 h-4 text-[#6d6e71]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
                       </svg>
                       {cap.name}
@@ -229,16 +244,13 @@ export default function PlanPage() {
                       key={cap.id}
                       onClick={() => setActiveCapabilityTab(cap.id)}
                       style={{
-                        paddingLeft: '24px',
-                        paddingRight: '24px',
-                        paddingTop: '12px',
-                        paddingBottom: '12px'
+                        padding: '14px 28px'
                       }}
                       className={`
                         rounded-lg text-base font-semibold transition-all
                         ${isActive 
                           ? 'bg-[#00877C] text-white' 
-                          : 'bg-white border border-[#CCCCCC] text-[#333333] hover:border-[#0098C3] hover:text-[#0098C3]'}
+                          : 'bg-white border border-[#d9d9d9] text-[#4a4a4c] hover:border-[#1f2bd4] hover:text-[#1f2bd4]'}
                       `}
                     >
                       {cap.name}
@@ -246,10 +258,7 @@ export default function PlanPage() {
                         <span 
                           className={`ml-3 rounded-full text-xs font-bold ${isActive ? 'bg-white text-[#00877C]' : 'bg-[#00877C] text-white'}`}
                           style={{ 
-                            paddingLeft: '10px', 
-                            paddingRight: '10px', 
-                            paddingTop: '4px', 
-                            paddingBottom: '4px',
+                            padding: '6px 14px',
                             minWidth: '28px',
                             display: 'inline-flex',
                             alignItems: 'center',
@@ -260,12 +269,9 @@ export default function PlanPage() {
                         </span>
                       ) : (
                         <span 
-                          className={`ml-3 rounded-full text-xs font-semibold uppercase tracking-wide ${isActive ? 'bg-white/30 text-white' : 'bg-[#0098C3]/10 text-[#0098C3] border border-[#0098C3]/30'}`}
+                          className={`ml-3 rounded-full text-xs font-semibold uppercase tracking-wide ${isActive ? 'bg-white/30 text-white' : 'bg-[#1f2bd4]/10 text-[#1f2bd4] border border-[#1f2bd4]/30'}`}
                           style={{ 
-                            paddingLeft: '10px', 
-                            paddingRight: '10px', 
-                            paddingTop: '4px', 
-                            paddingBottom: '4px'
+                            padding: '6px 14px'
                           }}
                         >
                           notes
@@ -311,34 +317,47 @@ export default function PlanPage() {
               });
 
               return (
-                <div key={cap.id} className="bg-white rounded-lg border border-[#CCCCCC] overflow-hidden" style={{ marginBottom: '48px' }}>
+                <div key={cap.id} className="bg-white rounded-lg border border-[#d9d9d9] overflow-hidden" style={{ marginBottom: '48px' }}>
                   {/* Capability Header */}
-                  <div className={`p-6 border-b border-[#E5E5E5] ${hasFocus ? 'bg-[#F1F1F1]' : 'bg-[#0098C3]/10'}`}>
+                  <div className={`p-6 border-b border-[#e2e3e4] ${hasFocus ? 'bg-[#f3f3f6]' : 'bg-[#1f2bd4]/10'}`}>
                     <div className="flex items-start justify-between">
-                      <div>
+                      <div className="flex-1">
                         <div className="flex items-center gap-2 mb-1">
-                          <h2 className="text-xl font-bold text-[#333333]">{cap.name}</h2>
+                          <h2 className="text-xl font-bold text-[#4a4a4c]">{cap.name}</h2>
                           {!hasFocus && (
-                            <span className="text-xs bg-[#0098C3]/20 text-[#0098C3] px-2 py-0.5 rounded-full font-medium">
+                            <span className="text-xs bg-[#1f2bd4]/20 text-[#1f2bd4] px-2 py-0.5 rounded-full font-medium">
                               No focus selected
                             </span>
                           )}
                         </div>
-                        <p className="text-sm text-[#666666]">
-                          Current level: {getLevelLabel(response?.currentLevel || null)}
-                          {demonstratedDescriptors.length > 0 && <> • {demonstratedDescriptors.length} demonstrated</>}
-                          {developmentFocus.length > 0 && <> • {developmentFocus.length} to develop</>}
+                        <p className="text-sm text-[#6d6e71]">
+                          {demonstratedDescriptors.length > 0 && <>{demonstratedDescriptors.length} demonstrated</>}
+                          {demonstratedDescriptors.length > 0 && developmentFocus.length > 0 && <> • </>}
+                          {developmentFocus.length > 0 && <>{developmentFocus.length} to develop</>}
+                          {demonstratedDescriptors.length === 0 && developmentFocus.length === 0 && <>No descriptors selected</>}
                         </p>
                       </div>
-                      <Link
-                        href={`/assess?capability=${cap.id}`}
-                        className="text-sm text-[#0098C3] hover:text-[#00457D] font-medium flex items-center gap-1"
-                      >
-                        {hasFocus ? 'Edit' : 'Add focus items'}
-                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                        </svg>
-                      </Link>
+                      <div className="flex items-center gap-3">
+                        <Link
+                          href={`/assess?capability=${cap.id}`}
+                          className="text-sm text-[#1f2bd4] hover:text-[#0c0c48] font-medium flex items-center gap-1"
+                        >
+                          {hasFocus ? 'Edit' : 'Add focus items'}
+                          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                          </svg>
+                        </Link>
+                        <button
+                          onClick={() => setCapabilityToRemove({ id: cap.id, name: cap.name })}
+                          className="text-sm text-[#d32f2f] hover:text-[#b71c1c] font-medium flex items-center gap-1 transition-colors"
+                          title="Remove this capability"
+                        >
+                          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                          </svg>
+                          Remove
+                        </button>
+                      </div>
                     </div>
                   </div>
 
@@ -347,7 +366,7 @@ export default function PlanPage() {
                     {/* Development Focus Items - only show if there are focus items */}
                     {hasFocus && (
                       <>
-                        <h3 className="text-sm font-semibold text-[#333333] flex items-center gap-2" style={{ marginBottom: '20px' }}>
+                        <h3 className="text-sm font-semibold text-[#4a4a4c] flex items-center gap-2" style={{ marginBottom: '20px' }}>
                           <span className="w-3 h-3 rounded bg-[#00877C]"></span>
                           Development Focus Areas
                         </h3>
@@ -364,7 +383,7 @@ export default function PlanPage() {
                                 </h4>
                                 <ul style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                                   {levelFocus.map((f, idx) => (
-                                    <li key={idx} className="flex gap-2 text-sm text-[#333333]">
+                                    <li key={idx} className="flex gap-2 text-sm text-[#4a4a4c]">
                                       <span className="text-[#00877C] mt-1 flex-shrink-0">→</span>
                                       <span>{getDescriptorText(cap.id, f.level, f.descriptorIndex)}</span>
                                     </li>
@@ -379,21 +398,25 @@ export default function PlanPage() {
 
                     {/* Message for capabilities without focus */}
                     {!hasFocus && (
-                      <div className="bg-[#0098C3]/10 rounded-lg p-4 border border-[#0098C3]/20" style={{ marginBottom: '32px' }}>
-                        <p className="text-sm text-[#333333]">
+                      <div className="bg-[#1f2bd4]/10 rounded-lg p-4 border border-[#1f2bd4]/20" style={{ marginBottom: '32px' }}>
+                        <p className="text-sm text-[#4a4a4c]">
                           <strong>No specific development focus selected yet.</strong> You can still write reflection notes below. 
                           To select specific descriptors to develop, click "Add focus items" above.
                         </p>
                       </div>
                     )}
 
-                    {/* Already Demonstrated */}
+                    {/* Already Demonstrated - Collapsible, default collapsed to keep focus on development */}
                     {demonstratedDescriptors.length > 0 && (
-                      <div style={{ marginBottom: '32px' }}>
-                        <h3 className="text-sm font-semibold text-[#333333] flex items-center gap-2" style={{ marginBottom: '20px' }}>
+                      <details style={{ marginBottom: '32px' }}>
+                        <summary className="text-sm font-semibold text-[#4a4a4c] flex items-center gap-2 cursor-pointer select-none list-none" style={{ marginBottom: '20px' }}>
+                          <svg className="w-4 h-4 text-[#6d6e71] transition-transform details-chevron" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                          </svg>
                           <span className="w-3 h-3 rounded bg-[#EAAB00]"></span>
                           Already Demonstrated ({demonstratedDescriptors.length} descriptor{demonstratedDescriptors.length !== 1 ? 's' : ''})
-                        </h3>
+                          <span className="text-xs font-normal text-[#6d6e71] ml-1">— click to expand</span>
+                        </summary>
                         
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                           {(["FOUNDATION", "INTERMEDIATE", "ADVANCED", "EXEMPLAR"] as CapabilityLevel[]).map(level => {
@@ -407,7 +430,7 @@ export default function PlanPage() {
                                 </h4>
                                 <ul style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                                   {levelDemonstrated.map((d, idx) => (
-                                    <li key={idx} className="flex gap-2 text-sm text-[#333333]">
+                                    <li key={idx} className="flex gap-2 text-sm text-[#4a4a4c]">
                                       <span className="text-[#9a7100] mt-1 flex-shrink-0">✓</span>
                                       <span>{getDescriptorText(cap.id, d.level, d.descriptorIndex)}</span>
                                     </li>
@@ -417,26 +440,32 @@ export default function PlanPage() {
                             );
                           })}
                         </div>
-                      </div>
+                      </details>
                     )}
 
                     {/* Development Notes - ALWAYS shown for all included capabilities */}
                     <div style={{ marginTop: '32px' }}>
-                      <label className="block text-sm font-semibold text-[#333333]" style={{ marginBottom: '12px' }}>
+                      <label className="block text-base font-semibold text-[#4a4a4c]" style={{ marginBottom: '12px' }}>
                         Development Actions & Reflection Notes
                       </label>
-                      <p className="text-xs text-[#666666]" style={{ marginBottom: '16px' }}>
+                      <p className="text-sm text-[#6d6e71]" style={{ marginBottom: '16px' }}>
                         {hasFocus 
-                          ? 'Add specific actions, training, shadowing opportunities, or conversations with your manager'
+                          ? 'Add specific actions, training, shadowing opportunities, or topics for your development conversation'
                           : 'Write your thoughts on this capability - goals, aspirations, or areas you want to explore'}
                       </p>
                       <textarea
                         value={note}
                         onChange={(e) => handleNoteChange(cap.id, e.target.value)}
                         placeholder={hasFocus 
-                          ? "e.g., Shadow colleague on grant applications\nAttend funder roadshow in Q2\nAsk manager about leading next team meeting\nComplete online training module on..."
+                          ? "e.g., Shadow colleague on grant applications\nAttend funder roadshow in Q2\nDiscuss leading next team meeting in development conversation\nComplete online training module on..."
                           : "e.g., I'd like to develop this capability because...\nMy goals for this area are...\nI plan to explore opportunities in..."}
-                        className="w-full px-4 py-3 border border-[#CCCCCC] rounded-lg focus:ring-2 focus:ring-[#0098C3] focus:border-[#0098C3] resize-y min-h-[120px] text-sm text-[#333333] placeholder:text-[#999999]"
+                        className="w-full border-2 border-[#d9d9d9] rounded-lg focus:ring-2 focus:ring-[#1f2bd4] focus:border-[#1f2bd4] resize-y text-[#4a4a4c] placeholder:text-[#afafc3]"
+                        style={{
+                          padding: '24px 28px',
+                          minHeight: '200px',
+                          fontSize: '16px',
+                          lineHeight: '1.7',
+                        }}
                       />
                     </div>
                   </div>
@@ -445,14 +474,14 @@ export default function PlanPage() {
             })}
 
             {/* Summary & Actions */}
-            <div className="bg-white rounded-lg border border-[#CCCCCC] p-6" style={{ marginTop: '48px' }}>
+            <div className="bg-white rounded-lg border border-[#d9d9d9] p-6" style={{ marginTop: '48px' }}>
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                 <div>
-                  <p className="text-sm text-[#333333] mb-1">
+                  <p className="text-sm text-[#4a4a4c] mb-1">
                     {allIncludedCapabilities.length} capabilit{allIncludedCapabilities.length !== 1 ? 'ies' : 'y'} included
                     {totalFocusItems > 0 && <> • {totalFocusItems} development focus item{totalFocusItems !== 1 ? 's' : ''}</>}
                   </p>
-                  <p className="text-xs text-[#666666]">
+                  <p className="text-xs text-[#6d6e71]">
                     View the Summary page to print or save your full assessment and development plan.
                   </p>
                 </div>
@@ -461,10 +490,7 @@ export default function PlanPage() {
                     onClick={handleSave}
                     className="bg-[#00877C] text-white rounded-lg font-semibold hover:bg-[#006b62] transition-colors flex items-center gap-2"
                     style={{
-                      paddingLeft: '24px',
-                      paddingRight: '24px',
-                      paddingTop: '12px',
-                      paddingBottom: '12px',
+                        padding: '14px 28px',
                       fontSize: '15px'
                     }}
                   >
@@ -475,13 +501,10 @@ export default function PlanPage() {
                   </button>
                   <Link
                     href="/summary"
-                    className="bg-[#0098C3] rounded-lg font-semibold hover:bg-[#007A9C] transition-colors inline-flex items-center gap-2"
+                    className="bg-[#1f2bd4] rounded-lg font-semibold hover:bg-[#1929a8] transition-colors inline-flex items-center gap-2"
                     style={{ 
                       color: 'white',
-                      paddingLeft: '24px',
-                      paddingRight: '24px',
-                      paddingTop: '12px',
-                      paddingBottom: '12px',
+                        padding: '14px 28px',
                       fontSize: '15px'
                     }}
                   >
@@ -496,9 +519,9 @@ export default function PlanPage() {
 
             {/* Add More Capabilities */}
             {unassessedCapabilities.length > 0 && (
-              <div className="bg-[#F1F1F1] rounded-lg border border-[#E5E5E5] p-6" style={{ marginTop: '48px' }}>
-                <h3 className="text-sm font-semibold text-[#333333] mb-3">Add More Capabilities</h3>
-                <p className="text-xs text-[#666666] mb-4">
+              <div className="bg-[#f3f3f6] rounded-lg border border-[#e2e3e4] p-6" style={{ marginTop: '48px' }}>
+                <h3 className="text-sm font-semibold text-[#4a4a4c] mb-3">Add More Capabilities</h3>
+                <p className="text-xs text-[#6d6e71] mb-4">
                   Capabilities you haven't assessed yet. Click to add them to your development plan.
                 </p>
                 <div className="flex flex-wrap gap-3">
@@ -515,16 +538,13 @@ export default function PlanPage() {
                         });
                         setActiveCapabilityTab(cap.id);
                       }}
-                      className="inline-flex items-center gap-2 bg-white border border-[#CCCCCC] text-[#333333] rounded-lg font-semibold hover:bg-[#F1F1F1] hover:border-[#0098C3] transition-colors"
+                      className="inline-flex items-center gap-2 bg-white border border-[#d9d9d9] text-[#4a4a4c] rounded-lg font-semibold hover:bg-[#f3f3f6] hover:border-[#1f2bd4] transition-colors"
                       style={{
-                        paddingLeft: '20px',
-                        paddingRight: '20px',
-                        paddingTop: '10px',
-                        paddingBottom: '10px',
+                        padding: '12px 24px',
                         fontSize: '15px'
                       }}
                     >
-                      <svg className="w-4 h-4 text-[#666666]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <svg className="w-4 h-4 text-[#6d6e71]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
                       </svg>
                       {cap.name}
@@ -534,11 +554,37 @@ export default function PlanPage() {
               </div>
             )}
 
+            {/* Training Resources */}
+            <div className="bg-[#f3f3f6] rounded-lg p-6 md:p-7 border border-[#e2e3e4]" style={{ marginTop: '64px', marginBottom: '48px' }}>
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <h4 className="font-semibold text-[#4a4a4c] mb-2">Training & Development Resources</h4>
+                  <p className="text-[#6d6e71] text-sm mb-3">
+                    Access training materials, courses, and development resources for RMA staff.
+                  </p>
+                  <a
+                    href="https://research-hub.auckland.ac.nz/induction-skills-and-development/research-management-and-administration-rma-staff-development"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 text-sm font-medium text-[#1f2bd4] hover:text-[#0c0c48] transition-colors"
+                  >
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                    </svg>
+                    Visit Research Hub – RMA Staff Development
+                    <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    </svg>
+                  </a>
+                </div>
+              </div>
+            </div>
+
             {/* Back to Assessment Link */}
             <div className="text-center no-print" style={{ marginTop: '48px' }}>
               <Link
                 href="/assess"
-                className="inline-flex items-center gap-2 text-[#666666] hover:text-[#00457D] transition-colors font-medium"
+                className="inline-flex items-center gap-2 text-[#6d6e71] hover:text-[#0c0c48] transition-colors font-medium"
               >
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M11 17l-5-5m0 0l5-5m-5 5h12" />
@@ -552,13 +598,60 @@ export default function PlanPage() {
       </main>
 
       {/* Footer */}
-      <footer className="w-full border-t border-[#CCCCCC] bg-white mt-20 flex justify-center">
+      <footer className="w-full border-t border-[#d9d9d9] bg-white mt-20 flex justify-center">
         <div className="w-full max-w-[1140px] px-8 lg:px-12 py-8">
-          <p className="text-sm text-[#666666] text-center">
+          <p className="text-sm text-[#6d6e71] text-center">
             RMA Capability Framework • Development Plan
           </p>
         </div>
       </footer>
+
+      {/* Confirmation Modal for Removing Capability */}
+      {capabilityToRemove && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50" onClick={() => setCapabilityToRemove(null)}>
+          <div 
+            className="bg-white rounded-lg shadow-xl max-w-md w-full mx-4"
+            onClick={(e) => e.stopPropagation()}
+            style={{ padding: '32px' }}
+          >
+            <div className="flex items-start gap-4 mb-6">
+              <div className="flex-shrink-0 w-12 h-12 rounded-full bg-[#d32f2f]/10 flex items-center justify-center">
+                <svg className="w-6 h-6 text-[#d32f2f]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+              </div>
+              <div className="flex-1 min-w-0">
+                <h3 className="text-lg font-bold text-[#4a4a4c] mb-2">
+                  Remove Capability?
+                </h3>
+                <p className="text-sm text-[#6d6e71] mb-1">
+                  Are you sure you want to remove <strong>{capabilityToRemove.name}</strong> from your development plan?
+                </p>
+                <p className="text-sm text-[#6d6e71]">
+                  This will delete all associated data including selected descriptors and reflection notes. This action cannot be undone.
+                </p>
+              </div>
+            </div>
+            
+            <div className="flex items-center justify-end gap-3">
+              <button
+                onClick={() => setCapabilityToRemove(null)}
+                className="bg-white text-[#4a4a4c] border-2 border-[#d9d9d9] rounded-lg hover:bg-[#f3f3f6] transition-colors font-medium"
+                style={{ padding: '10px 20px' }}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => handleRemoveCapability(capabilityToRemove.id)}
+                className="bg-[#d32f2f] text-white rounded-lg hover:bg-[#b71c1c] transition-colors font-medium"
+                style={{ padding: '10px 20px' }}
+              >
+                Remove Capability
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

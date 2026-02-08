@@ -38,23 +38,35 @@
 
 /* ============================================
    University of Auckland Design Tokens
-   Based on UoA Corporate Brand Guidelines
+   2025 One UoA Brand Refresh
+   Ref: experience.auckland.ac.nz/ux-basics/colour/
    ============================================ */
 :root {
-  /* Primary Brand Colors - UoA Official */
-  --uoa-navy: #00457D;
-  --uoa-blue: #0098C3;
-  --uoa-blue-light: #E6F4F9;
+  /* ---- Primary Brand Blues ---- */
+  /* Waitemata: primary blue — headers, headings, large card BGs, primary CTAs */
+  --uoa-navy: #0c0c48;
+  /* Azure: secondary/accent blue — CTAs, headings, sub-headings, occasional BGs */
+  --uoa-blue: #1f2bd4;
+  /* Mahina: light accent blue — separators, text decoration, filter components */
+  --uoa-mahina: #00caef;
+  --uoa-blue-light: #e7e7ed; /* 10% Waitemata tint */
   
-  /* Neutral Colors */
-  --uoa-text: #333333;
-  --uoa-text-muted: #666666;
-  --uoa-bg: #F5F5F5;
+  /* ---- Waitemata Tints ---- */
+  --uoa-tint-5: #f3f3f6;
+  --uoa-tint-10: #e7e7ed;
+  --uoa-tint-20: #ceceda;
+  --uoa-tint-30: #afafc3;
+
+  /* ---- Neutral / Grey Scale ---- */
+  --uoa-text: #4a4a4c;       /* Body text */
+  --uoa-text-muted: #6d6e71; /* Dark grey */
+  --uoa-bg: #f2f2f2;         /* Background grey */
   --uoa-bg-white: #FFFFFF;
-  --uoa-border: #CCCCCC;
-  --uoa-border-light: #E5E5E5;
+  --uoa-border: #d9d9d9;     /* Medium grey */
+  --uoa-border-light: #e2e3e4; /* Light grey */
   
-  /* Accent Colors - UoA Brand Palette */
+  /* ---- Functional / Semantic Colours ---- */
+  /* (Retained for assessment-tool data visualisation) */
   --uoa-gold: #EAAB00;
   --uoa-orange: #D2492A;
   --uoa-red: #A71930;
@@ -62,23 +74,31 @@
   --uoa-teal: #00877C;
   --uoa-green: #A8B400;
   
-  /* Semantic Colors */
   --color-success: #00877C;
   --color-warning: #EAAB00;
   --color-error: #A71930;
-  --color-info: #0098C3;
+  --color-info: #1f2bd4;
   
-  /* Shadows */
+  /* ---- Brand Accent Colours (imagery/campaigns only) ---- */
+  --uoa-lava: #ff5e4c;
+  --uoa-whenua: #19cd80;
+  --uoa-hinatore: #cf5cf2;
+
+  /* ---- Overlays ---- */
+  --overlay-dark: rgba(0, 0, 0, 0.85);
+  --overlay-waitemata: rgba(12, 12, 72, 0.98);
+
+  /* ---- Shadows ---- */
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
   --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
   --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
   
-  /* Border Radius */
+  /* ---- Border Radius ---- */
   --radius-sm: 4px;
   --radius-md: 8px;
   --radius-lg: 12px;
   
-  /* Spacing scale */
+  /* ---- Spacing Scale (8px base unit) ---- */
   --space-xs: 4px;
   --space-sm: 8px;
   --space-md: 16px;
@@ -86,9 +106,21 @@
   --space-xl: 32px;
   --space-2xl: 48px;
   --space-3xl: 64px;
+  --space-4xl: 80px;
+
+  /* ---- Component Spacing Tokens ---- */
+  --btn-padding-y: 14px;
+  --btn-padding-x: 28px;
+  --btn-padding-y-sm: 10px;
+  --btn-padding-x-sm: 20px;
+  --card-padding: 32px;
+  --card-padding-lg: 40px;
+  --section-padding-y: 80px;
+  --section-padding-y-mobile: 56px;
+  --card-gap: 24px;
   
-  /* Typography - UoA Inter Font */
-  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  /* ---- Typography — Inter (official UoA typeface) ---- */
+  --font-sans: 'Inter', Arial, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --font-size-xs: 0.75rem;
   --font-size-sm: 0.875rem;
   --font-size-base: 1rem;
@@ -98,7 +130,7 @@
   --font-size-3xl: 1.875rem;
   --font-size-4xl: 2.25rem;
   
-  /* Container */
+  /* ---- Container ---- */
   --container-max: 1140px;
   --container-padding: 24px;
 }
@@ -108,8 +140,8 @@
   :root.dark-mode {
     --uoa-bg: #1a1a2e;
     --uoa-bg-white: #16213e;
-    --uoa-text: #E5E5E5;
-    --uoa-text-muted: #A0A0A0;
+    --uoa-text: #e2e3e4;
+    --uoa-text-muted: #afafc3;
     --uoa-border: #3a3a5c;
     --uoa-border-light: #2a2a4c;
   }
@@ -132,7 +164,7 @@ html {
 
 body {
   font-family: var(--font-sans);
-  background: #FAFAFA;
+  background: #f2f2f2;
   color: var(--uoa-text);
   line-height: 1.75;
   -webkit-font-smoothing: antialiased;
@@ -251,41 +283,42 @@ section {
 
 /* ============================================
    Content Spacing & Readability
+   (Aligned with UoA Brand Refresh Guide)
    ============================================ */
 /* Improved spacing for content sections */
 .content-section {
-  padding-top: 4rem;
-  padding-bottom: 4rem;
+  padding-top: var(--section-padding-y-mobile);
+  padding-bottom: var(--section-padding-y-mobile);
 }
 
 @media (min-width: 768px) {
   .content-section {
-    padding-top: 6rem;
-    padding-bottom: 6rem;
+    padding-top: var(--section-padding-y);
+    padding-bottom: var(--section-padding-y);
   }
 }
 
 /* Better spacing between content blocks */
 .content-block + .content-block {
-  margin-top: 3rem;
+  margin-top: var(--space-xl);
 }
 
 @media (min-width: 768px) {
   .content-block + .content-block {
-    margin-top: 4rem;
+    margin-top: var(--space-2xl);
   }
 }
 
 /* Descriptor items spacing */
 .descriptor-item {
-  padding: 1.75rem 2rem;
-  margin-bottom: 1.5rem;
+  padding: var(--space-lg) var(--space-xl);
+  margin-bottom: var(--space-md);
 }
 
 @media (min-width: 768px) {
   .descriptor-item {
-    padding: 2rem 2.5rem;
-    margin-bottom: 2rem;
+    padding: var(--space-xl) var(--space-xl);
+    margin-bottom: var(--space-lg);
   }
 }
 
@@ -295,12 +328,12 @@ section {
 
 /* Section spacing improvements */
 section + section {
-  margin-top: 4rem;
+  margin-top: var(--space-2xl);
 }
 
 @media (min-width: 768px) {
   section + section {
-    margin-top: 6rem;
+    margin-top: var(--space-3xl);
   }
 }
 
@@ -313,7 +346,7 @@ section + section {
 .dark-bg p,
 .dark-bg span,
 .dark-bg li {
-  color: #B3D4E8;
+  color: #afafc3;
 }
 
 .dark-bg h1,
@@ -326,7 +359,7 @@ section + section {
 }
 
 .dark-bg a {
-  color: #B3D4E8;
+  color: #afafc3;
 }
 
 .dark-bg a:hover {
@@ -357,8 +390,8 @@ section + section {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  padding: 10px 20px;
+  gap: 10px;
+  padding: var(--btn-padding-y) var(--btn-padding-x);
   font-family: var(--font-sans);
   font-size: var(--font-size-sm);
   font-weight: 600;
@@ -374,12 +407,12 @@ section + section {
 }
 
 .uoa-btn-primary {
-  background: var(--uoa-navy);
+  background: var(--uoa-blue);
   color: white;
 }
 
 .uoa-btn-primary:hover:not(:disabled) {
-  background: #003561;
+  background: #1929a8;
 }
 
 .uoa-btn-secondary {
@@ -406,8 +439,8 @@ section + section {
 .uoa-badge {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  padding: 4px 10px;
+  gap: 6px;
+  padding: 6px 14px;
   font-size: var(--font-size-xs);
   font-weight: 600;
   border-radius: 9999px;
@@ -415,15 +448,15 @@ section + section {
 }
 
 .uoa-badge-navy {
-  background: rgba(0, 69, 125, 0.1);
+  background: rgba(12, 12, 72, 0.1);
   color: var(--uoa-navy);
-  border-color: rgba(0, 69, 125, 0.2);
+  border-color: rgba(12, 12, 72, 0.2);
 }
 
 .uoa-badge-blue {
-  background: rgba(0, 152, 195, 0.1);
+  background: rgba(31, 43, 212, 0.1);
   color: var(--uoa-blue);
-  border-color: rgba(0, 152, 195, 0.2);
+  border-color: rgba(31, 43, 212, 0.2);
 }
 
 .uoa-badge-teal {
@@ -447,7 +480,7 @@ section + section {
 /* Form input styles */
 .uoa-input {
   width: 100%;
-  padding: 10px 14px;
+  padding: 12px 16px;
   font-family: var(--font-sans);
   font-size: var(--font-size-sm);
   color: var(--uoa-text);
@@ -468,6 +501,17 @@ section + section {
 }
 
 /* ============================================
+   Collapsible Details Chevron Animation
+   ============================================ */
+details[open] .details-chevron {
+  transform: rotate(180deg);
+}
+
+details .details-chevron {
+  transition: transform 0.2s ease;
+}
+
+/* ============================================
    Print Styles
    ============================================ */
 @media print {
@@ -476,109 +520,194 @@ section + section {
     size: A4;
   }
   
+  /* ========================================
+     1. Core Reset & Color Preservation
+     ======================================== */
   * {
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
     color-adjust: exact !important;
+    box-sizing: border-box !important;
   }
   
-  body {
+  html, body {
+    width: 100% !important;
+    height: auto !important;
     background: white !important;
     margin: 0 !important;
     padding: 0 !important;
   }
   
+  /* ========================================
+     2. Hide Non-Print Elements
+     ======================================== */
   .no-print {
     display: none !important;
+    visibility: hidden !important;
   }
   
   .print-break {
     page-break-after: always;
   }
+
+  /* Show the print-mode-label in print */
+  .print-mode-label {
+    display: block !important;
+  }
+
+  /* ========================================
+     3. CRITICAL: Prevent Content Truncation
+     Ensure ALL content flows and nothing is
+     clipped by overflow or fixed heights.
+     ======================================== */
   
-  /* Force all containers to be visible - use outline for borders */
-  .uoa-card,
-  div[class*="rounded-lg"],
-  div[class*="rounded-xl"] {
-    box-shadow: none !important;
+  /* Remove ALL fixed/max heights */
+  * {
+    max-height: none !important;
+    height: auto !important;
+  }
+  
+  /* Remove ALL overflow restrictions */
+  html, body, main, article, section, header, footer, div, nav {
     overflow: visible !important;
+    min-height: 0 !important;
+    position: relative !important;
   }
   
-  /* Stats boxes - using outline for reliable borders */
-  div[class*="grid-cols"] > div {
-    border: none !important;
-    outline: 2px solid #999999 !important;
-    outline-offset: 0 !important;
-    background: white !important;
+  /* Ensure flex containers don't constrain content */
+  .flex, [class*="flex"] {
+    flex-shrink: 0 !important;
   }
   
-  /* Table with strong borders - using outline */
-  table {
-    border-collapse: collapse !important;
-    border: none !important;
-    outline: 2px solid #999999 !important;
-    outline-offset: 0 !important;
-  }
-  
-  thead {
-    display: table-header-group;
-    background: #F1F1F1 !important;
-  }
-  
-  tr {
-    page-break-inside: avoid;
-    border-bottom: 1px solid #E5E5E5 !important;
-  }
-  
-  th, td {
-    border: 1px solid #E5E5E5 !important;
-    padding: 12px 16px !important;
-  }
-  
-  th {
-    background: #F1F1F1 !important;
-    font-weight: 600 !important;
-  }
-  
-  /* Ensure proper spacing and no overflow */
-  header, main, section, div {
+  /* Force the page wrapper to not clip */
+  body > div,
+  body > div > div,
+  #__next,
+  #__next > div {
     overflow: visible !important;
+    height: auto !important;
+    min-height: 0 !important;
   }
   
-  /* Fix for full-width containers */
+  /* Force visibility of all non-hidden elements */
+  body * {
+    visibility: visible !important;
+  }
+  
+  body .no-print,
+  body .no-print * {
+    display: none !important;
+    visibility: hidden !important;
+  }
+  
+  /* ========================================
+     4. Layout Containers
+     ======================================== */
   div[class*="w-full"] {
     width: 100% !important;
-    overflow: visible !important;
   }
   
-  /* Fix for max-width containers - ensure space for borders/outlines */
-  div[class*="max-w-[1140px]"] {
+  div[class*="max-w-[1140px]"],
+  div[class*="max-w-"] {
     max-width: 100% !important;
+    width: 100% !important;
     padding-left: 8px !important;
     padding-right: 8px !important;
     margin-left: 0 !important;
     margin-right: 0 !important;
   }
   
-  /* Main content area needs padding for outlines */
   main > div {
     padding-left: 4px !important;
     padding-right: 4px !important;
   }
   
-  /* Ensure proper box sizing for all print elements */
-  div, section, header, main, article {
-    box-sizing: border-box !important;
-    -webkit-box-sizing: border-box !important;
+  /* Remove rounded corners for cleaner print look */
+  div[class*="rounded-lg"],
+  div[class*="rounded-xl"],
+  div[class*="rounded"] {
+    border-radius: 0 !important;
   }
   
-  /* Header section - ensure border shows */
+  /* Remove shadows */
+  .uoa-card,
+  div[class*="rounded-lg"],
+  div[class*="rounded-xl"] {
+    box-shadow: none !important;
+  }
+  
+  /* ========================================
+     5. Header Section
+     ======================================== */
   header[class*="bg-white"] {
-    border-bottom: 2px solid #CCCCCC !important;
+    border-bottom: 2px solid #d9d9d9 !important;
     background: white !important;
   }
   
-  /* Main capability cards - using outline for reliable all-side borders */
+  /* ========================================
+     6. Stats Grid - Force horizontal layout
+     ======================================== */
+  div[class*="grid-cols"] {
+    display: grid !important;
+    gap: 16px !important;
+  }
+
+  /* Force multi-column layout to match on-screen appearance */
+  div[class*="md:grid-cols-4"] {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  }
+
+  div[class*="md:grid-cols-3"] {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  }
+  
+  div[class*="grid-cols"] > div {
+    outline: 2px solid #d9d9d9 !important;
+    outline-offset: -2px !important;
+    border: none !important;
+    background: white !important;
+  }
+  
+  /* ========================================
+     7. Table Styles
+     ======================================== */
+  table {
+    border-collapse: collapse !important;
+    width: 100% !important;
+    outline: 2px solid #afafc3 !important;
+    outline-offset: 0 !important;
+  }
+  
+  thead {
+    display: table-header-group;
+    background: #f3f3f6 !important;
+  }
+  
+  tr {
+    page-break-inside: avoid;
+    border-bottom: 1px solid #e2e3e4 !important;
+  }
+  
+  th, td {
+    border: 1px solid #e2e3e4 !important;
+    padding: 12px 16px !important;
+  }
+  
+  th {
+    background: #f3f3f6 !important;
+    font-weight: 600 !important;
+  }
+  
+  div[class*="overflow-x-auto"] {
+    overflow: visible !important;
+  }
+  
+  /* ========================================
+     8. Capability Detail Cards
+     ======================================== */
+  
+  /* Capability cards - allow content to flow across pages */
+  .capability-detail-card,
   main div[class*="bg-white"][class*="rounded-lg"] {
     border: none !important;
     border-radius: 0 !important;
@@ -587,209 +716,24 @@ section + section {
     margin-right: 4px !important;
     overflow: visible !important;
     background: white !important;
-    outline: 2px solid #666666 !important;
+    outline: 2px solid #6d6e71 !important;
     outline-offset: 0 !important;
+    /* CRITICAL: Allow page breaks INSIDE cards to prevent truncation */
+    page-break-inside: auto !important;
+    break-inside: auto !important;
   }
   
-  /* Prevent orphaned headers */
-  h1, h2, h3, h4, h5, h6 {
-    page-break-after: avoid;
-    page-break-inside: avoid;
-  }
-  
-  /* Allow page breaks after sections to prevent content loss */
-  h2, h3, h4 {
-    orphans: 3;
-    widows: 3;
-  }
-  
-  /* Ensure padding is preserved */
-  * {
-    box-sizing: border-box !important;
-  }
-  
-  /* Summary page specific print fixes */
-  /* Stats grid */
-  div[class*="grid-cols"] {
-    display: grid !important;
-    gap: 16px !important;
-  }
-  
-  /* Capability detail sections */
-  div[style*="gap: 32px"] {
-    gap: 24px !important;
-  }
-  
-  /* Ensure all colored background sections maintain their styling */
-  div[style*="backgroundColor"] {
-    -webkit-print-color-adjust: exact !important;
-    print-color-adjust: exact !important;
-    border: 2px solid #999999 !important;
-  }
-  
-  /* Capability header with colored background */
+  /* Capability header - keep with first content below */
+  .capability-header,
   div[class*="border-b"][style*="backgroundColor"] {
-    border: 2px solid #999999 !important;
-    border-bottom: 2px solid #999999 !important;
+    border: 2px solid #afafc3 !important;
+    border-bottom: 2px solid #afafc3 !important;
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
-  }
-  
-  /* Level boxes (demonstrated) - golden/yellow - using outline */
-  div[class*="bg-[#EAAB00]"] {
-    background-color: rgba(234, 171, 0, 0.15) !important;
-    border: none !important;
-    outline: 2px solid #C4940A !important;
-    outline-offset: 0 !important;
-    padding: 20px !important;
-    margin-bottom: 16px !important;
-    -webkit-print-color-adjust: exact !important;
-    print-color-adjust: exact !important;
-    overflow: visible !important;
-  }
-  
-  /* Level boxes (development focus) - teal - using outline */
-  div[class*="bg-[#00877C]"] {
-    background-color: rgba(0, 135, 124, 0.15) !important;
-    border: none !important;
-    outline: 2px solid #006B62 !important;
-    outline-offset: 0 !important;
-    padding: 20px !important;
-    margin-bottom: 16px !important;
-    -webkit-print-color-adjust: exact !important;
-    print-color-adjust: exact !important;
-    overflow: visible !important;
-  }
-  
-  /* Notes section - gray background - using outline for reliable borders */
-  div[class*="bg-[#F1F1F1]"] {
-    background-color: #F1F1F1 !important;
-    padding: 20px !important;
-    -webkit-print-color-adjust: exact !important;
-    print-color-adjust: exact !important;
-    display: block !important;
-    visibility: visible !important;
-  }
-  
-  /* Allow list items to break if needed, but try to keep together */
-  li {
-    orphans: 2;
-    widows: 2;
-  }
-  
-  /* Remove rounded corners for most elements - cleaner look */
-  div[class*="rounded-lg"],
-  div[class*="rounded-xl"],
-  div[class*="rounded"] {
-    border-radius: 0 !important;
-  }
-  
-  /* Fix for nested containers */
-  div[class*="rounded"] div[class*="rounded"] {
-    overflow: visible !important;
-  }
-  
-  /* Ensure all content is visible - no height restrictions */
-  * {
-    max-height: none !important;
-    height: auto !important;
-  }
-  
-  /* Force visibility of all non-hidden elements */
-  body * {
-    visibility: visible !important;
-  }
-  
-  body .no-print {
-    display: none !important;
-    visibility: hidden !important;
-  }
-  
-  /* Ensure proper width containment */
-  div[class*="max-w-"] {
-    max-width: 100% !important;
-    width: 100% !important;
-  }
-  
-  /* Badges and pills - clear borders */
-  span[class*="rounded-full"],
-  span[class*="inline-flex"][class*="border"] {
-    border: 2px solid #999999 !important;
-    border-radius: 20px !important;
-    page-break-inside: avoid !important;
-    padding: 6px 14px !important;
-    -webkit-print-color-adjust: exact !important;
-    print-color-adjust: exact !important;
-  }
-  
-  /* Notes section */
-  div[class*="whitespace-pre-wrap"] {
-    white-space: pre-wrap !important;
-    word-wrap: break-word !important;
-  }
-  
-  /* Remove any min-height restrictions that could hide content */
-  body, main, section, div, article {
-    min-height: 0 !important;
-  }
-  
-  /* Ensure proper page sizing and margins */
-  html, body {
-    width: 100% !important;
-    height: auto !important;
-  }
-  
-  /* Prevent content from being pushed off page */
-  main, article, section {
-    position: relative !important;
-    display: block !important;
-  }
-  
-  /* Links should be normal text color in print */
-  a {
-    text-decoration: none !important;
-    color: inherit !important;
-  }
-  
-  /* Ensure icons and checkmarks are visible */
-  svg, span[class*="text-"] {
-    color: inherit !important;
-  }
-  
-  /* List styling */
-  ul, ol {
-    margin: 0 !important;
-    padding-left: 0 !important;
-  }
-  
-  li {
-    margin-bottom: 8px !important;
-    list-style-position: inside !important;
-  }
-  
-  /* Ensure proper text rendering */
-  p, span, div {
-    text-rendering: optimizeLegibility !important;
-  }
-  
-  /* Capability section headings */
-  h3[class*="font-bold"] {
-    color: inherit !important;
     page-break-after: avoid !important;
-    margin-bottom: 16px !important;
   }
   
-  /* Section headers with icons */
-  h4[class*="font-semibold"] {
-    page-break-after: avoid !important;
-    margin-bottom: 12px !important;
-  }
-  
-  /* ========================================
-     CRITICAL: Content Visibility First
-     ======================================== */
-  
-  /* Remove ALL page-break-inside: avoid that could hide content */
+  /* Content sections - ALLOW page breaks inside for long content */
   .notes-section-container,
   .demonstrated-section-container,
   .focus-section-container {
@@ -800,102 +744,180 @@ section + section {
     overflow: visible !important;
   }
   
-  /* Ensure notes content box is always visible */
-  .notes-section-container div[class*="bg-[#F1F1F1]"] {
-    display: block !important;
-    visibility: visible !important;
-    overflow: visible !important;
-    background-color: #F1F1F1 !important;
-    border: 2px solid #999999 !important;
+  /* Try to keep each level box together, but allow break if necessary */
+  div[class*="bg-[#EAAB00]"],
+  div[class*="bg-[#00877C]"] {
+    page-break-inside: auto !important;
+    break-inside: auto !important;
+  }
+  
+  /* Gap between capability cards */
+  div[style*="gap: 32px"] {
+    gap: 24px !important;
+  }
+  
+  /* ========================================
+     9. Level Boxes
+     ======================================== */
+  
+  /* Demonstrated (gold) */
+  div[class*="bg-[#EAAB00]"] {
+    background-color: rgba(234, 171, 0, 0.15) !important;
+    outline: 2px solid rgba(234, 171, 0, 0.6) !important;
+    outline-offset: -2px !important;
+    border: none !important;
     padding: 20px !important;
-    margin: 0 !important;
+    margin-bottom: 16px !important;
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
   }
   
-  /* Ensure paragraph inside notes is visible */
+  /* Development focus (teal) */
+  div[class*="bg-[#00877C]"] {
+    background-color: rgba(0, 135, 124, 0.15) !important;
+    outline: 2px solid rgba(0, 135, 124, 0.6) !important;
+    outline-offset: -2px !important;
+    border: none !important;
+    padding: 20px !important;
+    margin-bottom: 16px !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  
+  /* ========================================
+     10. Notes Section
+     ======================================== */
+  div[class*="bg-[#f3f3f6]"] {
+    background-color: #f3f3f6 !important;
+    padding: 20px !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    display: block !important;
+    visibility: visible !important;
+  }
+  
+  .notes-section-container div[class*="bg-[#f3f3f6]"] {
+    display: block !important;
+    visibility: visible !important;
+    overflow: visible !important;
+    background-color: #f3f3f6 !important;
+    border: 2px solid #afafc3 !important;
+    padding: 20px !important;
+    margin: 0 !important;
+  }
+  
   .notes-section-container p {
     display: block !important;
     visibility: visible !important;
     overflow: visible !important;
+    white-space: pre-wrap !important;
+    word-wrap: break-word !important;
+  }
+  
+  div[class*="bg-[#f3f3f6]"][class*="rounded-lg"] {
+    outline: 2px solid #afafc3 !important;
+    outline-offset: -2px !important;
+    border: none !important;
+    background-color: #f3f3f6 !important;
   }
   
   /* ========================================
-     Fix Border Rendering on All Containers
+     11. Typography & Content
      ======================================== */
   
-  /* Main capability card container - EXPLICIT borders on all 4 sides */
+  /* Headings - avoid orphaned headers */
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid;
+    page-break-inside: avoid;
+  }
+  
+  h3[class*="font-bold"] {
+    color: inherit !important;
+    page-break-after: avoid !important;
+    margin-bottom: 16px !important;
+  }
+  
+  h4[class*="font-semibold"] {
+    page-break-after: avoid !important;
+    margin-bottom: 12px !important;
+  }
+  
+  /* Lists */
+  ul, ol {
+    margin: 0 !important;
+    padding-left: 0 !important;
+  }
+  
+  li {
+    margin-bottom: 8px !important;
+    list-style-position: inside !important;
+    orphans: 2;
+    widows: 2;
+  }
+  
+  p, span, div {
+    text-rendering: optimizeLegibility !important;
+  }
+  
+  p, li {
+    orphans: 2;
+    widows: 2;
+  }
+  
+  /* Links */
+  a {
+    text-decoration: none !important;
+    color: inherit !important;
+  }
+  
+  /* Ensure icons and checkmarks visible */
+  svg, span[class*="text-"] {
+    color: inherit !important;
+  }
+  
+  /* ========================================
+     12. Badges and Pills
+     ======================================== */
+  span[class*="rounded-full"],
+  span[class*="inline-flex"][class*="border"] {
+    border: 2px solid #afafc3 !important;
+    border-radius: 20px !important;
+    page-break-inside: avoid !important;
+    padding: 6px 14px !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  
+  /* ========================================
+     13. Card Container Borders
+     ======================================== */
   div[class*="bg-white"][class*="border"][class*="rounded-lg"] {
     border: none !important;
-    outline: 2px solid #999999 !important;
+    outline: 2px solid #afafc3 !important;
     outline-offset: -2px !important;
     box-shadow: none !important;
   }
   
-  /* Alternative: use box-shadow for borders (more reliable in print) */
   main div[class*="overflow-hidden"] {
-    box-shadow: inset 0 0 0 2px #999999 !important;
+    box-shadow: inset 0 0 0 2px #afafc3 !important;
     border: none !important;
-  }
-
-  /* Stats boxes with proper borders */
-  div[class*="grid-cols"] > div[class*="bg-white"] {
-    outline: 2px solid #CCCCCC !important;
-    outline-offset: -2px !important;
-    border: none !important;
-  }
-  
-  /* Notes section gray box */
-  div[class*="bg-[#F1F1F1]"][class*="rounded-lg"] {
-    outline: 2px solid #999999 !important;
-    outline-offset: -2px !important;
-    border: none !important;
-    background-color: #F1F1F1 !important;
-  }
-  
-  /* Level boxes - demonstrated (gold) */
-  div[class*="bg-[#EAAB00]"] {
-    outline: 2px solid rgba(234, 171, 0, 0.6) !important;
-    outline-offset: -2px !important;
-    border: none !important;
-    background-color: rgba(234, 171, 0, 0.15) !important;
-  }
-  
-  /* Level boxes - focus (teal) */
-  div[class*="bg-[#00877C]"] {
-    outline: 2px solid rgba(0, 135, 124, 0.6) !important;
-    outline-offset: -2px !important;
-    border: none !important;
-    background-color: rgba(0, 135, 124, 0.15) !important;
-  }
-  
-  /* Table container */
-  div[class*="overflow-x-auto"] {
     overflow: visible !important;
   }
   
-  table {
-    outline: 2px solid #CCCCCC !important;
-    border: none !important;
+  /* ========================================
+     14. Footer in Print
+     ======================================== */
+  .print-footer {
+    margin-top: 40px !important;
+    border-top: 1px solid #d9d9d9 !important;
+    page-break-inside: avoid !important;
   }
   
   /* ========================================
-     Gentle Page Break Suggestions (won't hide content)
+     15. Colored Backgrounds Preservation
      ======================================== */
-  
-  /* Prefer breaks BEFORE capability cards */
-  main > div > div > div[class*="bg-white"] {
-    page-break-before: auto;
-  }
-  
-  /* Try to avoid orphaned headers */
-  h4 {
-    page-break-after: avoid;
-  }
-  
-  /* Basic typography control */
-  p, li {
-    orphans: 2;
-    widows: 2;
+  div[style*="backgroundColor"] {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
   }
 }
