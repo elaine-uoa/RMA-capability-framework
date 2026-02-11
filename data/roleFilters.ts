@@ -5,6 +5,13 @@ export interface RoleCapabilityMapping {
   level: CapabilityLevel;
 }
 
+export type GuidedFilterType = "role" | "function";
+
+export interface GuidedFilterSelection {
+  filterType: GuidedFilterType;
+  filterId: string;
+}
+
 export interface Role {
   id: string;
   name: string;
@@ -377,4 +384,75 @@ export function getCapabilityIdsForRole(roleId: string): string[] {
 export function getCapabilityIdsForFunction(functionId: string): string[] {
   const func = functions.find(f => f.id === functionId);
   return func ? func.capabilities.map(c => c.capabilityId) : [];
+}
+
+export const GUIDED_FILTER_STORAGE_KEY = "rma-guided-filter-selection";
+
+export function getCapabilityMappingsForSelection(
+  filterType: GuidedFilterType,
+  filterId: string
+): RoleCapabilityMapping[] {
+  if (filterType === "role") {
+    const role = roles.find((r) => r.id === filterId);
+    return role?.capabilities || [];
+  }
+
+  const func = functions.find((f) => f.id === filterId);
+  return func?.capabilities || [];
+}
+
+export function getRequiredLevelForCapability(
+  filterType: GuidedFilterType,
+  filterId: string,
+  capabilityId: string
+): CapabilityLevel | null {
+  const mappings = getCapabilityMappingsForSelection(filterType, filterId);
+  return mappings.find((m) => m.capabilityId === capabilityId)?.level || null;
+}
+
+// Placeholder descriptor relevance logic to simulate realistic guidance
+export function getRelevantDescriptorIndexes(
+  requiredLevel: CapabilityLevel,
+  totalDescriptors: number
+): number[] {
+  if (totalDescriptors <= 0) return [];
+
+  const templates: Record<CapabilityLevel, number[]> = {
+    FOUNDATION: [0, 1],
+    INTERMEDIATE: [0, 1, 2],
+    ADVANCED: [0, 2, 3],
+    EXEMPLAR: [0, 1, 3],
+  };
+
+  const candidates = templates[requiredLevel];
+  return candidates.filter((idx) => idx >= 0 && idx < totalDescriptors);
+}
+
+export function loadGuidedFilterSelection(): GuidedFilterSelection | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = window.localStorage.getItem(GUIDED_FILTER_STORAGE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as GuidedFilterSelection;
+    if (
+      parsed &&
+      (parsed.filterType === "role" || parsed.filterType === "function") &&
+      typeof parsed.filterId === "string"
+    ) {
+      return parsed;
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+export function saveGuidedFilterSelection(selection: GuidedFilterSelection): void {
+  if (typeof window === "undefined") return;
+  window.localStorage.setItem(GUIDED_FILTER_STORAGE_KEY, JSON.stringify(selection));
+}
+
+export function clearGuidedFilterSelection(): void {
+  if (typeof window === "undefined") return;
+  window.localStorage.removeItem(GUIDED_FILTER_STORAGE_KEY);
 }

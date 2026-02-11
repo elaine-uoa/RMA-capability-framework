@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { capabilities } from "@/data/capabilities";
+import { useGuidedFilter } from "@/hooks/useGuidedFilter";
 
 interface CapabilityNavigationProps {
   currentCapabilityId: string;
@@ -22,6 +23,7 @@ const CAPABILITY_COLORS: Record<string, { main: string; hover: string }> = {
 };
 
 export function CapabilityNavigation({ currentCapabilityId }: CapabilityNavigationProps) {
+  const { isGuidedFilterActive, isMappedCapability, getRequiredLevel } = useGuidedFilter();
   const currentIndex = capabilities.findIndex((c) => c.id === currentCapabilityId);
   const prevCapability = currentIndex > 0 ? capabilities[currentIndex - 1] : null;
   const nextCapability = currentIndex < capabilities.length - 1 ? capabilities[currentIndex + 1] : null;
@@ -55,6 +57,11 @@ export function CapabilityNavigation({ currentCapabilityId }: CapabilityNavigati
               <div className="text-base font-bold text-white truncate">
                 {prevCapability.name}
               </div>
+              {isGuidedFilterActive && isMappedCapability(prevCapability.id) && (
+                <div className="mt-1.5 inline-flex items-center gap-1 text-[11px] font-semibold rounded-full border border-white/40 bg-white/15 px-2 py-0.5 text-white">
+                  ★ mapped ({(getRequiredLevel(prevCapability.id) || "FOUNDATION").toLowerCase()})
+                </div>
+              )}
             </div>
           </div>
         </Link>
@@ -80,6 +87,11 @@ export function CapabilityNavigation({ currentCapabilityId }: CapabilityNavigati
               <div className="text-lg font-bold text-white truncate">
                 {nextCapability.name}
               </div>
+              {isGuidedFilterActive && isMappedCapability(nextCapability.id) && (
+                <div className="mt-1.5 inline-flex items-center gap-1 text-[11px] font-semibold rounded-full border border-white/40 bg-white/15 px-2 py-0.5 text-white">
+                  ★ mapped ({(getRequiredLevel(nextCapability.id) || "FOUNDATION").toLowerCase()})
+                </div>
+              )}
             </div>
             <div className="flex-shrink-0 w-14 h-14 rounded-lg bg-white/20 group-hover:bg-white/30 flex items-center justify-center transition-colors">
               <svg className="w-7 h-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>

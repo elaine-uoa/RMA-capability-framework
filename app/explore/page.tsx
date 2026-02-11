@@ -3,7 +3,10 @@
 import { useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { capabilities } from "@/data/capabilities";
-import { DescriptorAlignment, CapabilityLevel } from "@/types";
+import { CapabilityLevel } from "@/types";
+import { CapabilitySelector } from "@/components/CapabilitySelector";
+import { roles, functions } from "@/data/roleFilters";
+import { useGuidedFilter } from "@/hooks/useGuidedFilter";
 
 // Map capabilities to their key area colours (from homepage)
 const CAPABILITY_COLORS: Record<string, { main: string; hover: string }> = {
@@ -21,59 +24,30 @@ const CAPABILITY_COLORS: Record<string, { main: string; hover: string }> = {
 
 function DescriptorReadOnly({
   point,
-  index,
   levelColor,
-  hasAlignment
+  isRelevant = false,
 }: {
   point: string;
-  index: number;
   levelColor: string;
-  hasAlignment?: boolean;
+  isRelevant?: boolean;
 }) {
 
   return (
-    <div className="relative bg-[#F8F9FA] border border-[#e2e3e4] rounded-2xl p-8 md:p-10 hover:border-[#1f2bd4] hover:shadow-md transition-all">
-      <div className="flex items-start gap-5 md:gap-6">
-        <span 
-          className="flex-shrink-0 w-3 h-3 rounded-full mt-1.5"
-          style={{ backgroundColor: levelColor }}
-        />
-        <div className="flex items-start gap-3 flex-1">
-          <p className="text-[#4a4a4c] leading-relaxed text-base flex-1">{point}</p>
-          {hasAlignment && (
-            <div className="group relative flex-shrink-0">
-              <div className="w-5 h-5 rounded-full bg-[#00877C]/15 flex items-center justify-center transition-all group-hover:bg-[#00877C]/25">
-                <svg className="w-3 h-3 text-[#00877C]" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-                </svg>
-              </div>
-              {/* Tooltip - compact card style */}
-              <div 
-                className="absolute right-0 bottom-full mb-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none"
-                style={{ zIndex: 1000, width: '180px' }}
-              >
-                <div 
-                  className="bg-white border-2 border-[#00877C] rounded-lg shadow-xl"
-                  style={{ padding: '10px 12px' }}
-                >
-                  <p className="text-xs font-medium text-[#4a4a4c] leading-tight text-center">
-                    Has alignment info
-                  </p>
-                  {/* Arrow */}
-                  <div 
-                    className="absolute right-2 top-full w-0 h-0"
-                    style={{
-                      borderLeft: '6px solid transparent',
-                      borderRight: '6px solid transparent',
-                      borderTop: '6px solid #00877C',
-                    }}
-                  ></div>
-                </div>
-              </div>
-            </div>
-          )}
+    <div
+      className={`relative bg-[#F8F9FA] border rounded-2xl hover:border-[#1f2bd4] hover:shadow-md transition-all ${
+        isRelevant ? "border-[#1f2bd4]/50 bg-[#1f2bd4]/5" : "border-[#e2e3e4]"
+      }`}
+      style={{ padding: '40px 48px' }}
+    >
+      {isRelevant && (
+        <div className="inline-flex items-center gap-1 rounded-full border border-[#1f2bd4]/30 bg-[#1f2bd4]/10 text-[#1f2bd4] text-xs font-semibold"
+          style={{ marginBottom: "14px", padding: "4px 8px" }}
+        >
+          <span>●</span>
+          Role-relevant descriptor
         </div>
-      </div>
+      )}
+      <p className="text-[#4a4a4c] leading-relaxed text-base">{point}</p>
     </div>
   );
 }
@@ -81,14 +55,17 @@ function DescriptorReadOnly({
 function LevelTabsReadOnly({
   capabilityLevels,
   capabilityColor,
+  requiredLevel,
+  requiredDescriptorIndexes,
 }: {
   capabilityLevels: {
     level: CapabilityLevel;
     bulletPoints: string[];
     alignmentStatement?: string;
-    descriptorAlignments?: DescriptorAlignment[];
   }[];
   capabilityColor: string;
+  requiredLevel: CapabilityLevel | null;
+  requiredDescriptorIndexes: number[];
 }) {
   const levelOrder: CapabilityLevel[] = ["FOUNDATION", "INTERMEDIATE", "ADVANCED", "EXEMPLAR"];
   const [selectedTab, setSelectedTab] = useState<CapabilityLevel>("FOUNDATION");
@@ -144,16 +121,14 @@ function LevelTabsReadOnly({
                 }
               }}
             >
-              <span className="flex items-center gap-3">
-                {/* Colour dot indicator */}
-                <span 
-                  className={`w-3 h-3 rounded-full ${
-                    isActive ? 'bg-white' : ''
-                  }`} 
-                  style={!isActive ? { backgroundColor: color } : undefined}
-                />
-                {level.charAt(0) + level.slice(1).toLowerCase()}
-              </span>
+              {level.charAt(0) + level.slice(1).toLowerCase()}
+              {requiredLevel === level && (
+                <span className="ml-2 inline-flex items-center gap-1 text-xs font-bold bg-white/20 rounded-full"
+                  style={{ padding: "3px 7px" }}
+                >
+                  ★ required
+                </span>
+              )}
             </button>
           );
         })}
@@ -166,20 +141,14 @@ function LevelTabsReadOnly({
           className="px-6 md:px-8 py-5 border-b-4"
           style={{ borderColor: levelColors[selectedTab] }}
         >
-          <div className="flex flex-col md:flex-row justify-between items-start gap-4">
-            <div className="flex items-center gap-3">
-              <span 
-                className="w-4 h-4 rounded-full"
-                style={{ backgroundColor: levelColors[selectedTab] }}
-              />
-              <div>
-                <h3 className="text-xl font-bold text-[#4a4a4c]">
-                  {selectedTab.charAt(0) + selectedTab.slice(1).toLowerCase()} Level
-                </h3>
-                <p className="text-sm text-[#6d6e71]">
-                  {activeLevelData?.bulletPoints.length || 0} descriptors
-                </p>
-              </div>
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+            <div className="text-center md:flex-1">
+              <h3 className="text-xl font-bold text-[#4a4a4c]">
+                {selectedTab.charAt(0) + selectedTab.slice(1).toLowerCase()} Level
+              </h3>
+              <p className="text-sm text-[#6d6e71]">
+                {activeLevelData?.bulletPoints.length || 0} descriptors
+              </p>
             </div>
 
             <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#f3f3f6] rounded-lg text-sm text-[#6d6e71]">
@@ -194,79 +163,46 @@ function LevelTabsReadOnly({
 
         {/* Descriptors Section - with generous spacing for readability */}
         <div style={{ padding: '48px 56px' }}>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-            {activeLevelData?.bulletPoints.map((point: string, idx: number) => {
-              const hasAlignment = activeLevelData?.descriptorAlignments?.some(
-                (alignment: DescriptorAlignment) => alignment.descriptorIndex === idx
-              ) || false;
-              return (
-                <DescriptorReadOnly 
-                  key={idx} 
-                  point={point} 
-                  index={idx} 
-                  levelColor={levelColors[selectedTab]}
-                  hasAlignment={hasAlignment}
-                />
-              );
-            })}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
+            {activeLevelData?.bulletPoints.map((point: string, idx: number) => (
+              <DescriptorReadOnly
+                key={idx}
+                point={point}
+                levelColor={levelColors[selectedTab]}
+                isRelevant={selectedTab === requiredLevel && requiredDescriptorIndexes.includes(idx)}
+              />
+            ))}
           </div>
         </div>
 
-        {/* Māori Alignment Section - Collapsible */}
-        {activeLevelData?.descriptorAlignments && activeLevelData.descriptorAlignments.length > 0 && (
-          <div style={{ marginLeft: '56px', marginRight: '56px', marginBottom: '48px' }}>
-            <details className="bg-[#00877C]/5 rounded-lg border-2 border-[#00877C]/20 overflow-hidden">
-              <summary className="cursor-pointer select-none list-none px-6 py-5 flex items-center justify-between hover:bg-[#00877C]/10 transition-colors">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-full bg-[#00877C]/20 flex items-center justify-center">
-                    <svg className="w-5 h-5 text-[#00877C]" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-                    </svg>
-                  </div>
-                  <h4 className="font-semibold text-[#00877C] text-base">Māori Alignment & Framework References</h4>
-                  <span className="text-xs bg-[#00877C]/10 text-[#00877C] px-2 py-1 rounded-full font-medium">
-                    {activeLevelData.descriptorAlignments.length} alignment{activeLevelData.descriptorAlignments.length !== 1 ? 's' : ''}
-                  </span>
+        {/* Alignment to Whāia Te Hihiri - Fixed, always visible */}
+        <div style={{ marginLeft: '56px', marginRight: '56px', marginBottom: '48px' }}>
+          <div className="bg-[#00877C]/5 rounded-lg border-2 border-[#00877C]/20 overflow-hidden">
+            <div className="px-6 py-5 border-b border-[#00877C]/20">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-full bg-[#00877C]/20 flex items-center justify-center">
+                  <svg className="w-5 h-5 text-[#00877C]" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                  </svg>
                 </div>
-                <svg className="w-5 h-5 text-[#00877C] transition-transform details-chevron" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                </svg>
-              </summary>
-              <div className="px-6 pb-6 space-y-6">
-                {activeLevelData.descriptorAlignments.map((alignment: DescriptorAlignment, idx: number) => (
-                  <div key={idx} className="bg-white rounded-lg p-6 border border-[#00877C]/20">
-                    <div className="flex items-start gap-3 mb-3">
-                      <span className="w-6 h-6 rounded-full bg-[#00877C] text-white flex items-center justify-center text-xs font-bold flex-shrink-0">
-                        {alignment.descriptorIndex + 1}
-                      </span>
-                      <p className="text-sm text-[#6d6e71] italic leading-relaxed">
-                        <strong>Descriptor:</strong> {activeLevelData.bulletPoints[alignment.descriptorIndex]}
-                      </p>
-                    </div>
-                    <p className="text-sm text-[#4a4a4c] leading-relaxed mb-3 pl-9">
-                      {alignment.alignmentText}
-                    </p>
-                    {alignment.frameworks && alignment.frameworks.length > 0 && (
-                      <div className="pl-9 pt-3 border-t border-[#00877C]/10">
-                        <p className="text-xs font-medium text-[#00877C] mb-2">Aligned to:</p>
-                        <div className="flex flex-wrap gap-2">
-                          {alignment.frameworks.map((framework, fIdx) => (
-                            <span
-                              key={fIdx}
-                              className="inline-flex items-center px-3 py-1 rounded-md bg-[#00877C]/10 text-[#00877C] text-xs font-medium border border-[#00877C]/20"
-                            >
-                              {framework}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                ))}
+                <h4 className="font-semibold text-[#00877C] text-base">Alignment to Whāia Te Hihiri</h4>
               </div>
-            </details>
+            </div>
+            <div style={{ padding: "32px" }}>
+              <div
+                className="bg-white rounded-lg border border-[#00877C]/20"
+                style={{ padding: "28px" }}
+              >
+                <p className="text-xs font-semibold uppercase tracking-wide text-[#00877C] mb-2">
+                  {selectedTab.charAt(0) + selectedTab.slice(1).toLowerCase()}
+                </p>
+                <p className="text-sm text-[#4a4a4c] leading-relaxed" style={{ lineHeight: "1.75" }}>
+                  {activeLevelData?.alignmentStatement || ""}
+                </p>
+              </div>
+            </div>
           </div>
-        )}
+        </div>
       </div>
     </div>
   );
@@ -288,6 +224,25 @@ function ExploreContent() {
   const prevColors = prevCapability ? CAPABILITY_COLORS[prevCapability.id] : null;
   const nextColors = nextCapability ? CAPABILITY_COLORS[nextCapability.id] : null;
 
+  const {
+    selection,
+    isGuidedFilterActive,
+    getRequiredLevel,
+    getRelevantDescriptorIndexesForLevel,
+  } = useGuidedFilter();
+
+  const requiredLevel = getRequiredLevel(capability.id);
+  const requiredLevelDescriptorCount =
+    capability.levels.find((l) => l.level === requiredLevel)?.bulletPoints.length || 0;
+  const requiredDescriptorIndexes = requiredLevel
+    ? getRelevantDescriptorIndexesForLevel(capability.id, requiredLevel, requiredLevelDescriptorCount)
+    : [];
+  const activeFilterName = selection
+    ? (selection.filterType === "role"
+        ? roles.find((r) => r.id === selection.filterId)?.name
+        : functions.find((f) => f.id === selection.filterId)?.name) || selection.filterId
+    : null;
+
   return (
     <div className="w-full min-h-screen bg-[#f2f2f2]">
       {/* Header with key area colour background */}
@@ -303,21 +258,7 @@ function ExploreContent() {
               <span className="text-white" style={{ color: '#FFFFFF' }}>/</span>
               <span className="text-white font-medium" style={{ color: '#FFFFFF' }}>Explore</span>
             </div>
-            <select
-              value={capability.id}
-              onChange={(e) => {
-                const targetId = e.target.value;
-                window.location.href = `/explore?capability=${targetId}`;
-              }}
-              className="px-6 py-3.5 bg-white/20 border-2 border-white/30 rounded-lg text-lg font-semibold text-white hover:bg-white/30 focus:bg-white/30 focus:ring-2 focus:ring-white/50 transition-all outline-none cursor-pointer backdrop-blur-sm"
-              style={{ color: '#FFFFFF' }}
-            >
-              {capabilities.map((cap) => (
-                <option key={cap.id} value={cap.id} style={{ color: '#4a4a4c' }}>
-                  {cap.name}
-                </option>
-              ))}
-            </select>
+            <CapabilitySelector currentCapabilityId={capability.id} mode="explore" />
           </div>
 
           {/* Centered capability title and description */}
@@ -328,13 +269,68 @@ function ExploreContent() {
             <p className="text-lg leading-relaxed" style={{ color: '#FFFFFF' }}>
               {capability.description}
             </p>
+            {isGuidedFilterActive && (
+              <div className="inline-flex flex-wrap items-center justify-center gap-2 rounded-lg border border-white/40 bg-white/15"
+                style={{ marginTop: "16px", padding: "8px 12px" }}
+              >
+                <span className="text-sm font-semibold text-white">Guided mode:</span>
+                <span className="text-sm text-white/95">
+                  {selection?.filterType === "role" ? "Role" : "Function"}: {activeFilterName}
+                </span>
+                {requiredLevel ? (
+                  <span className="text-xs font-bold rounded-full bg-white/20 text-white" style={{ padding: "3px 8px" }}>
+                    ★ Required level: {requiredLevel.charAt(0) + requiredLevel.slice(1).toLowerCase()}
+                  </span>
+                ) : (
+                  <span className="text-xs font-semibold rounded-full bg-white/20 text-white" style={{ padding: "3px 8px" }}>
+                    Not mapped for this role/function
+                  </span>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </header>
 
       <main className="w-full">
         <div className="max-w-[1100px] mx-auto px-8 lg:px-12 py-12 md:py-16">
-          <LevelTabsReadOnly capabilityLevels={capability.levels} capabilityColor={capabilityColor} />
+          <LevelTabsReadOnly
+            capabilityLevels={capability.levels}
+            capabilityColor={capabilityColor}
+            requiredLevel={requiredLevel}
+            requiredDescriptorIndexes={requiredDescriptorIndexes}
+          />
+
+          {/* Training Resources */}
+          <div 
+            className="bg-white rounded-xl border border-[#d9d9d9] shadow-sm"
+            style={{ marginTop: '64px', marginBottom: '48px', padding: '40px 48px' }}
+          >
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <h4 className="font-bold text-[#4a4a4c] text-lg" style={{ marginBottom: '16px' }}>
+                  Training &amp; Development Resources
+                </h4>
+                <p className="text-[#6d6e71] text-base leading-relaxed" style={{ marginBottom: '20px' }}>
+                  Access training materials, courses, and development resources for RMA staff.
+                </p>
+                <a
+                  href="https://research-hub.auckland.ac.nz/induction-skills-and-development/research-management-and-administration-rma-staff-development"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 text-sm font-semibold text-[#1f2bd4] hover:text-[#0c0c48] transition-colors"
+                >
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                  </svg>
+                  Visit Research Hub - RMA Staff Development
+                  <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                  </svg>
+                </a>
+              </div>
+            </div>
+          </div>
 
           {/* Self-Assessment CTA - using capability colour */}
           <div 

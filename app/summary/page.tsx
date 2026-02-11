@@ -230,7 +230,7 @@ export default function SummaryPage() {
                 </div>
               )}
               <div className="bg-white rounded-lg border border-[#d9d9d9] p-5 text-center">
-                <div className="text-3xl font-bold text-[#00877C] mb-1">
+                <div className="text-3xl font-bold text-[#9a7100] mb-1">
                   {printCapabilities.reduce((sum, c) => sum + getDevelopmentFocus(c.id).length, 0)}
                 </div>
                 <div className="text-sm text-[#6d6e71]">Development Focus Areas</div>
@@ -247,7 +247,7 @@ export default function SummaryPage() {
             <div className="flex flex-wrap gap-4 no-print justify-center" style={{ marginBottom: '48px', marginTop: '32px' }}>
               <Link
                 href="/assess"
-                className="inline-flex items-center gap-2 bg-[#EAAB00]/10 border border-[#EAAB00]/30 text-[#9a7100] rounded-lg font-semibold hover:bg-[#EAAB00]/20 transition-colors"
+                className="inline-flex items-center gap-2 bg-[#00877C]/10 border border-[#00877C]/30 text-[#00877C] rounded-lg font-semibold hover:bg-[#00877C]/20 transition-colors"
                 style={{
                   padding: '14px 28px',
                   fontSize: '15px'
@@ -260,7 +260,7 @@ export default function SummaryPage() {
               </Link>
               <Link
                 href="/plan"
-                className="inline-flex items-center gap-2 bg-[#00877C]/10 border border-[#00877C]/30 text-[#00877C] rounded-lg font-semibold hover:bg-[#00877C]/20 transition-colors"
+                className="inline-flex items-center gap-2 bg-[#EAAB00]/10 border border-[#EAAB00]/30 text-[#9a7100] rounded-lg font-semibold hover:bg-[#EAAB00]/20 transition-colors"
                 style={{
                   padding: '14px 28px',
                   fontSize: '15px'
@@ -323,7 +323,7 @@ export default function SummaryPage() {
                           )}
                           <td className="py-5 px-6 lg:px-8">
                             {getDevelopmentFocus(capability.id).length > 0 ? (
-                              <span className="text-sm font-medium text-[#00877C]">
+                              <span className="text-sm font-medium text-[#9a7100]">
                                 {getDevelopmentFocus(capability.id).length} descriptor{getDevelopmentFocus(capability.id).length !== 1 ? 's' : ''}
                               </span>
                             ) : (
@@ -374,11 +374,11 @@ export default function SummaryPage() {
                           </div>
                           <div className="flex items-center gap-3" style={{ paddingRight: '8px' }}>
                             {reportMode !== 'focus-only' && (
-                              <span className="inline-flex items-center gap-1.5 rounded-full bg-[#EAAB00]/10 text-[#9a7100] border border-[#EAAB00]/30" style={{ padding: '10px 18px', fontSize: '14px' }}>
+                              <span className="inline-flex items-center gap-1.5 rounded-full bg-[#00877C]/10 text-[#00877C] border border-[#00877C]/30" style={{ padding: '10px 18px', fontSize: '14px' }}>
                                 <span className="font-medium">{demonstrated.length}</span> demonstrated
                               </span>
                             )}
-                            <span className="inline-flex items-center gap-1.5 rounded-full bg-[#00877C]/10 text-[#00877C] border border-[#00877C]/30" style={{ padding: '10px 18px', fontSize: '14px' }}>
+                            <span className="inline-flex items-center gap-1.5 rounded-full bg-[#EAAB00]/10 text-[#9a7100] border border-[#EAAB00]/30" style={{ padding: '10px 18px', fontSize: '14px' }}>
                               <span className="font-medium">{focus.length}</span> to develop
                             </span>
                           </div>
@@ -390,7 +390,7 @@ export default function SummaryPage() {
                         {reportMode !== 'focus-only' && demonstrated.length > 0 && (
                           <div className="demonstrated-section-container" style={{ marginBottom: '32px' }}>
                             <h4 className="font-semibold text-[#4a4a4c] flex items-center gap-2" style={{ marginBottom: '20px' }}>
-                              <span className="w-5 h-5 rounded-full bg-[#EAAB00]/20 flex items-center justify-center text-[#9a7100] text-xs">✓</span>
+                              <span className="w-5 h-5 rounded-full bg-[#00877C]/20 flex items-center justify-center text-[#00877C] text-xs">✓</span>
                               Demonstrated Competencies
                             </h4>
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
@@ -402,8 +402,8 @@ export default function SummaryPage() {
                                 if (!levelData) return null;
 
                                 return (
-                                  <div key={level} className="bg-[#EAAB00]/10 rounded-lg border border-[#EAAB00]/30" style={{ padding: '20px' }}>
-                                    <div className="font-semibold text-[#9a7100] text-sm" style={{ marginBottom: '12px' }}>
+                                  <div key={level} className="bg-[#00877C]/10 rounded-lg border border-[#00877C]/30" style={{ padding: '20px' }}>
+                                    <div className="font-semibold text-[#00877C] text-sm" style={{ marginBottom: '12px' }}>
                                       {level.charAt(0) + level.slice(1).toLowerCase()} Level
                                     </div>
                                     <ul style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
@@ -415,7 +415,7 @@ export default function SummaryPage() {
                                           
                                           return (
                                             <li key={`${d.level}-${d.descriptorIndex}`} className="flex gap-2 text-sm text-[#4a4a4c]">
-                                              <span className="text-[#9a7100] font-medium shrink-0">✓</span>
+                                              <span className="text-[#00877C] font-medium shrink-0">✓</span>
                                               <span>{descriptor}</span>
                                             </li>
                                           );
@@ -432,7 +432,7 @@ export default function SummaryPage() {
                         {focus.length > 0 && (
                           <div className="focus-section-container" style={{ marginBottom: '32px' }}>
                             <h4 className="font-semibold text-[#4a4a4c] flex items-center gap-2" style={{ marginBottom: '20px' }}>
-                              <span className="w-5 h-5 rounded-full bg-[#00877C]/20 flex items-center justify-center text-[#00877C] text-xs">→</span>
+                              <span className="w-5 h-5 rounded-full bg-[#EAAB00]/20 flex items-center justify-center text-[#9a7100] text-xs">→</span>
                               Development Focus Areas
                             </h4>
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
@@ -444,8 +444,8 @@ export default function SummaryPage() {
                                 if (!levelData) return null;
 
                                 return (
-                                  <div key={level} className="bg-[#00877C]/10 rounded-lg border border-[#00877C]/30" style={{ padding: '20px' }}>
-                                    <div className="font-semibold text-[#00877C] text-sm" style={{ marginBottom: '12px' }}>
+                                  <div key={level} className="bg-[#EAAB00]/10 rounded-lg border border-[#EAAB00]/30" style={{ padding: '20px' }}>
+                                    <div className="font-semibold text-[#9a7100] text-sm" style={{ marginBottom: '12px' }}>
                                       {level.charAt(0) + level.slice(1).toLowerCase()} Level Target
                                     </div>
                                     <ul style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
@@ -457,7 +457,7 @@ export default function SummaryPage() {
                                           
                                           return (
                                             <li key={`${f.level}-${f.descriptorIndex}`} className="flex gap-2 text-sm text-[#4a4a4c]">
-                                              <span className="text-[#00877C] font-medium shrink-0">→</span>
+                                              <span className="text-[#9a7100] font-medium shrink-0">→</span>
                                               <span>{descriptor}</span>
                                             </li>
                                           );
@@ -501,8 +501,8 @@ export default function SummaryPage() {
 
             {/* Call to action if no development focus yet */}
             {!completedCapabilities.some(c => getDevelopmentFocus(c.id).length > 0) && (
-              <div className="bg-[#00877C]/10 rounded-lg border border-[#00877C]/30 p-8 text-center mb-10">
-                <h3 className="text-lg font-semibold text-[#00877C] mb-2">Select Your Development Focus</h3>
+              <div className="bg-[#EAAB00]/10 rounded-lg border border-[#EAAB00]/30 p-8 text-center mb-10">
+                <h3 className="text-lg font-semibold text-[#9a7100] mb-2">Select Your Development Focus</h3>
                 <p className="text-[#4a4a4c] text-sm mb-4">
                   Return to the self-assessment page and tick "Want to develop" for the descriptors you'd like to focus on. Then add development notes on the Plan page.
                 </p>

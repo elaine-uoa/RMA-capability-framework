@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { useState, useRef, useEffect } from "react";
 import { capabilities } from "@/data/capabilities";
-import { roles, functions, getCapabilityIdsForRole, getCapabilityIdsForFunction } from "@/data/roleFilters";
+import { roles, functions } from "@/data/roleFilters";
+import { useGuidedFilter } from "@/hooks/useGuidedFilter";
 
 // Key Areas structure mapping capabilities to their key areas
 // ARMA-inspired vibrant colours while staying within UoA brand palette
@@ -154,157 +155,15 @@ const capabilityMetadata: Record<string, { icon: React.ReactNode }> = {
   },
 };
 
-// Component for expandable key area card (ARMA-inspired)
-function KeyAreaCard({ area, visibleCapabilityIds, filterType }: { area: KeyArea; visibleCapabilityIds: string[] | null; filterType: 'role' | 'function' | null }) {
-  const [isExpanded, setIsExpanded] = useState(true);
-  
-  // Get all capabilities in this area
-  const areaCapabilities = capabilities.filter(cap => 
-    area.capabilityIds.includes(cap.id)
-  );
-  
-  // Check if any are mapped to the filter (if filter is active)
-  const hasMappedCapabilities = visibleCapabilityIds === null || 
-    areaCapabilities.some(cap => visibleCapabilityIds.includes(cap.id));
-  
-  // Don't render the card if no capabilities at all in this area
-  if (areaCapabilities.length === 0) {
-    return null;
-  }
-
-  return (
-    <div className="overflow-hidden">
-      {/* ARMA-inspired vibrant coloured header card - Increased size for prominence */}
-      <div 
-        className="rounded-2xl transition-all duration-300 cursor-pointer"
-        style={{ 
-          backgroundColor: area.color.solid,
-          padding: '36px',
-        }}
-        onClick={() => setIsExpanded(!isExpanded)}
-      >
-        <div className="flex items-start gap-6">
-          {/* Large icon - increased size */}
-          <div className="flex-shrink-0 text-white/90" style={{ fontSize: '2.5rem' }}>
-            {area.icon}
-          </div>
-          <div className="flex-1 min-w-0">
-            <h3 className="font-bold mb-3" style={{ color: '#FFFFFF', fontSize: '1.75rem', lineHeight: '1.3' }}>
-              {area.name}
-            </h3>
-            <p className="leading-relaxed" style={{ color: '#FFFFFF', fontSize: '1.05rem' }}>
-              {area.description}
-            </p>
-          </div>
-          {/* Expand/collapse indicator - increased size */}
-          <button 
-            className="flex-shrink-0 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center transition-all"
-            style={{ width: '48px', height: '48px' }}
-            aria-label={isExpanded ? "Collapse capabilities" : "Expand capabilities"}
-          >
-            <svg 
-              className={`text-white transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`}
-              style={{ width: '24px', height: '24px' }}
-              fill="none" 
-              viewBox="0 0 24 24" 
-              stroke="currentColor" 
-              strokeWidth={2}
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-            </svg>
-          </button>
-        </div>
-      </div>
-      
-      {/* Expandable capabilities list */}
-      <div 
-        className={`overflow-hidden transition-all duration-300 ease-in-out ${
-          isExpanded ? 'max-h-[2000px] opacity-100' : 'max-h-0 opacity-0'
-        }`}
-        style={{ marginTop: isExpanded ? '24px' : '0' }}
-      >
-        <div 
-          className="rounded-xl border-2 overflow-hidden"
-          style={{ borderColor: area.color.solid }}
-        >
-          {areaCapabilities.map((cap, index) => {
-            const metadata = capabilityMetadata[cap.id] || { icon: null };
-            const isMapped = visibleCapabilityIds === null || visibleCapabilityIds.includes(cap.id);
-            const isGreyedOut = !isMapped;
-            
-            return (
-              <Link
-                key={cap.id}
-                href={`/explore?capability=${cap.id}`}
-                className={`group flex items-center transition-colors ${
-                  isGreyedOut 
-                    ? 'bg-gray-50 hover:bg-gray-100 opacity-50' 
-                    : 'bg-white hover:bg-gray-50'
-                }`}
-                style={{ 
-                  padding: '16px 20px',
-                  gap: '14px',
-                  borderBottom: index < areaCapabilities.length - 1 ? '2px solid #e2e3e4' : 'none'
-                }}
-              >
-                <div 
-                  className="flex-shrink-0 rounded-lg flex items-center justify-center transition-colors"
-                  style={{ 
-                    backgroundColor: isGreyedOut ? '#f2f2f2' : area.color.light, 
-                    color: isGreyedOut ? '#afafc3' : area.color.solid,
-                    width: '36px',
-                    height: '36px',
-                    fontSize: '0.95rem'
-                  }}
-                >
-                  {metadata.icon}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h4 
-                    className={`font-semibold transition-colors ${
-                      isGreyedOut 
-                        ? 'text-[#afafc3]' 
-                        : 'text-[#4a4a4c] group-hover:text-[#0c0c48]'
-                    }`}
-                    style={{ fontSize: '0.95rem', lineHeight: '1.4' }}
-                  >
-                    {cap.name}
-                    {isGreyedOut && (
-                      <span className="ml-2 text-xs font-normal italic text-[#afafc3]">
-                        (not mapped to selected {filterType === 'role' ? 'role' : 'function'})
-                      </span>
-                    )}
-                  </h4>
-                  <p className={`line-clamp-1 ${isGreyedOut ? 'text-[#AAAAAA]' : 'text-[#6d6e71]'}`} style={{ fontSize: '0.85rem', marginTop: '2px' }}>
-                    {cap.description}
-                  </p>
-                </div>
-                <svg 
-                  className={`flex-shrink-0 transition-colors ${
-                    isGreyedOut 
-                      ? 'text-[#d9d9d9]' 
-                      : 'text-[#d9d9d9] group-hover:text-[#0c0c48]'
-                  }`}
-                  style={{ width: '18px', height: '18px' }}
-                  fill="none" 
-                  viewBox="0 0 24 24" 
-                  stroke="currentColor"
-                  strokeWidth={2}
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                </svg>
-              </Link>
-            );
-          })}
-        </div>
-      </div>
-    </div>
-  );
-}
-
 export default function Home() {
-  const [selectedFilter, setSelectedFilter] = useState<string | null>(null);
-  const [filterType, setFilterType] = useState<'role' | 'function' | null>(null);
+  const {
+    selectedFilterId,
+    filterType,
+    mappedCapabilityIds,
+    getRequiredLevel,
+    setGuidedFilter,
+    clearGuidedFilter,
+  } = useGuidedFilter();
   const [activeTab, setActiveTab] = useState<'role' | 'function'>('role');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
@@ -321,13 +180,12 @@ export default function Home() {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
-  
+
   // Determine which capabilities should be visible based on the selected filter
-  const visibleCapabilityIds = selectedFilter && filterType
-    ? filterType === 'role' 
-      ? getCapabilityIdsForRole(selectedFilter)
-      : getCapabilityIdsForFunction(selectedFilter)
+  const visibleCapabilityIds = selectedFilterId && filterType
+    ? mappedCapabilityIds
     : null; // null means show all capabilities
+  const currentTab = filterType ?? activeTab;
   
   // Filter roles and functions based on search query
   const filteredRoles = roles.filter(role => 
@@ -339,15 +197,14 @@ export default function Home() {
   );
   
   const handleFilterSelect = (type: 'role' | 'function', id: string) => {
-    setSelectedFilter(id);
-    setFilterType(type);
+    setGuidedFilter(type, id);
     setIsDropdownOpen(false);
     setSearchQuery('');
+    setActiveTab(type);
   };
   
   const clearFilter = () => {
-    setSelectedFilter(null);
-    setFilterType(null);
+    clearGuidedFilter();
     setSearchQuery('');
   };
   
@@ -415,10 +272,10 @@ export default function Home() {
               About the Framework
             </h2>
             <p className="text-base md:text-lg text-[#6d6e71] leading-relaxed max-w-[900px] mx-auto mb-5">
-              The RMA Capability Framework identifies the core capabilities required for Research Management &amp; Administration staff to perform their roles effectively. It was developed through a consultation process with interest-holders across the University and the RMA function.
+              The RMA Capability Framework is a professional development tool created to encourage professional development activities for all staff across the RMA function.
             </p>
             <p className="text-base md:text-lg text-[#6d6e71] leading-relaxed max-w-[900px] mx-auto">
-              The framework comprises <strong>10 core capabilities</strong> organised across <strong>5 key functional areas</strong>. Click on any area below to explore detailed descriptors at Foundation, Intermediate, Advanced, and Exemplar levels.
+              It comprises <strong>10 core capabilities</strong> organised across <strong>5 key functional areas</strong> and <strong>4 proficiency levels</strong>, and supports role-focused development conversations rather than performance evaluation.
             </p>
           </div>
 
@@ -430,9 +287,9 @@ export default function Home() {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
                 </svg>
               </div>
-              <h3 className="font-bold text-[#4a4a4c] text-lg" style={{ marginBottom: '16px' }}>Who is it for?</h3>
+              <h3 className="font-bold text-[#4a4a4c] text-lg" style={{ marginBottom: '16px' }}>Purpose</h3>
               <p className="text-base text-[#6d6e71] leading-relaxed">
-                For all RMA staff at all levels, or anyone interested in pursuing a career in RMA. Collectively, RMA staff contribute to the full range of capabilities — no single person is expected to perform all of them.
+                The key purpose of RMA at Waipapa Taumata Rau, University of Auckland, is to enable and support research excellence through strategic and operational leadership, with impactful outcomes for Aotearoa New Zealand and beyond while upholding Te Tiriti o Waitangi principles and researcher-centred delivery.
               </p>
             </div>
             <div className="bg-[#f2f2f2] rounded-xl border border-[#e2e3e4]" style={{ padding: '40px' }}>
@@ -441,9 +298,9 @@ export default function Home() {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
-              <h3 className="font-bold text-[#4a4a4c] text-lg" style={{ marginBottom: '16px' }}>Purpose</h3>
+              <h3 className="font-bold text-[#4a4a4c] text-lg" style={{ marginBottom: '16px' }}>Creation</h3>
               <p className="text-base text-[#6d6e71] leading-relaxed">
-                Understand your individual skills, identify capability gaps, and create personalised development plans. This tool supports development conversations — it is not for performance evaluation.
+                Feedback was gathered through extensive consultation with an external consultant and staff across the RMA community. Drawing on international frameworks, this bespoke model reflects the unique context and aspirations of Waipapa Taumata Rau.
               </p>
             </div>
             <div className="bg-[#f2f2f2] rounded-xl border border-[#e2e3e4]" style={{ padding: '40px' }}>
@@ -452,50 +309,13 @@ export default function Home() {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                 </svg>
               </div>
-              <h3 className="font-bold text-[#4a4a4c] text-lg" style={{ marginBottom: '16px' }}>Māori Alignment</h3>
+              <h3 className="font-bold text-[#4a4a4c] text-lg" style={{ marginBottom: '16px' }}>Use</h3>
               <p className="text-base text-[#6d6e71] leading-relaxed">
-                The framework is aligned to Whāia Te Hihiri and Ngā Taumata Tutukinga, offering culturally responsive behavioural indicators that support Māori-informed research pathways.
+                This interactive website helps you identify capabilities to develop in your current role or future aspirations. It is not for performance evaluation, and can be used to guide development discussions with your manager.
               </p>
             </div>
           </div>
 
-          {/* Proficiency Level Descriptors */}
-          <div className="bg-[#f2f2f2] rounded-xl border border-[#e2e3e4]" style={{ padding: '48px' }}>
-            <h3 className="font-bold text-[#4a4a4c] text-center text-xl" style={{ marginBottom: '20px' }}>Proficiency Levels</h3>
-            <p className="text-base text-[#6d6e71] text-center max-w-[800px] mx-auto leading-relaxed" style={{ marginBottom: '40px' }}>
-              Each capability is assessed across four proficiency levels. Not all levels need to be attained — it depends on your role and objectives.
-            </p>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4" style={{ gap: '32px' }}>
-              <div className="bg-white rounded-lg border border-[#e2e3e4]" style={{ padding: '32px' }}>
-                <div className="flex items-center" style={{ gap: '12px', marginBottom: '16px' }}>
-                  <span className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold text-white" style={{ backgroundColor: 'rgba(0,69,125,0.4)' }}>1</span>
-                  <span className="font-semibold text-[#4a4a4c] text-base">Foundation</span>
-                </div>
-                <p className="text-sm text-[#6d6e71] leading-relaxed">Core knowledge and awareness. Beginning to apply skills with guidance and support.</p>
-              </div>
-              <div className="bg-white rounded-lg border border-[#e2e3e4]" style={{ padding: '32px' }}>
-                <div className="flex items-center" style={{ gap: '12px', marginBottom: '16px' }}>
-                  <span className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold text-white" style={{ backgroundColor: 'rgba(0,69,125,0.6)' }}>2</span>
-                  <span className="font-semibold text-[#4a4a4c] text-base">Intermediate</span>
-                </div>
-                <p className="text-sm text-[#6d6e71] leading-relaxed">Working independently with developing expertise. Actively contributing to team outcomes.</p>
-              </div>
-              <div className="bg-white rounded-lg border border-[#e2e3e4]" style={{ padding: '32px' }}>
-                <div className="flex items-center" style={{ gap: '12px', marginBottom: '16px' }}>
-                  <span className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold text-white" style={{ backgroundColor: 'rgba(0,69,125,0.8)' }}>3</span>
-                  <span className="font-semibold text-[#4a4a4c] text-base">Advanced</span>
-                </div>
-                <p className="text-sm text-[#6d6e71] leading-relaxed">Leading and mentoring others. Driving strategy and influencing practice across the organisation.</p>
-              </div>
-              <div className="bg-white rounded-lg border border-[#e2e3e4]" style={{ padding: '32px' }}>
-                <div className="flex items-center" style={{ gap: '12px', marginBottom: '16px' }}>
-                  <span className="w-8 h-8 rounded-full bg-[#0c0c48] flex items-center justify-center text-sm font-bold text-white">4</span>
-                  <span className="font-semibold text-[#4a4a4c] text-base">Exemplar</span>
-                </div>
-                <p className="text-sm text-[#6d6e71] leading-relaxed">Sector-leading expertise. Shaping institutional direction and transforming practice at a systemic level.</p>
-              </div>
-            </div>
-          </div>
         </div>
       </section>
 
@@ -517,7 +337,7 @@ export default function Home() {
               </div>
               
               {/* Active filter display - Centered */}
-              {selectedFilter && (
+              {selectedFilterId && (
                 <div className="flex items-center justify-center gap-3 p-5 bg-[#E8F4FD] rounded-lg border border-[#1f2bd4] max-w-[700px] mx-auto" style={{ marginBottom: '32px' }}>
                   <svg className="w-5 h-5 text-[#1f2bd4] flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
@@ -527,8 +347,8 @@ export default function Home() {
                       Filtering by {filterType === 'role' ? 'Role' : 'Function'}:{' '}
                       <span className="font-bold">
                         {filterType === 'role' 
-                          ? roles.find(r => r.id === selectedFilter)?.name 
-                          : functions.find(f => f.id === selectedFilter)?.name}
+                          ? roles.find(r => r.id === selectedFilterId)?.name 
+                          : functions.find(f => f.id === selectedFilterId)?.name}
                       </span>
                     </p>
                   </div>
@@ -548,7 +368,7 @@ export default function Home() {
                   <button
                     onClick={() => handleTabChange('role')}
                     className={`flex items-center gap-2 font-medium text-sm transition-all ${
-                      activeTab === 'role'
+                      currentTab === 'role'
                         ? 'bg-[#0c0c48] text-white'
                         : 'bg-white text-[#4a4a4c] hover:bg-[#f3f3f6]'
                     }`}
@@ -562,7 +382,7 @@ export default function Home() {
                   <button
                     onClick={() => handleTabChange('function')}
                     className={`flex items-center gap-2 font-medium text-sm transition-all border-l-2 border-[#d9d9d9] ${
-                      activeTab === 'function'
+                      currentTab === 'function'
                         ? 'bg-[#00877C] text-white'
                         : 'bg-white text-[#4a4a4c] hover:bg-[#f3f3f6]'
                     }`}
@@ -583,7 +403,7 @@ export default function Home() {
                   <div className="relative">
                     <input
                       type="text"
-                      placeholder={`Search ${activeTab === 'role' ? 'roles' : 'functions'}... (e.g., ${activeTab === 'role' ? 'Research, Grant, Coordinator' : 'Operations, Strategy, Development'})`}
+                      placeholder={`Search ${currentTab === 'role' ? 'roles' : 'functions'}... (e.g., ${currentTab === 'role' ? 'Research, Grant, Coordinator' : 'Operations, Strategy, Development'})`}
                       value={searchQuery}
                       onChange={(e) => {
                         setSearchQuery(e.target.value);
@@ -621,15 +441,15 @@ export default function Home() {
                   </div>
                   
                   {/* Dropdown List */}
-                  {isDropdownOpen && (activeTab === 'role' ? filteredRoles.length > 0 : filteredFunctions.length > 0) && (
+                  {isDropdownOpen && (currentTab === 'role' ? filteredRoles.length > 0 : filteredFunctions.length > 0) && (
                     <div className="absolute z-50 w-full mt-2 bg-white rounded-lg border-2 border-[#d9d9d9] shadow-xl max-h-[400px] overflow-y-auto">
-                      {activeTab === 'role' ? (
+                      {currentTab === 'role' ? (
                         filteredRoles.map((role) => (
                           <button
                             key={role.id}
                             onClick={() => handleFilterSelect('role', role.id)}
                             className={`w-full text-left transition-colors border-b border-[#e2e3e4] last:border-b-0 ${
-                              selectedFilter === role.id && filterType === 'role'
+                              selectedFilterId === role.id && filterType === 'role'
                                 ? 'bg-[#0c0c48] text-white'
                                 : 'hover:bg-[#f3f3f6] text-[#4a4a4c]'
                             }`}
@@ -638,7 +458,7 @@ export default function Home() {
                             <div className="font-medium text-sm">{role.name}</div>
                             {role.description && (
                               <div className={`text-xs mt-1 ${
-                                selectedFilter === role.id && filterType === 'role' ? 'text-white/80' : 'text-[#6d6e71]'
+                                selectedFilterId === role.id && filterType === 'role' ? 'text-white/80' : 'text-[#6d6e71]'
                               }`}>
                                 {role.description}
                               </div>
@@ -651,7 +471,7 @@ export default function Home() {
                             key={func.id}
                             onClick={() => handleFilterSelect('function', func.id)}
                             className={`w-full text-left transition-colors border-b border-[#e2e3e4] last:border-b-0 ${
-                              selectedFilter === func.id && filterType === 'function'
+                              selectedFilterId === func.id && filterType === 'function'
                                 ? 'bg-[#00877C] text-white'
                                 : 'hover:bg-[#f3f3f6] text-[#4a4a4c]'
                             }`}
@@ -660,7 +480,7 @@ export default function Home() {
                             <div className="font-medium text-sm">{func.name}</div>
                             {func.description && (
                               <div className={`text-xs mt-1 ${
-                                selectedFilter === func.id && filterType === 'function' ? 'text-white/80' : 'text-[#6d6e71]'
+                                selectedFilterId === func.id && filterType === 'function' ? 'text-white/80' : 'text-[#6d6e71]'
                               }`}>
                                 {func.description}
                               </div>
@@ -672,13 +492,13 @@ export default function Home() {
                   )}
                   
                   {/* No results message */}
-                  {isDropdownOpen && searchQuery && (activeTab === 'role' ? filteredRoles.length === 0 : filteredFunctions.length === 0) && (
+                  {isDropdownOpen && searchQuery && (currentTab === 'role' ? filteredRoles.length === 0 : filteredFunctions.length === 0) && (
                     <div className="absolute z-50 w-full mt-2 bg-white rounded-lg border-2 border-[#d9d9d9] shadow-xl">
                       <div className="p-6 text-center text-[#6d6e71]">
                         <svg className="w-8 h-8 mx-auto mb-2 text-[#afafc3]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                           <path strokeLinecap="round" strokeLinejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
-                        <p className="text-sm">No {activeTab === 'role' ? 'roles' : 'functions'} found matching &quot;{searchQuery}&quot;</p>
+                        <p className="text-sm">No {currentTab === 'role' ? 'roles' : 'functions'} found matching &quot;{searchQuery}&quot;</p>
                       </div>
                     </div>
                   )}
@@ -686,21 +506,282 @@ export default function Home() {
                 
                 {/* Hint text */}
                 <p className="text-xs text-[#6d6e71] text-center mt-3">
-                  {activeTab === 'role' ? 'Type to search roles' : 'Type to search functions'} or browse the full list
+                  {currentTab === 'role' ? 'Type to search roles' : 'Type to search functions'} or browse the full list
                 </p>
               </div>
             </div>
           </div>
           
-          {/* ARMA-inspired Key Area Cards - Vertical layout */}
-          <div className="flex flex-col" style={{ gap: '48px' }}>
-            {keyAreas.map((area) => (
-              <KeyAreaCard key={area.id} area={area} visibleCapabilityIds={visibleCapabilityIds} filterType={filterType} />
-            ))}
+          {/* 2x5 Capability Card Grid – matches framework document structure */}
+          {/* Each column: Key Area header + 2 capability cards as a cohesive vertical group */}
+          <div className="grid grid-cols-5 items-stretch" style={{ gap: '20px', minHeight: '620px' }}>
+            {keyAreas.map(area => {
+              const areaCaps = capabilities.filter(c => area.capabilityIds.includes(c.id));
+              const cap1 = areaCaps[0];
+              const cap2 = areaCaps[1];
+
+              return (
+                <div key={area.id} className="flex flex-col" style={{ height: '100%' }}>
+                  {/* Key Area Header - rounded top, connects to cards below */}
+                  <div
+                    className="text-center rounded-t-xl shadow-sm flex-shrink-0"
+                    style={{
+                      backgroundColor: area.color.solid,
+                      padding: '24px 18px',
+                      minHeight: '140px',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <div
+                      className="flex items-center justify-center"
+                      style={{
+                        marginBottom: '12px',
+                        transform: 'scale(0.7)',
+                        transformOrigin: 'center',
+                        color: '#FFFFFF',
+                        WebkitTextFillColor: '#FFFFFF',
+                      }}
+                    >
+                      <div style={{ color: '#FFFFFF', WebkitTextFillColor: '#FFFFFF' }}>{area.icon}</div>
+                    </div>
+                    <h3
+                      className="font-bold !text-white leading-snug"
+                      style={{
+                        fontSize: '0.875rem',
+                        color: '#FFFFFF',
+                        WebkitTextFillColor: '#FFFFFF',
+                        textShadow: '0 1px 2px rgba(0,0,0,0.15)',
+                      }}
+                    >
+                      {area.name}
+                    </h3>
+                  </div>
+
+                  {/* First Capability Card - no top radius */}
+                  {cap1 && (() => {
+                    const metadata = capabilityMetadata[cap1.id] || { icon: null };
+                    const isMapped = visibleCapabilityIds === null || visibleCapabilityIds.includes(cap1.id);
+                    const isGreyedOut = !isMapped;
+                    const requiredLevel = selectedFilterId ? getRequiredLevel(cap1.id) : null;
+
+                    return (
+                      <Link
+                        key={cap1.id}
+                        href={`/explore?capability=${cap1.id}`}
+                        className={`group relative flex flex-col flex-1 border-x-2 border-t-2 transition-all ${
+                          isGreyedOut
+                            ? 'bg-gray-50 opacity-50 border-[#e2e3e4]'
+                            : 'bg-white hover:shadow-lg border-[#e2e3e4] hover:border-opacity-60'
+                        }`}
+                        style={{
+                          padding: '20px 18px',
+                          borderLeftColor: isGreyedOut ? '#e2e3e4' : area.color.solid,
+                          borderRightColor: isGreyedOut ? '#e2e3e4' : area.color.solid,
+                          borderTopColor: isGreyedOut ? '#e2e3e4' : area.color.solid,
+                          borderLeftWidth: '3px',
+                          borderRightWidth: '3px',
+                          borderTopWidth: '1px',
+                        }}
+                      >
+                        {/* Icon */}
+                        <div
+                          className="flex-shrink-0 rounded-lg flex items-center justify-center"
+                          style={{
+                            backgroundColor: isGreyedOut ? '#f2f2f2' : area.color.light,
+                            color: isGreyedOut ? '#afafc3' : area.color.solid,
+                            width: '34px',
+                            height: '34px',
+                            marginBottom: '10px',
+                          }}
+                        >
+                          {metadata.icon}
+                        </div>
+
+                        {/* Capability Name */}
+                        <h4
+                          className={`font-bold leading-tight transition-colors ${
+                            isGreyedOut
+                              ? 'text-[#afafc3]'
+                              : 'text-[#4a4a4c] group-hover:text-[#0c0c48]'
+                          }`}
+                          style={{ fontSize: '0.875rem', marginBottom: '6px' }}
+                        >
+                          {cap1.name}
+                          {isGreyedOut && (
+                            <span className="block text-xs font-normal italic text-[#afafc3] mt-1">
+                              (not mapped to selected {filterType === 'role' ? 'role' : 'function'})
+                            </span>
+                          )}
+                        </h4>
+                        {requiredLevel && !isGreyedOut && (
+                          <div className="inline-flex items-center rounded-full text-[11px] font-semibold border"
+                            style={{
+                              marginBottom: "8px",
+                              padding: "4px 8px",
+                              borderColor: `${area.color.solid}55`,
+                              color: area.color.solid,
+                              backgroundColor: `${area.color.solid}12`,
+                            }}
+                          >
+                            Required: {requiredLevel.charAt(0) + requiredLevel.slice(1).toLowerCase()}
+                          </div>
+                        )}
+
+                        {/* Description */}
+                        <p
+                          className={`text-xs flex-1 ${
+                            isGreyedOut ? 'text-[#AAAAAA]' : 'text-[#6d6e71]'
+                          }`}
+                          style={{ display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden', lineHeight: '1.5' }}
+                        >
+                          {cap1.description}
+                        </p>
+
+                        {/* Explore arrow */}
+                        <div className="flex items-center gap-1" style={{ marginTop: '10px' }}>
+                          <span
+                            className={`text-xs font-semibold transition-colors ${
+                              isGreyedOut ? 'text-[#d9d9d9]' : 'group-hover:text-[#0c0c48]'
+                            }`}
+                            style={{ color: isGreyedOut ? '#d9d9d9' : area.color.solid }}
+                          >
+                            Explore
+                          </span>
+                          <svg
+                            className={`flex-shrink-0 transition-colors ${
+                              isGreyedOut ? 'text-[#d9d9d9]' : 'group-hover:text-[#0c0c48]'
+                            }`}
+                            style={{ width: '14px', height: '14px', color: isGreyedOut ? '#d9d9d9' : area.color.solid }}
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            strokeWidth={2.5}
+                          >
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                          </svg>
+                        </div>
+                      </Link>
+                    );
+                  })()}
+
+                  {/* Second Capability Card - rounded bottom, completes the vertical group */}
+                  {cap2 && (() => {
+                    const metadata = capabilityMetadata[cap2.id] || { icon: null };
+                    const isMapped = visibleCapabilityIds === null || visibleCapabilityIds.includes(cap2.id);
+                    const isGreyedOut = !isMapped;
+                    const requiredLevel = selectedFilterId ? getRequiredLevel(cap2.id) : null;
+
+                    return (
+                      <Link
+                        key={cap2.id}
+                        href={`/explore?capability=${cap2.id}`}
+                        className={`group relative flex flex-col flex-1 rounded-b-xl border-2 transition-all ${
+                          isGreyedOut
+                            ? 'bg-gray-50 opacity-50 border-[#e2e3e4]'
+                            : 'bg-white hover:shadow-lg border-[#e2e3e4] hover:border-opacity-60'
+                        }`}
+                        style={{
+                          padding: '20px 18px',
+                          marginTop: '1px',
+                          borderLeftColor: isGreyedOut ? '#e2e3e4' : area.color.solid,
+                          borderRightColor: isGreyedOut ? '#e2e3e4' : area.color.solid,
+                          borderBottomColor: isGreyedOut ? '#e2e3e4' : area.color.solid,
+                          borderTopColor: '#e2e3e4',
+                          borderLeftWidth: '3px',
+                          borderRightWidth: '3px',
+                          borderBottomWidth: '3px',
+                          borderTopWidth: '1px',
+                        }}
+                      >
+                        {/* Icon */}
+                        <div
+                          className="flex-shrink-0 rounded-lg flex items-center justify-center"
+                          style={{
+                            backgroundColor: isGreyedOut ? '#f2f2f2' : area.color.light,
+                            color: isGreyedOut ? '#afafc3' : area.color.solid,
+                            width: '34px',
+                            height: '34px',
+                            marginBottom: '10px',
+                          }}
+                        >
+                          {metadata.icon}
+                        </div>
+
+                        {/* Capability Name */}
+                        <h4
+                          className={`font-bold leading-tight transition-colors ${
+                            isGreyedOut
+                              ? 'text-[#afafc3]'
+                              : 'text-[#4a4a4c] group-hover:text-[#0c0c48]'
+                          }`}
+                          style={{ fontSize: '0.875rem', marginBottom: '6px' }}
+                        >
+                          {cap2.name}
+                          {isGreyedOut && (
+                            <span className="block text-xs font-normal italic text-[#afafc3] mt-1">
+                              (not mapped to selected {filterType === 'role' ? 'role' : 'function'})
+                            </span>
+                          )}
+                        </h4>
+                        {requiredLevel && !isGreyedOut && (
+                          <div className="inline-flex items-center rounded-full text-[11px] font-semibold border"
+                            style={{
+                              marginBottom: "8px",
+                              padding: "4px 8px",
+                              borderColor: `${area.color.solid}55`,
+                              color: area.color.solid,
+                              backgroundColor: `${area.color.solid}12`,
+                            }}
+                          >
+                            Required: {requiredLevel.charAt(0) + requiredLevel.slice(1).toLowerCase()}
+                          </div>
+                        )}
+
+                        {/* Description */}
+                        <p
+                          className={`text-xs flex-1 ${
+                            isGreyedOut ? 'text-[#AAAAAA]' : 'text-[#6d6e71]'
+                          }`}
+                          style={{ display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden', lineHeight: '1.5' }}
+                        >
+                          {cap2.description}
+                        </p>
+
+                        {/* Explore arrow */}
+                        <div className="flex items-center gap-1" style={{ marginTop: '10px' }}>
+                          <span
+                            className={`text-xs font-semibold transition-colors ${
+                              isGreyedOut ? 'text-[#d9d9d9]' : 'group-hover:text-[#0c0c48]'
+                            }`}
+                            style={{ color: isGreyedOut ? '#d9d9d9' : area.color.solid }}
+                          >
+                            Explore
+                          </span>
+                          <svg
+                            className={`flex-shrink-0 transition-colors ${
+                              isGreyedOut ? 'text-[#d9d9d9]' : 'group-hover:text-[#0c0c48]'
+                            }`}
+                            style={{ width: '14px', height: '14px', color: isGreyedOut ? '#d9d9d9' : area.color.solid }}
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            strokeWidth={2.5}
+                          >
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                          </svg>
+                        </div>
+                      </Link>
+                    );
+                  })()}
+                </div>
+              );
+            })}
           </div>
           
           {/* Info message when filter is active */}
-          {selectedFilter && (
+          {selectedFilterId && (
             <div className="text-center py-8">
               <div className="inline-flex flex-col items-center gap-3 p-6 bg-[#E8F4FD] rounded-xl border-2 border-[#1f2bd4]/30">
                 <svg className="w-10 h-10 text-[#1f2bd4]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -717,6 +798,46 @@ export default function Home() {
               </div>
             </div>
           )}
+
+          {/* Proficiency Level Descriptors */}
+          <div style={{ marginTop: '64px' }}>
+            <div className="bg-[#f2f2f2] rounded-xl border border-[#e2e3e4]" style={{ padding: '48px' }}>
+              <h3 className="font-bold text-[#4a4a4c] text-center text-xl" style={{ marginBottom: '20px' }}>Proficiency Levels</h3>
+              <p className="text-base text-[#6d6e71] text-center max-w-[800px] mx-auto leading-relaxed" style={{ marginBottom: '40px' }}>
+                Each capability is assessed across four proficiency levels. Not all levels need to be attained — it depends on your role and objectives.
+              </p>
+              <div className="grid sm:grid-cols-2 lg:grid-cols-4" style={{ gap: '32px' }}>
+                <div className="bg-white rounded-lg border border-[#e2e3e4]" style={{ padding: '32px' }}>
+                  <div className="flex items-center" style={{ gap: '12px', marginBottom: '16px' }}>
+                    <span className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold text-white" style={{ backgroundColor: 'rgba(0,69,125,0.4)' }}>1</span>
+                    <span className="font-semibold text-[#4a4a4c] text-base">Foundation</span>
+                  </div>
+                  <p className="text-sm text-[#6d6e71] leading-relaxed">Core knowledge and awareness. Beginning to apply skills with guidance and support.</p>
+                </div>
+                <div className="bg-white rounded-lg border border-[#e2e3e4]" style={{ padding: '32px' }}>
+                  <div className="flex items-center" style={{ gap: '12px', marginBottom: '16px' }}>
+                    <span className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold text-white" style={{ backgroundColor: 'rgba(0,69,125,0.6)' }}>2</span>
+                    <span className="font-semibold text-[#4a4a4c] text-base">Intermediate</span>
+                  </div>
+                  <p className="text-sm text-[#6d6e71] leading-relaxed">Working independently with developing expertise. Actively contributing to team outcomes.</p>
+                </div>
+                <div className="bg-white rounded-lg border border-[#e2e3e4]" style={{ padding: '32px' }}>
+                  <div className="flex items-center" style={{ gap: '12px', marginBottom: '16px' }}>
+                    <span className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold text-white" style={{ backgroundColor: 'rgba(0,69,125,0.8)' }}>3</span>
+                    <span className="font-semibold text-[#4a4a4c] text-base">Advanced</span>
+                  </div>
+                  <p className="text-sm text-[#6d6e71] leading-relaxed">Leading and mentoring others. Driving strategy and influencing practice across the organisation.</p>
+                </div>
+                <div className="bg-white rounded-lg border border-[#e2e3e4]" style={{ padding: '32px' }}>
+                  <div className="flex items-center" style={{ gap: '12px', marginBottom: '16px' }}>
+                    <span className="w-8 h-8 rounded-full bg-[#0c0c48] flex items-center justify-center text-sm font-bold text-white">4</span>
+                    <span className="font-semibold text-[#4a4a4c] text-base">Exemplar</span>
+                  </div>
+                  <p className="text-sm text-[#6d6e71] leading-relaxed">Sector-leading expertise. Shaping institutional direction and transforming practice at a systemic level.</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 

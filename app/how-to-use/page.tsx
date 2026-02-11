@@ -15,11 +15,14 @@ export default function HowToUsePage() {
 
       {/* Main Content */}
       <main className="w-full flex justify-center">
-        <div className="w-full max-w-[1140px] px-8 lg:px-12 py-16 md:py-24">
+        <div className="w-full max-w-[1140px] px-8 lg:px-12" style={{ paddingTop: "104px", paddingBottom: "132px" }}>
         {/* Overview */}
-        <div className="bg-white rounded-lg border-2 border-[#d9d9d9] p-8 md:p-10 shadow-sm text-center" style={{ marginBottom: '56px' }}>
+        <div
+          className="bg-white rounded-lg border-2 border-[#d9d9d9] shadow-sm text-center"
+          style={{ marginBottom: "88px", padding: "52px" }}
+        >
           <h2 className="text-2xl md:text-3xl font-bold text-[#4a4a4c] mb-6">Overview</h2>
-          <p className="text-[#6d6e71] text-lg leading-relaxed mb-6 max-w-[800px] mx-auto">
+          <p className="text-[#6d6e71] text-lg leading-relaxed mb-8 max-w-[800px] mx-auto" style={{ lineHeight: '1.8' }}>
             This tool helps Research Management & Administration (RMA) staff assess their current capabilities, 
             identify development opportunities, and create focused development plans. The process follows three main steps:
           </p>
@@ -37,9 +40,12 @@ export default function HowToUsePage() {
         </div>
         
         {/* Getting Started Section */}
-        <div className="bg-gradient-to-br from-[#0c0c48]/5 to-[#1f2bd4]/5 rounded-lg border-2 border-[#0c0c48]/20 p-8 md:p-10 shadow-sm" style={{ marginBottom: '56px' }}>
-          <h2 className="text-2xl md:text-3xl font-bold text-[#0c0c48] mb-6">Getting Started</h2>
-          <div className="space-y-5">
+        <div
+          className="bg-gradient-to-br from-[#0c0c48]/5 to-[#1f2bd4]/5 rounded-lg border-2 border-[#0c0c48]/20 shadow-sm"
+          style={{ marginBottom: "88px", padding: "52px" }}
+        >
+          <h2 className="text-2xl md:text-3xl font-bold text-[#0c0c48] mb-8">Getting Started</h2>
+          <div className="space-y-6">
             <div className="flex items-start gap-4">
               <div className="w-8 h-8 rounded-full bg-[#1f2bd4] flex items-center justify-center flex-shrink-0 mt-1">
                 <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -50,7 +56,8 @@ export default function HowToUsePage() {
                 <h3 className="text-lg font-bold text-[#4a4a4c] mb-2">Data Storage</h3>
                 <p className="text-[#6d6e71] leading-relaxed">
                   All your assessment data is stored locally in your browser. No information is sent to a server. 
-                  You can work at your own pace and your progress is automatically saved as you go.
+                  You can work at your own pace and your progress is automatically saved as you go. Your selected
+                  role/function filter is also remembered while you move between Homepage, Explore, and Self-Assessment.
                 </p>
               </div>
             </div>
@@ -71,8 +78,11 @@ export default function HowToUsePage() {
         </div>
 
         {/* Step 1 */}
-        <div className="bg-white rounded-lg border-2 border-[#d9d9d9] p-8 md:p-10 shadow-sm" style={{ marginBottom: '56px' }}>
-          <div className="flex items-start gap-4 mb-6">
+        <div
+          className="bg-white rounded-lg border-2 border-[#d9d9d9] shadow-sm"
+          style={{ marginBottom: "88px", padding: "52px" }}
+        >
+          <div className="flex items-start gap-4 mb-8">
             <div className="w-12 h-12 rounded-full bg-[#1f2bd4]/10 flex items-center justify-center flex-shrink-0">
               <span className="text-[#1f2bd4] font-bold text-xl">1</span>
             </div>
@@ -84,12 +94,12 @@ export default function HowToUsePage() {
             </div>
           </div>
           
-          <div className="bg-[#f3f3f6] rounded-lg p-6 md:p-7 space-y-4">
+          <div className="bg-[#f3f3f6] rounded-lg space-y-5" style={{ padding: "40px" }}>
             <div className="flex items-start gap-4">
               <svg className="w-6 h-6 text-[#1f2bd4] mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
               </svg>
-              <p className="text-[#4a4a4c] text-base leading-relaxed">On the homepage, you can <strong>filter by role or function</strong> to see which capabilities are mapped to your area. <em>(Note: Full role mapping is not live yet — this feature is being expanded and more roles and functions will be added over time.)</em> When you select a filter, capabilities not mapped to that role/function will appear in light grey so you can still see them but know they're not prioritised for your role.</p>
+              <p className="text-[#4a4a4c] text-base leading-relaxed">On the homepage, you can <strong>filter by role or function</strong> to activate guided mode. Mapped capabilities remain emphasised, non-mapped capabilities are visually de-emphasised, and required levels are surfaced to help you focus on what is most relevant.</p>
             </div>
             <div className="flex items-start gap-4">
               <svg className="w-6 h-6 text-[#1f2bd4] mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -101,26 +111,29 @@ export default function HowToUsePage() {
               <svg className="w-6 h-6 text-[#1f2bd4] mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
               </svg>
-              <p className="text-[#4a4a4c] text-base leading-relaxed">Use the level tabs (Foundation, Intermediate, Advanced, Exemplar) to see descriptors at each proficiency level. <strong>You only need to assess up to the level mapped for your role</strong>, but you can choose to self-assess or develop at a higher level.</p>
+              <p className="text-[#4a4a4c] text-base leading-relaxed">Use the level tabs (Foundation, Intermediate, Advanced, Exemplar) to see descriptors at each proficiency level. In guided mode, the required tab is marked with a <strong>star/required indicator</strong> for your selected role or function.</p>
             </div>
             <div className="flex items-start gap-4">
               <svg className="w-6 h-6 text-[#1f2bd4] mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
               </svg>
-              <p className="text-[#4a4a4c] text-base leading-relaxed">Look for the teal info icons next to some descriptors – these show Māori alignment statements.</p>
+              <p className="text-[#4a4a4c] text-base leading-relaxed">Within the required level, look for <strong>role-relevant descriptor indicators</strong> to quickly identify behaviours most relevant to your selected role/function.</p>
             </div>
             <div className="flex items-start gap-4">
               <svg className="w-6 h-6 text-[#1f2bd4] mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
               </svg>
-              <p className="text-[#4a4a4c] text-base leading-relaxed">This mode is read-only – no data is saved. Take your time to understand the framework.</p>
+              <p className="text-[#4a4a4c] text-base leading-relaxed">Use <strong>Jump to Capability</strong> in Explore and Self-Assessment to move directly between capabilities; mapped capabilities are marked to help guided navigation.</p>
             </div>
           </div>
         </div>
 
         {/* Step 2 */}
-        <div className="bg-white rounded-lg border-2 border-[#d9d9d9] p-8 md:p-10 shadow-sm" style={{ marginBottom: '56px' }}>
-          <div className="flex items-start gap-4 mb-6">
+        <div
+          className="bg-white rounded-lg border-2 border-[#d9d9d9] shadow-sm"
+          style={{ marginBottom: "88px", padding: "52px" }}
+        >
+          <div className="flex items-start gap-4 mb-8">
             <div className="w-12 h-12 rounded-full bg-[#EAAB00]/10 flex items-center justify-center flex-shrink-0">
               <span className="text-[#9a7100] font-bold text-xl">2</span>
             </div>
@@ -132,7 +145,7 @@ export default function HowToUsePage() {
             </div>
           </div>
           
-          <div className="bg-[#f3f3f6] rounded-lg p-6 md:p-7 space-y-4">
+          <div className="bg-[#f3f3f6] rounded-lg space-y-5" style={{ padding: "40px" }}>
             <div className="flex items-start gap-4">
               <svg className="w-6 h-6 text-[#9a7100] mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
@@ -143,15 +156,15 @@ export default function HowToUsePage() {
               <svg className="w-6 h-6 text-[#9a7100] mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
               </svg>
-              <p className="text-[#4a4a4c] text-base leading-relaxed">For each descriptor, use the <strong>two checkboxes</strong>:</p>
+              <p className="text-[#4a4a4c] text-base leading-relaxed">For each descriptor, use the <strong>two checkboxes</strong> (guided mode markers from Explore also appear in Self-Assessment):</p>
             </div>
             <div className="ml-10 space-y-3">
               <p className="text-[#4a4a4c] text-base leading-relaxed flex items-center gap-3">
-                <span className="w-4 h-4 rounded bg-[#EAAB00]/30 border-2 border-[#EAAB00]/50 flex-shrink-0"></span>
+                <span className="w-4 h-4 rounded bg-[#00877C]/30 border-2 border-[#00877C]/50 flex-shrink-0"></span>
                 <span><strong>"I can do this"</strong> – behaviours you can competently demonstrate (include previous roles and experiences)</span>
               </p>
               <p className="text-[#4a4a4c] text-base leading-relaxed flex items-center gap-3">
-                <span className="w-4 h-4 rounded bg-[#00877C]/30 border-2 border-[#00877C]/50 flex-shrink-0"></span>
+                <span className="w-4 h-4 rounded bg-[#EAAB00]/30 border-2 border-[#EAAB00]/50 flex-shrink-0"></span>
                 <span><strong>"Want to develop"</strong> – areas you want to focus on for your development plan</span>
               </p>
             </div>
@@ -177,8 +190,11 @@ export default function HowToUsePage() {
         </div>
 
         {/* Step 3 */}
-        <div className="bg-white rounded-lg border-2 border-[#d9d9d9] p-8 md:p-10 shadow-sm" style={{ marginBottom: '56px' }}>
-          <div className="flex items-start gap-4 mb-6">
+        <div
+          className="bg-white rounded-lg border-2 border-[#d9d9d9] shadow-sm"
+          style={{ marginBottom: "88px", padding: "52px" }}
+        >
+          <div className="flex items-start gap-4 mb-8">
             <div className="w-12 h-12 rounded-full bg-[#00877C]/10 flex items-center justify-center flex-shrink-0">
               <span className="text-[#00877C] font-bold text-xl">3</span>
             </div>
@@ -190,7 +206,7 @@ export default function HowToUsePage() {
             </div>
           </div>
           
-          <div className="bg-[#f3f3f6] rounded-lg p-6 md:p-7 space-y-4">
+          <div className="bg-[#f3f3f6] rounded-lg space-y-5" style={{ padding: "40px" }}>
             <div className="flex items-start gap-4">
               <svg className="w-6 h-6 text-[#00877C] mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
@@ -225,8 +241,11 @@ export default function HowToUsePage() {
         </div>
 
         {/* Summary & Export */}
-        <div className="bg-white rounded-lg border-2 border-[#d9d9d9] p-8 md:p-10 shadow-sm" style={{ marginBottom: '56px' }}>
-          <div className="flex items-start gap-4 mb-6">
+        <div
+          className="bg-white rounded-lg border-2 border-[#d9d9d9] shadow-sm"
+          style={{ marginBottom: "88px", padding: "52px" }}
+        >
+          <div className="flex items-start gap-4 mb-8">
             <div className="w-12 h-12 rounded-full bg-[#f3f3f6] border-2 border-[#d9d9d9] flex items-center justify-center flex-shrink-0">
               <svg className="w-6 h-6 text-[#4a4a4c]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -240,7 +259,7 @@ export default function HowToUsePage() {
             </div>
           </div>
           
-          <div className="bg-[#f3f3f6] rounded-lg p-6 md:p-7 space-y-4">
+          <div className="bg-[#f3f3f6] rounded-lg space-y-5" style={{ padding: "40px" }}>
             <div className="flex items-start gap-4">
               <svg className="w-6 h-6 text-[#6d6e71] mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
@@ -275,14 +294,17 @@ export default function HowToUsePage() {
         </div>
 
         {/* Tips */}
-        <div className="bg-gradient-to-br from-[#0c0c48]/5 to-[#1f2bd4]/5 rounded-lg border-2 border-[#0c0c48]/20 p-8 md:p-10 shadow-sm" style={{ marginBottom: '56px' }}>
-          <div className="flex items-center gap-3 mb-6">
+        <div
+          className="bg-gradient-to-br from-[#0c0c48]/5 to-[#1f2bd4]/5 rounded-lg border-2 border-[#0c0c48]/20 shadow-sm"
+          style={{ marginBottom: "88px", padding: "52px" }}
+        >
+          <div className="flex items-center gap-3 mb-8">
             <svg className="w-8 h-8 text-[#0c0c48]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
             </svg>
             <h2 className="text-2xl md:text-3xl font-bold text-[#0c0c48]">Tips for Effective Use</h2>
           </div>
-          <ul className="space-y-5">
+          <ul className="space-y-6">
             <li className="flex items-start gap-4">
               <span className="text-[#0c0c48] font-bold text-2xl leading-none mt-1">•</span>
               <p className="text-[#4a4a4c] text-base leading-relaxed"><strong>Be honest</strong> in your self-assessment. This tool is for your own development, not performance evaluation.</p>
@@ -311,7 +333,10 @@ export default function HowToUsePage() {
         </div>
 
         {/* Get Started CTA */}
-        <div className="bg-white rounded-lg border-2 border-[#d9d9d9] p-8 md:p-12 text-center shadow-sm">
+        <div
+          className="bg-white rounded-lg border-2 border-[#d9d9d9] text-center shadow-sm"
+          style={{ padding: "56px" }}
+        >
           <h2 className="text-2xl md:text-3xl font-bold text-[#4a4a4c] mb-5">Ready to Get Started?</h2>
           <p className="text-[#6d6e71] text-lg leading-relaxed mb-8 max-w-[600px] mx-auto">
             Begin by exploring the framework, then move on to your self-assessment when you're ready.

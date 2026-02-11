@@ -6,6 +6,20 @@ import { capabilities } from "@/data/capabilities";
 import { useAssessment } from "@/contexts/AssessmentContext";
 import { CapabilityLevel, SelectedDescriptor } from "@/types";
 
+// Key Area color mapping - matches homepage structure
+const keyAreaColors: Record<string, { solid: string; hover: string }> = {
+  "research-engagement": { solid: "#0c0c48", hover: "#0a0a3a" },
+  "maximising-impact": { solid: "#0c0c48", hover: "#0a0a3a" },
+  "researcher-development": { solid: "#00877C", hover: "#006B63" },
+  "environment-culture": { solid: "#00877C", hover: "#006B63" },
+  "funding-opportunities": { solid: "#1f2bd4", hover: "#1929a8" },
+  "proposal-support": { solid: "#1f2bd4", hover: "#1929a8" },
+  "initiation": { solid: "#D97706", hover: "#B45309" },
+  "projects-initiatives": { solid: "#D97706", hover: "#B45309" },
+  "monitoring-reporting": { solid: "#4F2D7F", hover: "#3D2262" },
+  "policy-strategy": { solid: "#4F2D7F", hover: "#3D2262" }
+};
+
 export default function PlanPage() {
   const { assessmentState, getResponse, updateResponse, removeCapability } = useAssessment();
   
@@ -139,8 +153,8 @@ export default function PlanPage() {
       {/* Header */}
       <header className="w-full bg-white border-b border-[#d9d9d9] flex justify-center">
         <div className="w-full max-w-[1140px] px-8 lg:px-12 py-8">
-          <div className="bg-[#00877C]/10 border border-[#00877C]/20 text-[#4a4a4c] rounded-lg p-4 mb-6 no-print">
-            <div className="font-semibold flex items-center gap-2 text-[#00877C]">
+          <div className="bg-[#EAAB00]/10 border border-[#EAAB00]/20 text-[#4a4a4c] rounded-lg p-4 mb-6 no-print">
+            <div className="font-semibold flex items-center gap-2 text-[#9a7100]">
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
               </svg>
@@ -173,8 +187,8 @@ export default function PlanPage() {
         {allIncludedCapabilities.length === 0 ? (
           <div className="space-y-12">
             <div className="bg-white rounded-lg border border-[#d9d9d9] p-12 text-center">
-              <div className="w-16 h-16 rounded-full bg-[#00877C]/10 flex items-center justify-center mx-auto mb-4">
-                <svg className="w-8 h-8 text-[#00877C]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <div className="w-16 h-16 rounded-full bg-[#EAAB00]/10 flex items-center justify-center mx-auto mb-4">
+                <svg className="w-8 h-8 text-[#9a7100]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
@@ -238,32 +252,36 @@ export default function PlanPage() {
                   const focusCount = response?.developmentFocus?.length || 0;
                   const isActive = activeCapabilityTab === cap.id;
                   const hasFocus = focusCount > 0;
+                  const keyAreaColor = keyAreaColors[cap.id] || { solid: "#EAAB00", hover: "#d19a00" };
                   
                   return (
                     <button
                       key={cap.id}
                       onClick={() => setActiveCapabilityTab(cap.id)}
                       style={{
-                        padding: '14px 28px'
+                        padding: '14px 28px',
+                        backgroundColor: isActive ? keyAreaColor.solid : undefined
                       }}
                       className={`
                         rounded-lg text-base font-semibold transition-all
                         ${isActive 
-                          ? 'bg-[#00877C] text-white' 
+                          ? 'text-white' 
                           : 'bg-white border border-[#d9d9d9] text-[#4a4a4c] hover:border-[#1f2bd4] hover:text-[#1f2bd4]'}
                       `}
                     >
                       {cap.name}
                       {hasFocus ? (
                         <span 
-                          className={`ml-3 rounded-full text-xs font-bold ${isActive ? 'bg-white text-[#00877C]' : 'bg-[#00877C] text-white'}`}
                           style={{ 
                             padding: '6px 14px',
                             minWidth: '28px',
                             display: 'inline-flex',
                             alignItems: 'center',
-                            justifyContent: 'center'
+                            justifyContent: 'center',
+                            backgroundColor: isActive ? 'white' : keyAreaColor.solid,
+                            color: isActive ? keyAreaColor.solid : 'white'
                           }}
+                          className="ml-3 rounded-full text-xs font-bold"
                         >
                           {focusCount}
                         </span>
@@ -320,9 +338,9 @@ export default function PlanPage() {
                 <div key={cap.id} className="bg-white rounded-lg border border-[#d9d9d9] overflow-hidden" style={{ marginBottom: '48px' }}>
                   {/* Capability Header */}
                   <div className={`p-6 border-b border-[#e2e3e4] ${hasFocus ? 'bg-[#f3f3f6]' : 'bg-[#1f2bd4]/10'}`}>
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-1">
+                    <div className="flex items-center justify-between">
+                      <div className="flex-1 text-center">
+                        <div className="flex items-center justify-center gap-2 mb-1">
                           <h2 className="text-xl font-bold text-[#4a4a4c]">{cap.name}</h2>
                           {!hasFocus && (
                             <span className="text-xs bg-[#1f2bd4]/20 text-[#1f2bd4] px-2 py-0.5 rounded-full font-medium">
@@ -337,7 +355,7 @@ export default function PlanPage() {
                           {demonstratedDescriptors.length === 0 && developmentFocus.length === 0 && <>No descriptors selected</>}
                         </p>
                       </div>
-                      <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-3 ml-4">
                         <Link
                           href={`/assess?capability=${cap.id}`}
                           className="text-sm text-[#1f2bd4] hover:text-[#0c0c48] font-medium flex items-center gap-1"
@@ -362,12 +380,15 @@ export default function PlanPage() {
                   </div>
 
                   {/* Content */}
-                  <div className="p-6">
+                  <div style={{ padding: '48px' }}>
                     {/* Development Focus Items - only show if there are focus items */}
                     {hasFocus && (
                       <>
                         <h3 className="text-sm font-semibold text-[#4a4a4c] flex items-center gap-2" style={{ marginBottom: '20px' }}>
-                          <span className="w-3 h-3 rounded bg-[#00877C]"></span>
+                          <span 
+                            className="w-3 h-3 rounded" 
+                            style={{ backgroundColor: keyAreaColors[cap.id]?.solid || "#EAAB00" }}
+                          ></span>
                           Development Focus Areas
                         </h3>
                         
@@ -375,16 +396,34 @@ export default function PlanPage() {
                           {(["FOUNDATION", "INTERMEDIATE", "ADVANCED", "EXEMPLAR"] as CapabilityLevel[]).map(level => {
                             const levelFocus = focusByLevel[level];
                             if (levelFocus.length === 0) return null;
+                            const keyAreaColor = keyAreaColors[cap.id] || { solid: "#EAAB00", hover: "#d19a00" };
 
                             return (
-                              <div key={level} className="bg-[#00877C]/10 rounded-lg border border-[#00877C]/20" style={{ padding: '20px' }}>
-                                <h4 className="text-sm font-semibold text-[#00877C]" style={{ marginBottom: '16px' }}>
+                              <div 
+                                key={level} 
+                                className="rounded-lg" 
+                                style={{ 
+                                  padding: '20px',
+                                  backgroundColor: `${keyAreaColor.solid}10`,
+                                  border: `1px solid ${keyAreaColor.solid}33`
+                                }}
+                              >
+                                <h4 
+                                  className="text-sm font-semibold" 
+                                  style={{ 
+                                    marginBottom: '16px',
+                                    color: keyAreaColor.solid
+                                  }}
+                                >
                                   {level.charAt(0) + level.slice(1).toLowerCase()} Level
                                 </h4>
                                 <ul style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                                   {levelFocus.map((f, idx) => (
                                     <li key={idx} className="flex gap-2 text-sm text-[#4a4a4c]">
-                                      <span className="text-[#00877C] mt-1 flex-shrink-0">→</span>
+                                      <span 
+                                        className="mt-1 flex-shrink-0" 
+                                        style={{ color: keyAreaColor.solid }}
+                                      >→</span>
                                       <span>{getDescriptorText(cap.id, f.level, f.descriptorIndex)}</span>
                                     </li>
                                   ))}
@@ -413,7 +452,7 @@ export default function PlanPage() {
                           <svg className="w-4 h-4 text-[#6d6e71] transition-transform details-chevron" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
                           </svg>
-                          <span className="w-3 h-3 rounded bg-[#EAAB00]"></span>
+                          <span className="w-3 h-3 rounded bg-[#00877C]"></span>
                           Already Demonstrated ({demonstratedDescriptors.length} descriptor{demonstratedDescriptors.length !== 1 ? 's' : ''})
                           <span className="text-xs font-normal text-[#6d6e71] ml-1">— click to expand</span>
                         </summary>
@@ -424,8 +463,8 @@ export default function PlanPage() {
                             if (levelDemonstrated.length === 0) return null;
 
                             return (
-                              <div key={level} className="bg-[#EAAB00]/10 rounded-lg border border-[#EAAB00]/30" style={{ padding: '20px' }}>
-                                <h4 className="text-sm font-semibold text-[#9a7100]" style={{ marginBottom: '16px' }}>
+                              <div key={level} className="bg-[#00877C]/10 rounded-lg border border-[#00877C]/30" style={{ padding: '20px' }}>
+                                <h4 className="text-sm font-semibold text-[#00877C]" style={{ marginBottom: '16px' }}>
                                   {level.charAt(0) + level.slice(1).toLowerCase()} Level
                                 </h4>
                                 <ul style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
@@ -474,10 +513,10 @@ export default function PlanPage() {
             })}
 
             {/* Summary & Actions */}
-            <div className="bg-white rounded-lg border border-[#d9d9d9] p-6" style={{ marginTop: '48px' }}>
-              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="bg-white rounded-lg border border-[#d9d9d9]" style={{ marginTop: '48px', padding: '32px' }}>
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between" style={{ gap: '32px' }}>
                 <div>
-                  <p className="text-sm text-[#4a4a4c] mb-1">
+                  <p className="text-sm text-[#4a4a4c]" style={{ marginBottom: '8px' }}>
                     {allIncludedCapabilities.length} capabilit{allIncludedCapabilities.length !== 1 ? 'ies' : 'y'} included
                     {totalFocusItems > 0 && <> • {totalFocusItems} development focus item{totalFocusItems !== 1 ? 's' : ''}</>}
                   </p>
@@ -488,7 +527,7 @@ export default function PlanPage() {
                 <div className="flex items-center gap-3">
                   <button
                     onClick={handleSave}
-                    className="bg-[#00877C] text-white rounded-lg font-semibold hover:bg-[#006b62] transition-colors flex items-center gap-2"
+                    className="bg-[#EAAB00] text-white rounded-lg font-semibold hover:bg-[#d19a00] transition-colors flex items-center gap-2"
                     style={{
                         padding: '14px 28px',
                       fontSize: '15px'
@@ -555,23 +594,28 @@ export default function PlanPage() {
             )}
 
             {/* Training Resources */}
-            <div className="bg-[#f3f3f6] rounded-lg p-6 md:p-7 border border-[#e2e3e4]" style={{ marginTop: '64px', marginBottom: '48px' }}>
+            <div 
+              className="bg-white rounded-xl border border-[#d9d9d9] shadow-sm"
+              style={{ marginTop: '64px', marginBottom: '48px', padding: '40px 48px' }}
+            >
               <div className="flex items-start justify-between gap-4">
                 <div>
-                  <h4 className="font-semibold text-[#4a4a4c] mb-2">Training & Development Resources</h4>
-                  <p className="text-[#6d6e71] text-sm mb-3">
+                  <h4 className="font-bold text-[#4a4a4c] text-lg" style={{ marginBottom: '16px' }}>
+                    Training &amp; Development Resources
+                  </h4>
+                  <p className="text-[#6d6e71] text-base leading-relaxed" style={{ marginBottom: '20px' }}>
                     Access training materials, courses, and development resources for RMA staff.
                   </p>
                   <a
                     href="https://research-hub.auckland.ac.nz/induction-skills-and-development/research-management-and-administration-rma-staff-development"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 text-sm font-medium text-[#1f2bd4] hover:text-[#0c0c48] transition-colors"
+                    className="inline-flex items-center gap-2 text-sm font-semibold text-[#1f2bd4] hover:text-[#0c0c48] transition-colors"
                   >
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                     </svg>
-                    Visit Research Hub – RMA Staff Development
+                    Visit Research Hub - RMA Staff Development
                     <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                     </svg>

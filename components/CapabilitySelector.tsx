@@ -3,9 +3,17 @@
 import { useState } from "react";
 import { capabilities } from "@/data/capabilities";
 import Link from "next/link";
+import { useGuidedFilter } from "@/hooks/useGuidedFilter";
 
-export function CapabilitySelector({ currentCapabilityId }: { currentCapabilityId?: string }) {
+export function CapabilitySelector({
+  currentCapabilityId,
+  mode = "assess",
+}: {
+  currentCapabilityId?: string;
+  mode?: "assess" | "explore";
+}) {
   const [isOpen, setIsOpen] = useState(false);
+  const { isGuidedFilterActive, isMappedCapability, getRequiredLevel } = useGuidedFilter();
 
   return (
     <div className="relative z-50">
@@ -36,11 +44,13 @@ export function CapabilitySelector({ currentCapabilityId }: { currentCapabilityI
             <div className="max-h-[400px] overflow-y-auto p-2">
               {capabilities.map((cap, index) => {
                 const isCurrent = cap.id === currentCapabilityId;
+                const isMapped = isGuidedFilterActive && isMappedCapability(cap.id);
+                const requiredLevel = isMapped ? getRequiredLevel(cap.id) : null;
                 
                 return (
                   <Link
                     key={cap.id}
-                    href={`/assess?capability=${cap.id}`}
+                    href={`/${mode}?capability=${cap.id}`}
                     onClick={() => setIsOpen(false)}
                     className={`
                       w-full text-left px-4 py-3 rounded-lg transition-all duration-200 
@@ -56,13 +66,34 @@ export function CapabilitySelector({ currentCapabilityId }: { currentCapabilityI
                       {index + 1}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <div className="text-sm font-medium truncate">
+                      <div className="text-sm font-medium truncate flex items-center gap-1.5">
+                        {isMapped && <span className="text-[#1f2bd4]">★</span>}
                         {cap.name}
                       </div>
+                      {isMapped && requiredLevel && (
+                        <div className="text-[11px] text-[#1f2bd4] font-medium mt-0.5">
+                          Required: {requiredLevel.charAt(0) + requiredLevel.slice(1).toLowerCase()}
+                        </div>
+                      )}
                     </div>
-                    {isCurrent && (
-                      <div className="w-2 h-2 rounded-full bg-[#0c0c48]" />
-                    )}
+                    <div className="flex items-center gap-1.5">
+                      {isMapped && (
+                        <div
+                          className="text-[10px] font-semibold uppercase tracking-wide rounded-full"
+                          style={{
+                            padding: "2px 6px",
+                            color: "#1f2bd4",
+                            backgroundColor: "#1f2bd415",
+                            border: "1px solid #1f2bd433",
+                          }}
+                        >
+                          mapped
+                        </div>
+                      )}
+                      {isCurrent && (
+                        <div className="w-2 h-2 rounded-full bg-[#0c0c48]" />
+                      )}
+                    </div>
                   </Link>
                 );
               })}
