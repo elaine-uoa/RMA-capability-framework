@@ -35,6 +35,7 @@ function DescriptorItem({
   onToggleWantToDevelop,
   levelColor,
   isRelevant = false,
+  showAlignmentIndicator = false,
 }: {
   point: string;
   index: number;
@@ -44,6 +45,7 @@ function DescriptorItem({
   onToggleWantToDevelop: () => void;
   levelColor: string;
   isRelevant?: boolean;
+  showAlignmentIndicator?: boolean;
 }) {
 
   // Determine background colour based on status - UoA colours
@@ -62,7 +64,17 @@ function DescriptorItem({
 
   return (
     <div className="relative">
-      <div className={`rounded-2xl transition-all shadow-sm hover:shadow-md ${getBgClass()}`} style={{ padding: '40px 48px' }}>
+      <div className={`descriptor-card-padding rounded-2xl transition-all shadow-sm hover:shadow-md ${getBgClass()}`} style={{ padding: '40px 48px' }}>
+        {showAlignmentIndicator && (
+          <div
+            className="absolute top-4 right-4 w-6 h-6 rounded-full bg-[#00877C]/20 flex items-center justify-center"
+            aria-hidden="true"
+          >
+            <svg className="w-3.5 h-3.5 text-[#00877C]" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+            </svg>
+          </div>
+        )}
         <div className="flex-1 min-w-0">
           {isRelevant && (
             <div
@@ -175,7 +187,7 @@ function LevelTabs({
   return (
     <div style={{ marginTop: '32px' }}>
       {/* Level Tabs - Colour coded with proper contrast */}
-      <div className="flex flex-wrap justify-center gap-3 mb-8">
+      <div className="level-tabs-wrap flex flex-wrap justify-center gap-3 mb-8">
         {levelOrder.map((level, idx) => {
           const isActive = selectedTab === level;
           const isCurrent = currentLevel === level;
@@ -210,8 +222,12 @@ function LevelTabs({
             >
               {level.charAt(0) + level.slice(1).toLowerCase()}
               {requiredLevel === level && (
-                <span className="ml-2 inline-flex items-center gap-1 text-xs font-bold bg-white/20 rounded-full" style={{ padding: "3px 7px" }}>
-                  ★ required
+                <span
+                  className="ml-2 inline-flex items-center gap-1 text-xs font-bold bg-white/20 rounded-full"
+                  title="Role-relevant level"
+                  style={{ padding: "3px 7px" }}
+                >
+                  ★
                 </span>
               )}
               {(counts.demonstrated > 0 || counts.wantToDevelop > 0) && (
@@ -234,7 +250,7 @@ function LevelTabs({
       </div>
 
       {/* Tab Content */}
-      <div className="bg-white rounded-2xl border border-[#e2e3e4] shadow-sm overflow-hidden">
+      <div className="level-content-container bg-white rounded-2xl border border-[#e2e3e4] shadow-sm overflow-hidden">
         {/* Header with level colour accent */}
         <div 
           className="px-6 md:px-8 py-5 border-b-4"
@@ -253,7 +269,7 @@ function LevelTabs({
         </div>
 
         {/* Descriptors Section - with generous spacing for readability */}
-        <div style={{ padding: '48px 56px' }}>
+        <div className="level-content-padding" style={{ padding: '48px 56px' }}>
           {/* Mini Legend */}
           <div className="flex flex-wrap items-center gap-4 mb-10 pb-6 border-b border-[#e2e3e4]">
             <span className="text-xs font-medium text-[#6d6e71] uppercase tracking-wide">Select status:</span>
@@ -287,6 +303,7 @@ function LevelTabs({
                   onToggleWantToDevelop={() => onToggleWantToDevelop(selectedTab, idx)}
                   levelColor={levelColors[selectedTab].bg}
                   isRelevant={selectedTab === requiredLevel && requiredDescriptorIndexes.includes(idx)}
+                  showAlignmentIndicator={idx === 0}
                 />
               );
             })}
@@ -294,7 +311,7 @@ function LevelTabs({
         </div>
 
         {/* Alignment to Whāia Te Hihiri - Fixed, always visible */}
-        <div style={{ marginLeft: '56px', marginRight: '56px', marginBottom: '48px' }}>
+        <div className="alignment-block-margin" style={{ marginLeft: '56px', marginRight: '56px', marginBottom: '48px' }}>
           <div className="bg-[#00877C]/5 rounded-lg border-2 border-[#00877C]/20 overflow-hidden">
             <div className="px-6 py-5 border-b border-[#00877C]/20">
               <div className="flex items-center gap-3">
@@ -306,9 +323,9 @@ function LevelTabs({
                 <h4 className="font-semibold text-[#00877C] text-base">Alignment to Whāia Te Hihiri</h4>
               </div>
             </div>
-            <div style={{ padding: "32px" }}>
+            <div className="alignment-content-padding" style={{ padding: "32px" }}>
               <div
-                className="bg-white rounded-lg border border-[#00877C]/20"
+                className="alignment-statement-card bg-white rounded-lg border border-[#00877C]/20"
                 style={{ padding: "28px" }}
               >
                 <p className="text-xs font-semibold uppercase tracking-wide text-[#00877C] mb-2">
@@ -353,6 +370,7 @@ function AssessmentInner({ capability, capabilityId, getResponse, updateResponse
     isGuidedFilterActive,
     getRequiredLevel,
     getRelevantDescriptorIndexesForLevel,
+    isMappedCapability,
   } = useGuidedFilter();
   
   // Get the key area colour for this capability
@@ -477,7 +495,7 @@ function AssessmentInner({ capability, capabilityId, getResponse, updateResponse
         className="w-full"
         style={{ backgroundColor: capabilityColor }}
       >
-        <div className="max-w-[1100px] mx-auto px-8 lg:px-12 py-10 md:py-14">
+        <div className="max-w-[1100px] mx-auto px-8 lg:px-12 py-10 md:py-14 page-mobile-container">
           {/* Breadcrumb and capability selector - top row */}
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
             <div className="flex items-center gap-2 text-sm">
@@ -508,7 +526,11 @@ function AssessmentInner({ capability, capabilityId, getResponse, updateResponse
                 </span>
                 {requiredLevel ? (
                   <span className="text-xs font-bold rounded-full bg-white/20 text-white" style={{ padding: "3px 8px" }}>
-                    ★ Required level: {requiredLevel.charAt(0) + requiredLevel.slice(1).toLowerCase()}
+                    ★ Role-relevant level: {requiredLevel.charAt(0) + requiredLevel.slice(1).toLowerCase()}
+                  </span>
+                ) : isMappedCapability(capabilityId) ? (
+                  <span className="text-xs font-semibold rounded-full bg-white/20 text-white" style={{ padding: "3px 8px" }}>
+                    ★ Mapped capability
                   </span>
                 ) : (
                   <span className="text-xs font-semibold rounded-full bg-white/20 text-white" style={{ padding: "3px 8px" }}>
@@ -572,7 +594,7 @@ function AssessmentInner({ capability, capabilityId, getResponse, updateResponse
 
       {/* Main Content */}
       <main className="w-full flex justify-center">
-        <div className="max-w-[1100px] mx-auto px-8 lg:px-12 py-12 md:py-16">
+        <div className="max-w-[1100px] mx-auto px-8 lg:px-12 py-12 md:py-16 page-mobile-container">
         <LevelTabs 
           levels={capability.levels}
           currentLevel={currentLevel}
@@ -592,7 +614,7 @@ function AssessmentInner({ capability, capabilityId, getResponse, updateResponse
 
         {/* Training Resources */}
         <div 
-          className="bg-white rounded-xl border border-[#d9d9d9] shadow-sm"
+          className="resource-card-padding bg-white rounded-xl border border-[#d9d9d9] shadow-sm"
           style={{ marginTop: '64px', marginBottom: '48px', padding: '40px 48px' }}
         >
           <div className="flex items-start justify-between gap-4">
@@ -622,7 +644,7 @@ function AssessmentInner({ capability, capabilityId, getResponse, updateResponse
         </div>
 
         {/* Assessment Summary & Next Steps */}
-        <div className="mt-8 bg-white rounded-lg border border-[#d9d9d9] p-6 md:p-8">
+        <div className="summary-card-mobile mt-8 bg-white rounded-lg border border-[#d9d9d9] p-6 md:p-8">
           <h3 className="text-xl font-bold text-[#4a4a4c] mb-4 text-center">Assessment Summary</h3>
           
           <div className="grid md:grid-cols-3 gap-4 mb-6">
@@ -646,8 +668,8 @@ function AssessmentInner({ capability, capabilityId, getResponse, updateResponse
             </div>
           </div>
           
-          <div 
-            className="border-t border-[#e2e3e4]"
+          <div
+            className="summary-actions-row border-t border-[#e2e3e4]"
             style={{ 
               paddingTop: '32px', 
               marginTop: '32px',
@@ -659,7 +681,7 @@ function AssessmentInner({ capability, capabilityId, getResponse, updateResponse
               flexWrap: 'wrap'
             }}
           >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
+            <div className="summary-actions-group" style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
               <button
                 onClick={handleSave}
                 className="inline-flex items-center gap-2 px-6 py-3 bg-[#1f2bd4] rounded-lg font-semibold hover:bg-[#1929a8] transition-colors"
@@ -675,7 +697,7 @@ function AssessmentInner({ capability, capabilityId, getResponse, updateResponse
               </p>
             </div>
             
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <div className="summary-actions-group" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
               <Link
                 href="/summary"
                 className="inline-flex items-center gap-2 px-6 py-3 bg-[#1f2bd4] rounded-lg font-semibold hover:bg-[#1929a8] transition-colors"

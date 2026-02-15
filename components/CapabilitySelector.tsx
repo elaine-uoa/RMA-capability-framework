@@ -13,13 +13,13 @@ export function CapabilitySelector({
   mode?: "assess" | "explore";
 }) {
   const [isOpen, setIsOpen] = useState(false);
-  const { isGuidedFilterActive, isMappedCapability, getRequiredLevel } = useGuidedFilter();
+  const { isGuidedFilterActive, isMappedCapability } = useGuidedFilter();
 
   return (
-    <div className="relative z-50">
+    <div className="relative z-50 capability-selector">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-3 px-6 py-3.5 bg-white/20 border-2 border-white/30 rounded-lg text-lg font-semibold text-white hover:bg-white/30 transition-colors backdrop-blur-sm"
+        className="capability-selector-button flex items-center gap-3 px-6 py-3.5 bg-white/20 border-2 border-white/30 rounded-lg text-lg font-semibold text-white hover:bg-white/30 transition-colors backdrop-blur-sm"
         style={{ color: '#FFFFFF' }}
       >
         <span>Jump to Capability</span>
@@ -40,12 +40,11 @@ export function CapabilitySelector({
             className="fixed inset-0 z-10" 
             onClick={() => setIsOpen(false)} 
           />
-          <div className="absolute right-0 mt-2 w-80 bg-white border border-[#d9d9d9] rounded-lg shadow-xl overflow-hidden z-20">
+          <div className="capability-selector-menu absolute right-0 mt-2 w-80 bg-white border border-[#d9d9d9] rounded-lg shadow-xl overflow-hidden z-20">
             <div className="max-h-[400px] overflow-y-auto p-2">
               {capabilities.map((cap, index) => {
                 const isCurrent = cap.id === currentCapabilityId;
                 const isMapped = isGuidedFilterActive && isMappedCapability(cap.id);
-                const requiredLevel = isMapped ? getRequiredLevel(cap.id) : null;
                 
                 return (
                   <Link
@@ -70,11 +69,6 @@ export function CapabilitySelector({
                         {isMapped && <span className="text-[#1f2bd4]">★</span>}
                         {cap.name}
                       </div>
-                      {isMapped && requiredLevel && (
-                        <div className="text-[11px] text-[#1f2bd4] font-medium mt-0.5">
-                          Required: {requiredLevel.charAt(0) + requiredLevel.slice(1).toLowerCase()}
-                        </div>
-                      )}
                     </div>
                     <div className="flex items-center gap-1.5">
                       {isMapped && (

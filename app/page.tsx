@@ -226,12 +226,12 @@ export default function Home() {
               A professional development tool for Research Management &amp; Administration staff at Waipapa Taumata Rau, University of Auckland. 
               Explore capabilities, assess your skills, and create personalised development plans.
             </p>
-            <div className="flex items-center justify-center gap-4 flex-wrap xl:flex-nowrap mb-8">
+            <div className="home-hero-cta-group flex items-center justify-center gap-4 flex-wrap xl:flex-nowrap mb-8">
               <Link 
                 href="/how-to-use" 
                 className="inline-flex items-center justify-center gap-3 min-w-[260px] px-10 py-5 bg-white text-[#0c0c48] font-semibold text-lg rounded-xl hover:bg-[#f2f2f2] transition-all shadow-lg hover:shadow-xl"
               >
-                How to use this tool
+                How to Guide
                 <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
                 </svg>
@@ -300,7 +300,7 @@ export default function Home() {
               </div>
               <h3 className="font-bold text-[#4a4a4c] text-lg" style={{ marginBottom: '16px' }}>Creation</h3>
               <p className="text-base text-[#6d6e71] leading-relaxed">
-                Feedback was gathered through extensive consultation with an external consultant and staff across the RMA community. Drawing on international frameworks, this bespoke model reflects the unique context and aspirations of Waipapa Taumata Rau.
+                Feedback was gathered through extensive consultation with an external consultant and staff across the RMA community. Drawing on international frameworks, this bespoke model reflects the unique context and aspirations of Waipapa Taumata Rau, University of Auckland.
               </p>
             </div>
             <div className="bg-[#f2f2f2] rounded-xl border border-[#e2e3e4]" style={{ padding: '40px' }}>
@@ -325,7 +325,7 @@ export default function Home() {
           
           {/* Role / Function Filter */}
           <div className="mb-12" style={{ paddingTop: '32px', paddingBottom: '32px' }}>
-            <div className="bg-white rounded-xl border-2 border-[#e2e3e4] shadow-sm" style={{ padding: '36px 48px' }}>
+            <div className="home-filter-panel bg-white rounded-xl border-2 border-[#e2e3e4] shadow-sm" style={{ padding: '36px 48px' }}>
               {/* Header - Centered */}
               <div className="text-center" style={{ marginBottom: '32px' }}>
                 <h3 className="text-xl font-semibold text-[#4a4a4c]" style={{ marginBottom: '12px' }}>
@@ -514,17 +514,17 @@ export default function Home() {
           
           {/* 2x5 Capability Card Grid – matches framework document structure */}
           {/* Each column: Key Area header + 2 capability cards as a cohesive vertical group */}
-          <div className="grid grid-cols-5 items-stretch" style={{ gap: '20px', minHeight: '620px' }}>
+          <div className="home-key-areas-grid grid grid-cols-5 items-stretch" style={{ gap: '20px', minHeight: '620px' }}>
             {keyAreas.map(area => {
               const areaCaps = capabilities.filter(c => area.capabilityIds.includes(c.id));
               const cap1 = areaCaps[0];
               const cap2 = areaCaps[1];
 
               return (
-                <div key={area.id} className="flex flex-col" style={{ height: '100%' }}>
+                <div key={area.id} className="home-key-area-col flex flex-col" style={{ height: '100%' }}>
                   {/* Key Area Header - rounded top, connects to cards below */}
                   <div
-                    className="text-center rounded-t-xl shadow-sm flex-shrink-0"
+                    className="home-key-area-header text-center rounded-t-xl shadow-sm flex-shrink-0"
                     style={{
                       backgroundColor: area.color.solid,
                       padding: '24px 18px',
@@ -625,7 +625,7 @@ export default function Home() {
                               backgroundColor: `${area.color.solid}12`,
                             }}
                           >
-                            Required: {requiredLevel.charAt(0) + requiredLevel.slice(1).toLowerCase()}
+                            Role-relevant level: {requiredLevel.charAt(0) + requiredLevel.slice(1).toLowerCase()}
                           </div>
                         )}
 
@@ -735,7 +735,7 @@ export default function Home() {
                               backgroundColor: `${area.color.solid}12`,
                             }}
                           >
-                            Required: {requiredLevel.charAt(0) + requiredLevel.slice(1).toLowerCase()}
+                            Role-relevant level: {requiredLevel.charAt(0) + requiredLevel.slice(1).toLowerCase()}
                           </div>
                         )}
 
@@ -801,39 +801,39 @@ export default function Home() {
 
           {/* Proficiency Level Descriptors */}
           <div style={{ marginTop: '64px' }}>
-            <div className="bg-[#f2f2f2] rounded-xl border border-[#e2e3e4]" style={{ padding: '48px' }}>
+            <div className="home-proficiency-wrap bg-[#f2f2f2] rounded-xl border border-[#e2e3e4]" style={{ padding: '48px' }}>
               <h3 className="font-bold text-[#4a4a4c] text-center text-xl" style={{ marginBottom: '20px' }}>Proficiency Levels</h3>
               <p className="text-base text-[#6d6e71] text-center max-w-[800px] mx-auto leading-relaxed" style={{ marginBottom: '40px' }}>
                 Each capability is assessed across four proficiency levels. Not all levels need to be attained — it depends on your role and objectives.
               </p>
-              <div className="grid sm:grid-cols-2 lg:grid-cols-4" style={{ gap: '32px' }}>
-                <div className="bg-white rounded-lg border border-[#e2e3e4]" style={{ padding: '32px' }}>
+              <div className="home-proficiency-grid grid sm:grid-cols-2 lg:grid-cols-4" style={{ gap: '32px' }}>
+                <div className="home-proficiency-card bg-white rounded-lg border border-[#e2e3e4]" style={{ padding: '32px' }}>
                   <div className="flex items-center" style={{ gap: '12px', marginBottom: '16px' }}>
                     <span className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold text-white" style={{ backgroundColor: 'rgba(0,69,125,0.4)' }}>1</span>
                     <span className="font-semibold text-[#4a4a4c] text-base">Foundation</span>
                   </div>
-                  <p className="text-sm text-[#6d6e71] leading-relaxed">Core knowledge and awareness. Beginning to apply skills with guidance and support.</p>
+                  <p className="text-sm text-[#6d6e71] leading-relaxed">University professionals at this level have the technical understanding and values which will enable them to thrive in their role. They exhibit a foundational set of skills and aptitudes which enable them to perform clearly defined and less complex tasks that are relevant to this capability and to grow in their roles. They can perform more complex but clearly defined tasks with guidance and support from mentors.</p>
                 </div>
-                <div className="bg-white rounded-lg border border-[#e2e3e4]" style={{ padding: '32px' }}>
+                <div className="home-proficiency-card bg-white rounded-lg border border-[#e2e3e4]" style={{ padding: '32px' }}>
                   <div className="flex items-center" style={{ gap: '12px', marginBottom: '16px' }}>
                     <span className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold text-white" style={{ backgroundColor: 'rgba(0,69,125,0.6)' }}>2</span>
                     <span className="font-semibold text-[#4a4a4c] text-base">Intermediate</span>
                   </div>
-                  <p className="text-sm text-[#6d6e71] leading-relaxed">Working independently with developing expertise. Actively contributing to team outcomes.</p>
+                  <p className="text-sm text-[#6d6e71] leading-relaxed">University professionals at this level can independently carry out complex and clearly defined tasks. They are able to contribute effectively to addressing challenges within this field or discipline and are capable of overseeing or supervising routine activities carried out by their peers.</p>
                 </div>
-                <div className="bg-white rounded-lg border border-[#e2e3e4]" style={{ padding: '32px' }}>
+                <div className="home-proficiency-card bg-white rounded-lg border border-[#e2e3e4]" style={{ padding: '32px' }}>
                   <div className="flex items-center" style={{ gap: '12px', marginBottom: '16px' }}>
                     <span className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold text-white" style={{ backgroundColor: 'rgba(0,69,125,0.8)' }}>3</span>
                     <span className="font-semibold text-[#4a4a4c] text-base">Advanced</span>
                   </div>
-                  <p className="text-sm text-[#6d6e71] leading-relaxed">Leading and mentoring others. Driving strategy and influencing practice across the organisation.</p>
+                  <p className="text-sm text-[#6d6e71] leading-relaxed">University professionals at this level possess the deep knowledge, skills and competences required to operate at a high level. They have the ability to manage complex and open-ended tasks autonomously, resolve unique challenges, and provide wide ranging guidance to peers within their own practice.</p>
                 </div>
-                <div className="bg-white rounded-lg border border-[#e2e3e4]" style={{ padding: '32px' }}>
+                <div className="home-proficiency-card bg-white rounded-lg border border-[#e2e3e4]" style={{ padding: '32px' }}>
                   <div className="flex items-center" style={{ gap: '12px', marginBottom: '16px' }}>
                     <span className="w-8 h-8 rounded-full bg-[#0c0c48] flex items-center justify-center text-sm font-bold text-white">4</span>
                     <span className="font-semibold text-[#4a4a4c] text-base">Exemplar</span>
                   </div>
-                  <p className="text-sm text-[#6d6e71] leading-relaxed">Sector-leading expertise. Shaping institutional direction and transforming practice at a systemic level.</p>
+                  <p className="text-sm text-[#6d6e71] leading-relaxed">University professionals at this level are exemplars of excellence. They have know-how and skills honed over years of highly impactful practice as well as a keen awareness of how to use their capabilities within a wide range of operational and strategic contexts. They can resolve highly complex and ambiguous challenges and have the ability to develop the performance of others and the systems in which they operate.</p>
                 </div>
               </div>
             </div>

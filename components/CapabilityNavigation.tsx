@@ -33,12 +33,12 @@ export function CapabilityNavigation({ currentCapabilityId }: CapabilityNavigati
   const nextColors = nextCapability ? CAPABILITY_COLORS[nextCapability.id] : null;
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div className="capability-nav-grid grid grid-cols-1 md:grid-cols-2 gap-6">
       {/* Previous Button */}
       {prevCapability && prevColors ? (
         <Link
           href={`/assess?capability=${prevCapability.id}`}
-          className="group rounded-lg shadow-sm hover:shadow-md transition-all duration-200"
+          className="capability-nav-card group rounded-lg shadow-sm hover:shadow-md transition-all duration-200"
           style={{ 
             padding: '20px 24px',
             backgroundColor: prevColors.main,
@@ -59,7 +59,10 @@ export function CapabilityNavigation({ currentCapabilityId }: CapabilityNavigati
               </div>
               {isGuidedFilterActive && isMappedCapability(prevCapability.id) && (
                 <div className="mt-1.5 inline-flex items-center gap-1 text-[11px] font-semibold rounded-full border border-white/40 bg-white/15 px-2 py-0.5 text-white">
-                  ★ mapped ({(getRequiredLevel(prevCapability.id) || "FOUNDATION").toLowerCase()})
+                  {(() => {
+                    const level = getRequiredLevel(prevCapability.id);
+                    return level ? `★ mapped (${level.toLowerCase()})` : "★ mapped";
+                  })()}
                 </div>
               )}
             </div>
@@ -73,7 +76,7 @@ export function CapabilityNavigation({ currentCapabilityId }: CapabilityNavigati
       {nextCapability && nextColors ? (
         <Link
           href={`/assess?capability=${nextCapability.id}`}
-          className="group rounded-lg shadow-md hover:shadow-lg transition-all duration-200 md:col-start-2"
+          className="capability-nav-card group rounded-lg shadow-md hover:shadow-lg transition-all duration-200 md:col-start-2"
           style={{ 
             padding: '24px 28px',
             backgroundColor: nextColors.main,
@@ -89,7 +92,10 @@ export function CapabilityNavigation({ currentCapabilityId }: CapabilityNavigati
               </div>
               {isGuidedFilterActive && isMappedCapability(nextCapability.id) && (
                 <div className="mt-1.5 inline-flex items-center gap-1 text-[11px] font-semibold rounded-full border border-white/40 bg-white/15 px-2 py-0.5 text-white">
-                  ★ mapped ({(getRequiredLevel(nextCapability.id) || "FOUNDATION").toLowerCase()})
+                  {(() => {
+                    const level = getRequiredLevel(nextCapability.id);
+                    return level ? `★ mapped (${level.toLowerCase()})` : "★ mapped";
+                  })()}
                 </div>
               )}
             </div>
@@ -103,7 +109,7 @@ export function CapabilityNavigation({ currentCapabilityId }: CapabilityNavigati
       ) : (
         <Link
           href="/plan"
-          className="group bg-[#0c0c48] hover:bg-[#0a0a3a] rounded-lg shadow-md hover:shadow-lg transition-all duration-200 md:col-start-2"
+          className="capability-nav-card group bg-[#0c0c48] hover:bg-[#0a0a3a] rounded-lg shadow-md hover:shadow-lg transition-all duration-200 md:col-start-2"
           style={{ padding: '24px 28px' }}
         >
           <div className="flex items-center gap-5">

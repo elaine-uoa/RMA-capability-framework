@@ -921,3 +921,169 @@ details .details-chevron {
     print-color-adjust: exact !important;
   }
 }
+
+/* ============================================
+   Mobile-First Responsive Safeguards
+   Desktop-safe: only applies <= 767px
+   ============================================ */
+@media (max-width: 767px) {
+  /* Global container spacing */
+  .page-mobile-container,
+  .w-full.max-w-\[1140px\],
+  .w-full.max-w-\[1100px\] {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+
+  /* Navbar */
+  nav.no-print > div > div {
+    height: 82px !important;
+  }
+  nav.no-print a[href="/"] {
+    padding-left: 16px !important;
+  }
+  nav.no-print img[alt*="University of Auckland"] {
+    height: 50px !important;
+    width: auto !important;
+  }
+  nav.no-print button[aria-label="Toggle navigation menu"] {
+    margin-right: 12px !important;
+  }
+
+  /* Footer */
+  footer.no-print > div {
+    padding: 24px 0 !important;
+  }
+  footer.no-print > div > div {
+    gap: 20px !important;
+  }
+  footer.no-print > div > div > div:first-child {
+    padding-left: 16px !important;
+  }
+  footer.no-print > div > div > div:nth-child(2) {
+    padding: 0 16px !important;
+  }
+  footer.no-print img[alt*="University of Auckland"] {
+    height: 52px !important;
+    width: auto !important;
+  }
+
+  /* Homepage */
+  .home-hero-cta-group > a {
+    width: 100%;
+    justify-content: center;
+  }
+  .home-filter-panel {
+    padding: 22px 16px !important;
+  }
+  .home-key-areas-grid {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+    min-height: 0 !important;
+  }
+  .home-key-area-col {
+    height: auto !important;
+  }
+  .home-key-area-header {
+    min-height: 0 !important;
+    padding: 18px 14px !important;
+  }
+  .home-proficiency-wrap {
+    padding: 24px 16px !important;
+  }
+  .home-proficiency-grid {
+    gap: 16px !important;
+  }
+  .home-proficiency-card {
+    padding: 20px !important;
+  }
+
+  /* Explore + Assess: tabs and descriptor density */
+  .capability-selector-button {
+    width: 100%;
+    justify-content: space-between;
+    font-size: 16px !important;
+    line-height: 1.2;
+    padding: 12px 14px !important;
+  }
+  .capability-selector-menu {
+    width: min(92vw, 360px) !important;
+    right: 0 !important;
+  }
+  .level-tabs-wrap button {
+    min-width: 0 !important;
+    width: 100%;
+    padding: 14px 16px !important;
+    font-size: 14px !important;
+  }
+  .level-content-padding {
+    padding: 24px 16px !important;
+  }
+  .descriptor-card-padding {
+    padding: 22px 16px !important;
+  }
+  .alignment-block-margin {
+    margin-left: 16px !important;
+    margin-right: 16px !important;
+    margin-bottom: 24px !important;
+  }
+  .alignment-content-padding {
+    padding: 16px !important;
+  }
+  .alignment-statement-card {
+    padding: 16px !important;
+  }
+  .resource-card-padding {
+    margin-top: 36px !important;
+    margin-bottom: 28px !important;
+    padding: 24px 16px !important;
+  }
+  .cta-card-padding {
+    padding: 24px 16px !important;
+  }
+  .capability-nav-card {
+    padding: 16px 14px !important;
+  }
+  .capability-nav-card .w-14.h-14,
+  .capability-nav-card .w-12.h-12 {
+    width: 42px !important;
+    height: 42px !important;
+  }
+
+  /* Assess summary action row */
+  .summary-actions-row {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 16px !important;
+  }
+  .summary-actions-group {
+    width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  /* Summary + Plan + Guide card/tables/modal */
+  .assessment-overview-table th,
+  .assessment-overview-table td {
+    padding-top: 12px !important;
+    padding-bottom: 12px !important;
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+    font-size: 13px !important;
+    vertical-align: top;
+  }
+  .assessment-overview-table th:first-child,
+  .assessment-overview-table td:first-child {
+    padding-left: 14px !important;
+  }
+  .overflow-x-auto {
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Modal layout on small screens */
+  .fixed.inset-0 > .bg-white.rounded-xl.shadow-2xl.max-w-lg.w-full {
+    padding: 24px !important;
+    max-height: 92vh;
+    overflow-y: auto;
+  }
+}

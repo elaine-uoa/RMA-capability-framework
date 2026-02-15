@@ -406,6 +406,9 @@ export function getRequiredLevelForCapability(
   filterId: string,
   capabilityId: string
 ): CapabilityLevel | null {
+  // Function filtering operates at capability granularity (not level granularity).
+  if (filterType === "function") return null;
+
   const mappings = getCapabilityMappingsForSelection(filterType, filterId);
   return mappings.find((m) => m.capabilityId === capabilityId)?.level || null;
 }

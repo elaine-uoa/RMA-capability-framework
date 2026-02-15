@@ -6,7 +6,7 @@ export default function HowToUsePage() {
       {/* Header */}
       <header className="w-full bg-white border-b-2 border-[#d9d9d9] flex justify-center shadow-sm">
         <div className="w-full max-w-[1140px] px-8 lg:px-12 py-12 md:py-16 text-center">
-          <h1 className="text-3xl md:text-4xl font-bold text-[#4a4a4c] mb-4">How to Use This Tool</h1>
+          <h1 className="text-3xl md:text-4xl font-bold text-[#4a4a4c] mb-4">How to Guide</h1>
           <p className="text-lg md:text-xl text-[#6d6e71] leading-relaxed max-w-[800px] mx-auto">
             A comprehensive guide to help you navigate the RMA Capability Framework self-assessment tool.
           </p>
@@ -39,6 +39,23 @@ export default function HowToUsePage() {
           </div>
         </div>
         
+        {/* Framework Progression Logic */}
+        <div
+          className="bg-white rounded-lg border-2 border-[#d9d9d9] shadow-sm"
+          style={{ marginBottom: "88px", padding: "52px" }}
+        >
+          <h2 className="text-2xl md:text-3xl font-bold text-[#4a4a4c] mb-6">Framework Progression Logic</h2>
+          <p className="text-[#6d6e71] text-base leading-relaxed mb-5">
+            The framework uses a cumulative progression model across four professional levels: Foundation, Intermediate, Advanced, and Exemplar.
+          </p>
+          <p className="text-[#6d6e71] text-base leading-relaxed mb-5">
+            Demonstrating capability at a higher level implies competence in all preceding levels within the same capability. For example, competence at Intermediate level assumes the Foundation-level expectations are already met.
+          </p>
+          <p className="text-[#6d6e71] text-base leading-relaxed">
+            In the same way, competence at Exemplar level implies capability across Advanced, Intermediate, and Foundation levels. This progression model supports consistent interpretation of capability development and reinforces that higher-level performance builds on lower-level foundations.
+          </p>
+        </div>
+
         {/* Getting Started Section */}
         <div
           className="bg-gradient-to-br from-[#0c0c48]/5 to-[#1f2bd4]/5 rounded-lg border-2 border-[#0c0c48]/20 shadow-sm"
@@ -99,7 +116,7 @@ export default function HowToUsePage() {
               <svg className="w-6 h-6 text-[#1f2bd4] mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
               </svg>
-              <p className="text-[#4a4a4c] text-base leading-relaxed">On the homepage, you can <strong>filter by role or function</strong> to activate guided mode. Mapped capabilities remain emphasised, non-mapped capabilities are visually de-emphasised, and required levels are surfaced to help you focus on what is most relevant.</p>
+              <p className="text-[#4a4a4c] text-base leading-relaxed">On the homepage, you can <strong>filter by role or function</strong> to activate guided mode. Mapped capabilities remain emphasised, non-mapped capabilities are visually de-emphasised, and role-relevant levels are surfaced to help you focus on what is most relevant.</p>
             </div>
             <div className="flex items-start gap-4">
               <svg className="w-6 h-6 text-[#1f2bd4] mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -111,13 +128,13 @@ export default function HowToUsePage() {
               <svg className="w-6 h-6 text-[#1f2bd4] mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
               </svg>
-              <p className="text-[#4a4a4c] text-base leading-relaxed">Use the level tabs (Foundation, Intermediate, Advanced, Exemplar) to see descriptors at each proficiency level. In guided mode, the required tab is marked with a <strong>star/required indicator</strong> for your selected role or function.</p>
+              <p className="text-[#4a4a4c] text-base leading-relaxed">Use the level tabs (Foundation, Intermediate, Advanced, Exemplar) to see descriptors at each proficiency level. In guided mode, the role-relevant tab is marked with a <strong>star indicator</strong> for your selected role or function.</p>
             </div>
             <div className="flex items-start gap-4">
               <svg className="w-6 h-6 text-[#1f2bd4] mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
               </svg>
-              <p className="text-[#4a4a4c] text-base leading-relaxed">Within the required level, look for <strong>role-relevant descriptor indicators</strong> to quickly identify behaviours most relevant to your selected role/function.</p>
+              <p className="text-[#4a4a4c] text-base leading-relaxed">Within the role-relevant level, look for <strong>role-relevant descriptor indicators</strong> to quickly identify behaviours most relevant to your selected role/function.</p>
             </div>
             <div className="flex items-start gap-4">
               <svg className="w-6 h-6 text-[#1f2bd4] mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>

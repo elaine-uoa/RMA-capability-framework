@@ -26,19 +26,31 @@ function DescriptorReadOnly({
   point,
   levelColor,
   isRelevant = false,
+  showAlignmentIndicator = false,
 }: {
   point: string;
   levelColor: string;
   isRelevant?: boolean;
+  showAlignmentIndicator?: boolean;
 }) {
 
   return (
     <div
-      className={`relative bg-[#F8F9FA] border rounded-2xl hover:border-[#1f2bd4] hover:shadow-md transition-all ${
+      className={`descriptor-card-padding relative bg-[#F8F9FA] border rounded-2xl hover:border-[#1f2bd4] hover:shadow-md transition-all ${
         isRelevant ? "border-[#1f2bd4]/50 bg-[#1f2bd4]/5" : "border-[#e2e3e4]"
       }`}
       style={{ padding: '40px 48px' }}
     >
+      {showAlignmentIndicator && (
+        <div
+          className="absolute top-4 right-4 w-6 h-6 rounded-full bg-[#00877C]/20 flex items-center justify-center"
+          aria-hidden="true"
+        >
+          <svg className="w-3.5 h-3.5 text-[#00877C]" fill="currentColor" viewBox="0 0 20 20">
+            <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+          </svg>
+        </div>
+      )}
       {isRelevant && (
         <div className="inline-flex items-center gap-1 rounded-full border border-[#1f2bd4]/30 bg-[#1f2bd4]/10 text-[#1f2bd4] text-xs font-semibold"
           style={{ marginBottom: "14px", padding: "4px 8px" }}
@@ -92,7 +104,7 @@ function LevelTabsReadOnly({
   return (
     <div style={{ marginTop: '32px' }}>
       {/* Colour-coded Level Tabs with proper contrast */}
-      <div className="flex flex-wrap justify-center gap-3 mb-8">
+      <div className="level-tabs-wrap flex flex-wrap justify-center gap-3 mb-8">
         {levelOrder.map((level, idx) => {
           const isActive = selectedTab === level;
           const color = levelColors[level];
@@ -124,9 +136,10 @@ function LevelTabsReadOnly({
               {level.charAt(0) + level.slice(1).toLowerCase()}
               {requiredLevel === level && (
                 <span className="ml-2 inline-flex items-center gap-1 text-xs font-bold bg-white/20 rounded-full"
+                  title="Role-relevant level"
                   style={{ padding: "3px 7px" }}
                 >
-                  ★ required
+                  ★
                 </span>
               )}
             </button>
@@ -135,7 +148,7 @@ function LevelTabsReadOnly({
       </div>
 
       {/* Tab Content */}
-      <div className="bg-white rounded-2xl border border-[#e2e3e4] shadow-sm overflow-hidden">
+      <div className="level-content-container bg-white rounded-2xl border border-[#e2e3e4] shadow-sm overflow-hidden">
         {/* Header with level colour accent */}
         <div 
           className="px-6 md:px-8 py-5 border-b-4"
@@ -162,7 +175,7 @@ function LevelTabsReadOnly({
         </div>
 
         {/* Descriptors Section - with generous spacing for readability */}
-        <div style={{ padding: '48px 56px' }}>
+        <div className="level-content-padding" style={{ padding: '48px 56px' }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
             {activeLevelData?.bulletPoints.map((point: string, idx: number) => (
               <DescriptorReadOnly
@@ -170,13 +183,14 @@ function LevelTabsReadOnly({
                 point={point}
                 levelColor={levelColors[selectedTab]}
                 isRelevant={selectedTab === requiredLevel && requiredDescriptorIndexes.includes(idx)}
+                showAlignmentIndicator={idx === 0}
               />
             ))}
           </div>
         </div>
 
         {/* Alignment to Whāia Te Hihiri - Fixed, always visible */}
-        <div style={{ marginLeft: '56px', marginRight: '56px', marginBottom: '48px' }}>
+        <div className="alignment-block-margin" style={{ marginLeft: '56px', marginRight: '56px', marginBottom: '48px' }}>
           <div className="bg-[#00877C]/5 rounded-lg border-2 border-[#00877C]/20 overflow-hidden">
             <div className="px-6 py-5 border-b border-[#00877C]/20">
               <div className="flex items-center gap-3">
@@ -188,9 +202,9 @@ function LevelTabsReadOnly({
                 <h4 className="font-semibold text-[#00877C] text-base">Alignment to Whāia Te Hihiri</h4>
               </div>
             </div>
-            <div style={{ padding: "32px" }}>
+            <div className="alignment-content-padding" style={{ padding: "32px" }}>
               <div
-                className="bg-white rounded-lg border border-[#00877C]/20"
+                className="alignment-statement-card bg-white rounded-lg border border-[#00877C]/20"
                 style={{ padding: "28px" }}
               >
                 <p className="text-xs font-semibold uppercase tracking-wide text-[#00877C] mb-2">
@@ -229,6 +243,7 @@ function ExploreContent() {
     isGuidedFilterActive,
     getRequiredLevel,
     getRelevantDescriptorIndexesForLevel,
+    isMappedCapability,
   } = useGuidedFilter();
 
   const requiredLevel = getRequiredLevel(capability.id);
@@ -250,7 +265,7 @@ function ExploreContent() {
         className="w-full"
         style={{ backgroundColor: capabilityColor }}
       >
-        <div className="max-w-[1100px] mx-auto px-8 lg:px-12 py-10 md:py-14">
+        <div className="max-w-[1100px] mx-auto px-8 lg:px-12 py-10 md:py-14 page-mobile-container">
           {/* Breadcrumb and capability selector - top row */}
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
             <div className="flex items-center gap-2 text-sm">
@@ -279,7 +294,11 @@ function ExploreContent() {
                 </span>
                 {requiredLevel ? (
                   <span className="text-xs font-bold rounded-full bg-white/20 text-white" style={{ padding: "3px 8px" }}>
-                    ★ Required level: {requiredLevel.charAt(0) + requiredLevel.slice(1).toLowerCase()}
+                    ★ Role-relevant level: {requiredLevel.charAt(0) + requiredLevel.slice(1).toLowerCase()}
+                  </span>
+                ) : isMappedCapability(capability.id) ? (
+                  <span className="text-xs font-semibold rounded-full bg-white/20 text-white" style={{ padding: "3px 8px" }}>
+                    ★ Mapped capability
                   </span>
                 ) : (
                   <span className="text-xs font-semibold rounded-full bg-white/20 text-white" style={{ padding: "3px 8px" }}>
@@ -293,7 +312,7 @@ function ExploreContent() {
       </header>
 
       <main className="w-full">
-        <div className="max-w-[1100px] mx-auto px-8 lg:px-12 py-12 md:py-16">
+        <div className="max-w-[1100px] mx-auto px-8 lg:px-12 py-12 md:py-16 page-mobile-container">
           <LevelTabsReadOnly
             capabilityLevels={capability.levels}
             capabilityColor={capabilityColor}
@@ -303,7 +322,7 @@ function ExploreContent() {
 
           {/* Training Resources */}
           <div 
-            className="bg-white rounded-xl border border-[#d9d9d9] shadow-sm"
+            className="resource-card-padding bg-white rounded-xl border border-[#d9d9d9] shadow-sm"
             style={{ marginTop: '64px', marginBottom: '48px', padding: '40px 48px' }}
           >
             <div className="flex items-start justify-between gap-4">
@@ -334,7 +353,7 @@ function ExploreContent() {
 
           {/* Self-Assessment CTA - using capability colour */}
           <div 
-            className="mt-12 rounded-lg"
+            className="cta-card-padding mt-12 rounded-lg"
             style={{ backgroundColor: capabilityColor, padding: '48px' }}
           >
             <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8">

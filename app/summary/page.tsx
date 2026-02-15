@@ -115,14 +115,10 @@ export default function SummaryPage() {
       <header className="w-full bg-white border-b border-[#d9d9d9] flex justify-center">
         <div className="w-full max-w-[1140px] px-8 lg:px-12 py-8">
           {/* Action buttons */}
-          <div className="flex items-center justify-center gap-4 mb-6 no-print" style={{ marginTop: '24px' }}>
+          <div className="flex flex-wrap items-center justify-center gap-4 mb-6 no-print" style={{ marginTop: '24px' }}>
             <button
               onClick={handlePrint}
-              className="flex items-center gap-2 bg-white border border-[#d9d9d9] text-[#4a4a4c] rounded-lg font-semibold hover:bg-[#f3f3f6] hover:border-[#1f2bd4] transition-colors"
-              style={{
-                padding: '14px 28px',
-                fontSize: '15px'
-              }}
+              className="flex items-center justify-center gap-2 w-full sm:w-[240px] h-12 bg-[#00877C] border border-[#00877C] text-white rounded-lg font-semibold hover:bg-[#006b63] hover:border-[#006b63] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#00877C]/30 transition-colors"
             >
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
@@ -131,11 +127,7 @@ export default function SummaryPage() {
             </button>
             <button
               onClick={handleClear}
-              className="flex items-center gap-2 bg-white border border-[#d9d9d9] text-[#A71930] rounded-lg font-semibold hover:bg-[#A71930]/5 hover:border-[#A71930] transition-colors"
-              style={{
-                padding: '14px 28px',
-                fontSize: '15px'
-              }}
+              className="flex items-center justify-center gap-2 w-full sm:w-[240px] h-12 bg-white border border-[#d9d9d9] text-[#4a4a4c] rounded-lg font-semibold hover:bg-[#f3f3f6] hover:border-[#afafc3] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#afafc3]/30 transition-colors"
             >
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -212,7 +204,7 @@ export default function SummaryPage() {
         ) : (
           <>
             {/* Stats */}
-            <div className={`grid grid-cols-1 ${reportMode === 'focus-only' ? 'md:grid-cols-3' : 'md:grid-cols-4'} mb-10`} style={{ gap: '24px', paddingTop: '32px' }}>
+            <div className={`grid grid-cols-1 ${reportMode === 'focus-only' ? 'md:grid-cols-2' : 'md:grid-cols-3'} mb-10`} style={{ gap: '24px', paddingTop: '32px' }}>
               <div className="bg-white rounded-lg border border-[#d9d9d9] p-5 text-center">
                 <div className="text-3xl font-bold text-[#0c0c48] mb-1">
                   {reportMode === 'focus-only' ? printCapabilities.length : completedCapabilities.length}
@@ -234,12 +226,6 @@ export default function SummaryPage() {
                   {printCapabilities.reduce((sum, c) => sum + getDevelopmentFocus(c.id).length, 0)}
                 </div>
                 <div className="text-sm text-[#6d6e71]">Development Focus Areas</div>
-              </div>
-              <div className="bg-white rounded-lg border border-[#d9d9d9] p-5 text-center">
-                <div className="text-3xl font-bold text-[#4a4a4c] mb-1">
-                  {completedCapabilities.filter(c => getDevelopmentFocus(c.id).length > 0).length}
-                </div>
-                <div className="text-sm text-[#6d6e71]">With Development Focus</div>
               </div>
             </div>
 
@@ -284,15 +270,20 @@ export default function SummaryPage() {
                 )}
               </div>
               
-              <div className="overflow-x-auto">
-                <table className="w-full">
+              <div className="overflow-x-auto" style={{ paddingLeft: '20px', paddingRight: '20px' }}>
+                <table className="w-full assessment-overview-table">
                   <thead>
                     <tr className="bg-[#f3f3f6] border-b border-[#e2e3e4]">
-                      <th className="text-left py-5 px-6 lg:px-8 font-semibold text-[#4a4a4c] text-sm">Capability</th>
+                      <th
+                        className="text-left py-5 pr-8 lg:pr-10 font-semibold text-[#4a4a4c] text-sm"
+                        style={{ paddingLeft: '36px' }}
+                      >
+                        Capability
+                      </th>
                       {reportMode !== 'focus-only' && (
-                        <th className="text-left py-5 px-6 lg:px-8 font-semibold text-[#4a4a4c] text-sm">Demonstrated</th>
+                        <th className="text-left py-5 px-8 lg:px-10 font-semibold text-[#4a4a4c] text-sm">Demonstrated</th>
                       )}
-                      <th className="text-left py-5 px-6 lg:px-8 font-semibold text-[#4a4a4c] text-sm">To Develop</th>
+                      <th className="text-left py-5 px-8 lg:px-10 font-semibold text-[#4a4a4c] text-sm">To Develop</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -303,7 +294,7 @@ export default function SummaryPage() {
                           key={capability.id}
                           className="border-b border-[#e2e3e4] hover:bg-[#f3f3f6] transition-colors"
                         >
-                          <td className="py-5 px-6 lg:px-8">
+                          <td className="py-5 pr-8 lg:pr-10" style={{ paddingLeft: '36px' }}>
                             <Link
                               href={`/assess?capability=${capability.id}`}
                               className="font-medium text-[#4a4a4c] hover:text-[#1f2bd4] transition-colors inline-flex items-center gap-1.5"
@@ -315,13 +306,13 @@ export default function SummaryPage() {
                             </Link>
                           </td>
                           {reportMode !== 'focus-only' && (
-                            <td className="py-5 px-6 lg:px-8">
+                            <td className="py-5 px-8 lg:px-10">
                               <span className="text-sm font-medium text-[#9a7100]">
                                 {getDemonstrated(capability.id).length} descriptor{getDemonstrated(capability.id).length !== 1 ? 's' : ''}
                               </span>
                             </td>
                           )}
-                          <td className="py-5 px-6 lg:px-8">
+                          <td className="py-5 px-8 lg:px-10">
                             {getDevelopmentFocus(capability.id).length > 0 ? (
                               <span className="text-sm font-medium text-[#9a7100]">
                                 {getDevelopmentFocus(capability.id).length} descriptor{getDevelopmentFocus(capability.id).length !== 1 ? 's' : ''}

@@ -25,7 +25,7 @@ export function Footer() {
               <img
                 src="/uoa_corporate_branding/Primary Logo_PNG/Large Primary Logo_PNG/UoA-Logo-Primary-RGB-Reversed-Large.png"
                 alt="Waipapa Taumata Rau - University of Auckland"
-                style={{ height: '56px', width: 'auto' }}
+                style={{ height: '64px', width: 'auto' }}
               />
             </a>
           </div>

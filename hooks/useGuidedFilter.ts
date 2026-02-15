@@ -4,7 +4,6 @@ import { useCallback, useMemo, useState } from "react";
 import {
   clearGuidedFilterSelection,
   getCapabilityMappingsForSelection,
-  getRelevantDescriptorIndexes,
   getRequiredLevelForCapability,
   GuidedFilterSelection,
   GuidedFilterType,
@@ -51,7 +50,7 @@ export function useGuidedFilter() {
     (capabilityId: string, level: CapabilityLevel, totalDescriptors: number): number[] => {
       const required = getRequiredLevel(capabilityId);
       if (!required || required !== level) return [];
-      return getRelevantDescriptorIndexes(required, totalDescriptors);
+      return Array.from({ length: totalDescriptors }, (_, index) => index);
     },
     [getRequiredLevel]
   );

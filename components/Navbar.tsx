@@ -10,7 +10,7 @@ const navItems = [
   { href: "/assess", label: "Self-Assessment" },
   { href: "/plan", label: "Development Plan" },
   { href: "/summary", label: "My Summary" },
-  { href: "/how-to-use", label: "Guide" },
+  { href: "/how-to-use", label: "How to Guide" },
 ];
 
 export function Navbar() {
@@ -25,15 +25,20 @@ export function Navbar() {
   };
 
   return (
-    <nav className="w-full bg-[#0c0c48] sticky top-0 z-50 no-print">
+    <nav className="relative w-full bg-[#0c0c48] sticky top-0 z-[80] no-print">
       <div className="w-full">
-        <div className="flex items-center justify-between" style={{ height: '80px' }}>
+        <div className="flex items-center justify-between" style={{ height: '96px' }}>
           {/* Official UoA Logo */}
-          <Link href="/" className="flex items-center hover:opacity-90 transition-opacity flex-shrink-0" style={{ paddingLeft: '32px' }}>
+          <Link
+            href="/"
+            className="flex items-center hover:opacity-90 transition-opacity flex-shrink-0"
+            style={{ paddingLeft: '28px' }}
+            onClick={() => setMobileMenuOpen(false)}
+          >
             <img 
               src="/uoa_corporate_branding/Primary Logo_PNG/Large Primary Logo_PNG/UoA-Logo-Primary-RGB-Reversed-Large.png" 
               alt="Waipapa Taumata Rau - University of Auckland" 
-              style={{ height: '48px', width: 'auto', objectFit: 'contain' }}
+              style={{ height: '64px', width: 'auto', objectFit: 'contain' }}
             />
           </Link>
           
@@ -46,7 +51,7 @@ export function Navbar() {
                   key={item.href}
                   href={item.href}
                   className={`
-                    text-sm font-medium transition-all duration-200 whitespace-nowrap rounded-lg
+                    text-[15px] font-medium transition-all duration-200 whitespace-nowrap rounded-lg
                     ${active
                       ? "bg-white/20 text-white font-semibold"
                       : "text-white hover:text-white hover:bg-white/10"
@@ -54,7 +59,7 @@ export function Navbar() {
                   `}
                   style={{ 
                     color: '#FFFFFF',
-                    padding: '10px 20px',
+                    padding: '10px 18px',
                   }}
                 >
                   {item.label}
@@ -70,6 +75,8 @@ export function Navbar() {
             style={{ padding: '10px', marginRight: '24px' }}
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label="Toggle navigation menu"
+            aria-expanded={mobileMenuOpen}
+            aria-controls="mobile-nav-menu"
           >
             {mobileMenuOpen ? (
               <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -86,30 +93,52 @@ export function Navbar() {
 
       {/* Mobile Navigation Menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden bg-[#0a0a3a] border-t border-white/10">
-          <div style={{ padding: '16px 24px' }}>
-            {navItems.map((item) => {
-              const active = isActive(item.href);
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className={`
-                    block text-sm font-medium rounded-lg transition-all duration-200
-                    ${active
-                      ? "bg-white/15 text-white font-semibold"
-                      : "text-white hover:text-white hover:bg-white/10"
-                    }
-                  `}
-                  style={{ padding: '14px 20px', marginBottom: '4px' }}
-                >
-                  {item.label}
-                </Link>
-              );
-            })}
+        <>
+          <button
+            type="button"
+            aria-label="Close navigation menu"
+            className="md:hidden fixed inset-x-0 bottom-0 z-[85] bg-black/35"
+            style={{ top: '82px' }}
+            onClick={() => setMobileMenuOpen(false)}
+          />
+          <div
+            id="mobile-nav-menu"
+            className="md:hidden absolute left-0 right-0 top-full z-[90] border-t border-white/15 bg-[#080839] shadow-2xl"
+          >
+            <div className="flex flex-col" style={{ padding: '12px 14px 16px 14px', gap: '8px' }}>
+              {navItems.map((item) => {
+                const active = isActive(item.href);
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={`
+                      block rounded-xl transition-all duration-200 no-underline
+                      ${active
+                        ? "font-semibold shadow-sm"
+                        : ""
+                      }
+                    `}
+                    style={{
+                      color: '#FFFFFF',
+                      padding: '13px 14px',
+                      fontSize: '15px',
+                      lineHeight: 1.25,
+                      minHeight: '46px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      border: active ? '1px solid rgba(255,255,255,0.24)' : '1px solid rgba(255,255,255,0.10)',
+                      backgroundColor: active ? '#3E3E70' : '#1A1A55',
+                    }}
+                  >
+                    {item.label}
+                  </Link>
+                );
+              })}
+            </div>
           </div>
-        </div>
+        </>
       )}
     </nav>
   );
