@@ -10,7 +10,7 @@ const navItems = [
   { href: "/assess", label: "Self-Assessment" },
   { href: "/plan", label: "Development Plan" },
   { href: "/summary", label: "My Summary" },
-  { href: "/how-to-use", label: "How to Guide" },
+  { href: "/how-to-use", label: "How-to Guide" },
 ];
 
 export function Navbar() {
@@ -27,23 +27,23 @@ export function Navbar() {
   return (
     <nav className="relative w-full bg-[#0c0c48] sticky top-0 z-[80] no-print">
       <div className="w-full">
-        <div className="flex items-center justify-between" style={{ height: '96px' }}>
+        <div className="flex items-center justify-between" style={{ height: "96px" }}>
           {/* Official UoA Logo */}
           <Link
             href="/"
             className="flex items-center hover:opacity-90 transition-opacity flex-shrink-0"
-            style={{ paddingLeft: '28px' }}
+            style={{ paddingLeft: "28px" }}
             onClick={() => setMobileMenuOpen(false)}
           >
             <img 
-              src="/uoa_corporate_branding/Primary Logo_PNG/Large Primary Logo_PNG/UoA-Logo-Primary-RGB-Reversed-Large.png" 
+              src="/uoa_logo_ext_reversed.png" 
               alt="Waipapa Taumata Rau - University of Auckland" 
-              style={{ height: '64px', width: 'auto', objectFit: 'contain' }}
+              style={{ height: "52px", width: "auto", objectFit: "contain" }}
             />
           </Link>
           
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center" style={{ paddingRight: '32px', gap: '8px' }}>
+          <div className="hidden md:flex items-center" style={{ paddingRight: "34px", gap: "20px" }}>
             {navItems.map((item) => {
               const active = isActive(item.href);
               return (
@@ -51,15 +51,17 @@ export function Navbar() {
                   key={item.href}
                   href={item.href}
                   className={`
-                    text-[15px] font-medium transition-all duration-200 whitespace-nowrap rounded-lg
+                    text-[15px] font-medium transition-all duration-200 whitespace-nowrap
                     ${active
-                      ? "bg-white/20 text-white font-semibold"
-                      : "text-white hover:text-white hover:bg-white/10"
+                      ? "text-white font-semibold border-b-2 border-white"
+                      : "text-white hover:text-white border-b-2 border-transparent"
                     }
                   `}
                   style={{ 
-                    color: '#FFFFFF',
-                    padding: '10px 18px',
+                    color: "#FFFFFF",
+                    paddingTop: "6px",
+                    paddingBottom: "4px",
+                    lineHeight: 1.1,
                   }}
                 >
                   {item.label}

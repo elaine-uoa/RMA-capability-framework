@@ -3,7 +3,6 @@
 import { useEffect, useState, Suspense, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 import { capabilities } from "@/data/capabilities";
-import { CapabilityNavigation } from "@/components/CapabilityNavigation";
 import { CapabilitySelector } from "@/components/CapabilitySelector";
 import { useAssessment } from "@/contexts/AssessmentContext";
 import { CapabilityLevel, SelectedDescriptor } from "@/types";
@@ -11,31 +10,55 @@ import { useGuidedFilter } from "@/hooks/useGuidedFilter";
 import { roles, functions } from "@/data/roleFilters";
 import Link from "next/link";
 
-// Map capabilities to their key area colours (from homepage)
 const CAPABILITY_COLORS: Record<string, { main: string; hover: string }> = {
-  "research-engagement": { main: "#0c0c48", hover: "#0a0a3a" },        // Navy
-  "maximising-impact": { main: "#0c0c48", hover: "#0a0a3a" },          // Navy
-  "researcher-development": { main: "#00877C", hover: "#006b63" },     // Teal
-  "environment-culture": { main: "#00877C", hover: "#006b63" },        // Teal
-  "funding-opportunities": { main: "#1f2bd4", hover: "#1929a8" },      // Blue
-  "proposal-support": { main: "#1f2bd4", hover: "#1929a8" },           // Blue
-  "initiation": { main: "#D97706", hover: "#b86205" },                 // Orange
-  "projects-initiatives": { main: "#D97706", hover: "#b86205" },       // Orange
-  "monitoring-reporting": { main: "#4F2D7F", hover: "#3e2465" },       // Purple
-  "policy-strategy": { main: "#4F2D7F", hover: "#3e2465" },            // Purple
+  "research-engagement": { main: "#BCC0F3", hover: "#AAB0E8" },
+  "maximising-impact": { main: "#BCC0F3", hover: "#AAB0E8" },
+  "researcher-development": { main: "#99EAF9", hover: "#87DBF0" },
+  "environment-culture": { main: "#99EAF9", hover: "#87DBF0" },
+  "funding-opportunities": { main: "#A3EBCC", hover: "#91DFC0" },
+  "proposal-support": { main: "#A3EBCC", hover: "#91DFC0" },
+  "initiation": { main: "#FFBFB7", hover: "#F0ADA5" },
+  "projects-initiatives": { main: "#FFBFB7", hover: "#F0ADA5" },
+  "monitoring-reporting": { main: "#ECBEFA", hover: "#DCAEE8" },
+  "policy-strategy": { main: "#ECBEFA", hover: "#DCAEE8" },
 };
 
-// Component for individual descriptor with DUAL checkboxes: "I can do" + "Want to develop"
-function DescriptorItem({
+/* ── Info-circle icon (31 × 31, blue fill matching CSS spec) ── */
+function InfoCircleIcon() {
+  return (
+    <svg
+      width="31"
+      height="31"
+      viewBox="0 0 32 32"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <circle cx="16" cy="16" r="14" fill="#1F2BD4" />
+      <path d="M16 14.5V22" stroke="#FFFFFF" strokeWidth="2.2" strokeLinecap="round" />
+      <circle cx="16" cy="10.5" r="1.6" fill="#FFFFFF" />
+    </svg>
+  );
+}
+
+/* ── Checkmark SVG for custom checkboxes ── */
+function CheckmarkSvg() {
+  return (
+    <svg width="12" height="10" viewBox="0 0 12 10" fill="none">
+      <path d="M1 5L4.5 8.5L11 1.5" stroke="#0C0C48" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+/* ── Descriptor card with dual checkboxes and selection-state backgrounds ── */
+function DescriptorCard({
   point,
   index,
   isDemonstrated,
   isWantToDevelop,
   onToggleDemonstrated,
   onToggleWantToDevelop,
-  levelColor,
-  isRelevant = false,
-  showAlignmentIndicator = false,
+  showAlignmentIcon = false,
+  isRoleRelevant = false,
 }: {
   point: string;
   index: number;
@@ -43,302 +66,468 @@ function DescriptorItem({
   isWantToDevelop: boolean;
   onToggleDemonstrated: () => void;
   onToggleWantToDevelop: () => void;
-  levelColor: string;
-  isRelevant?: boolean;
-  showAlignmentIndicator?: boolean;
+  showAlignmentIcon?: boolean;
+  isRoleRelevant?: boolean;
 }) {
-
-  // Determine background colour based on status - UoA colours
-  const getBgClass = () => {
+  const getCardStyle = (): { bg: string; border: string } => {
     if (isDemonstrated && isWantToDevelop) {
-      return 'bg-gradient-to-r from-[#00877C]/10 to-[#EAAB00]/10 border-2 border-[#00877C]/30';
+      return { bg: "#D5DFF4", border: "#8F9092" };
     }
     if (isDemonstrated) {
-      return 'bg-[#00877C]/10 border-2 border-[#00877C]/30';
+      return { bg: "#D5F4DE", border: "#2EC95C" };
     }
     if (isWantToDevelop) {
-      return 'bg-[#EAAB00]/10 border-2 border-[#EAAB00]/30';
+      return { bg: "#FFF7D7", border: "#FDD835" };
     }
-    return 'hover:bg-[#f3f3f6] border-2 border-transparent';
+    return { bg: "#FFFFFF", border: "#8F9092" };
   };
 
+  const { bg, border } = getCardStyle();
+
   return (
-    <div className="relative">
-      <div className={`descriptor-card-padding rounded-2xl transition-all shadow-sm hover:shadow-md ${getBgClass()}`} style={{ padding: '40px 48px' }}>
-        {showAlignmentIndicator && (
-          <div
-            className="absolute top-4 right-4 w-6 h-6 rounded-full bg-[#00877C]/20 flex items-center justify-center"
-            aria-hidden="true"
-          >
-            <svg className="w-3.5 h-3.5 text-[#00877C]" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-            </svg>
-          </div>
-        )}
-        <div className="flex-1 min-w-0">
-          {isRelevant && (
-            <div
-              className="inline-flex items-center gap-1 rounded-full border border-[#1f2bd4]/30 bg-[#1f2bd4]/10 text-[#1f2bd4] text-xs font-semibold"
-              style={{ marginBottom: "12px", padding: "4px 8px" }}
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        padding: "20px",
+        gap: "10px",
+        backgroundColor: bg,
+        border: `0.68px solid ${border}`,
+        borderRadius: "10px",
+        transition: "background-color 0.2s ease, border-color 0.2s ease",
+      }}
+    >
+      <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+        <div style={{ display: "flex", alignItems: "flex-start", gap: "20px" }}>
+          {/* Descriptor text with optional role-relevant tag */}
+          <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: "8px" }}>
+            {isRoleRelevant && (
+              <span
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "4px",
+                  width: "fit-content",
+                  padding: "4px 10px",
+                  backgroundColor: "rgba(31,43,212,0.1)",
+                  border: "1px solid rgba(31,43,212,0.3)",
+                  borderRadius: "999px",
+                  fontFamily: "Inter, sans-serif",
+                  fontWeight: 600,
+                  fontSize: "12px",
+                  color: "#1F2BD4",
+                }}
+              >
+                <span style={{ fontSize: "10px" }}>●</span>
+                Role-relevant descriptor
+              </span>
+            )}
+            <p
+              style={{
+                fontFamily: "Inter, sans-serif",
+                fontWeight: 400,
+                fontSize: "16px",
+                lineHeight: "24px",
+                color: "#0C0C48",
+                margin: 0,
+              }}
             >
-              <span>●</span>
-              Role-relevant descriptor
+              {point}
+            </p>
+          </div>
+          {/* Alignment icon on first descriptor only */}
+          {showAlignmentIcon && (
+            <div style={{ flexShrink: 0 }}>
+              <InfoCircleIcon />
             </div>
           )}
-          <div className="mb-6">
-            <p className="text-[#4a4a4c] leading-relaxed text-base">{point}</p>
-          </div>
-          
-            {/* Dual checkbox row - simple layout without outer containers */}
-            <div className="flex flex-wrap items-center gap-6">
-              <label className="flex items-center gap-2.5 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={isDemonstrated}
-                  onChange={onToggleDemonstrated}
-                  className="w-5 h-5 rounded border-[#d9d9d9] text-[#00877C] focus:ring-[#00877C] focus:ring-2 cursor-pointer accent-[#00877C]"
-                />
-                <span className={`text-sm font-medium ${isDemonstrated ? 'text-[#00877C]' : 'text-[#6d6e71]'}`}>
-                  I can do this
-                </span>
-              </label>
-              
-              <label className="flex items-center gap-2.5 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={isWantToDevelop}
-                  onChange={onToggleWantToDevelop}
-                  className="w-5 h-5 rounded border-[#d9d9d9] text-[#EAAB00] focus:ring-[#EAAB00] focus:ring-2 cursor-pointer accent-[#EAAB00]"
-                />
-                <span className={`text-sm font-medium ${isWantToDevelop ? 'text-[#9a7100]' : 'text-[#6d6e71]'}`}>
-                  Want to develop
-                </span>
-              </label>
+        </div>
+
+        {/* Checkbox row */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            padding: "0 55px",
+            gap: "20px",
+          }}
+        >
+          {/* "I can do this" checkbox */}
+          <label
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "10px",
+              cursor: "pointer",
+            }}
+          >
+            <div
+              onClick={onToggleDemonstrated}
+              style={{
+                width: "20px",
+                height: "20px",
+                borderRadius: "2px",
+                border: `1px solid ${isDemonstrated ? "#0C0C48" : "#0C0C48"}`,
+                backgroundColor: isDemonstrated ? "#2EC95C" : "#FFFFFF",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                cursor: "pointer",
+                transition: "background-color 0.15s ease",
+              }}
+            >
+              {isDemonstrated && <CheckmarkSvg />}
             </div>
+            <span
+              style={{
+                fontFamily: "Inter, sans-serif",
+                fontWeight: 400,
+                fontSize: "16px",
+                lineHeight: "24px",
+                color: "#0C0C48",
+              }}
+            >
+              I can do this
+            </span>
+          </label>
+
+          {/* "I want to develop" checkbox */}
+          <label
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "10px",
+              cursor: "pointer",
+            }}
+          >
+            <div
+              onClick={onToggleWantToDevelop}
+              style={{
+                width: "20px",
+                height: "20px",
+                borderRadius: "2px",
+                border: `1px solid ${isWantToDevelop ? "#FDD835" : "#0C0C48"}`,
+                backgroundColor: isWantToDevelop ? "#FDD835" : "#FFFFFF",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                cursor: "pointer",
+                transition: "background-color 0.15s ease",
+              }}
+            >
+              {isWantToDevelop && <CheckmarkSvg />}
+            </div>
+            <span
+              style={{
+                fontFamily: "Inter, sans-serif",
+                fontWeight: 400,
+                fontSize: "16px",
+                lineHeight: "24px",
+                color: "#0C0C48",
+              }}
+            >
+              I want to develop
+            </span>
+          </label>
         </div>
       </div>
     </div>
   );
 }
 
-function LevelTabs({ 
-  levels, 
-  currentLevel, 
-  onSelectLevel,
+/* ── Level tabs + header + descriptors + alignment section ── */
+function AssessLevelTabs({
+  levels,
   selectedTab,
   setSelectedTab,
   demonstratedDescriptors,
   developmentFocus,
   onToggleDemonstrated,
   onToggleWantToDevelop,
-  capabilityColor,
   requiredLevel,
   requiredDescriptorIndexes,
-}: { 
-  levels: any[], 
-  currentLevel: CapabilityLevel | null, 
-  onSelectLevel: (l: CapabilityLevel) => void,
-  selectedTab: CapabilityLevel,
-  setSelectedTab: (l: CapabilityLevel) => void,
-  demonstratedDescriptors: SelectedDescriptor[],
-  developmentFocus: SelectedDescriptor[],
-  onToggleDemonstrated: (level: CapabilityLevel, index: number) => void,
-  onToggleWantToDevelop: (level: CapabilityLevel, index: number) => void,
-  capabilityColor: string,
-  requiredLevel: CapabilityLevel | null,
-  requiredDescriptorIndexes: number[],
+}: {
+  levels: any[];
+  selectedTab: CapabilityLevel;
+  setSelectedTab: (l: CapabilityLevel) => void;
+  demonstratedDescriptors: SelectedDescriptor[];
+  developmentFocus: SelectedDescriptor[];
+  onToggleDemonstrated: (level: CapabilityLevel, index: number) => void;
+  onToggleWantToDevelop: (level: CapabilityLevel, index: number) => void;
+  requiredLevel: CapabilityLevel | null;
+  requiredDescriptorIndexes: number[];
 }) {
   const levelOrder: CapabilityLevel[] = ["FOUNDATION", "INTERMEDIATE", "ADVANCED", "EXEMPLAR"];
-  const activeLevelData = levels.find(l => l.level === selectedTab);
+  const activeLevelData = levels.find((l: any) => l.level === selectedTab);
 
-  // Count demonstrated and want-to-develop per level
   const getLevelCounts = (level: CapabilityLevel) => {
-    const demonstrated = demonstratedDescriptors.filter(d => d.level === level).length;
-    const wantToDevelop = developmentFocus.filter(d => d.level === level).length;
+    const demonstrated = demonstratedDescriptors.filter((d) => d.level === level).length;
+    const wantToDevelop = developmentFocus.filter((d) => d.level === level).length;
     return { demonstrated, wantToDevelop };
   };
 
-  // Helper function to create lighter shades of the capability colour
-  const lightenColor = (hex: string, percent: number): string => {
-    const num = parseInt(hex.replace("#", ""), 16);
-    const r = Math.min(255, Math.floor((num >> 16) + (255 - (num >> 16)) * percent));
-    const g = Math.min(255, Math.floor(((num >> 8) & 0x00FF) + (255 - ((num >> 8) & 0x00FF)) * percent));
-    const b = Math.min(255, Math.floor((num & 0x0000FF) + (255 - (num & 0x0000FF)) * percent));
-    return `#${((r << 16) | (g << 8) | b).toString(16).padStart(6, '0')}`;
-  };
-
-  // Progressive colour scheme: lightest (Foundation) to darkest (Exemplar)
-  // Using the capability's key area colour from homepage
-  const levelColors: Record<CapabilityLevel, { bg: string; border: string; text: string; light: string }> = {
-    FOUNDATION: { bg: lightenColor(capabilityColor, 0.6), border: lightenColor(capabilityColor, 0.6), text: 'white', light: lightenColor(capabilityColor, 0.6) },
-    INTERMEDIATE: { bg: lightenColor(capabilityColor, 0.4), border: lightenColor(capabilityColor, 0.4), text: 'white', light: lightenColor(capabilityColor, 0.4) },
-    ADVANCED: { bg: lightenColor(capabilityColor, 0.2), border: lightenColor(capabilityColor, 0.2), text: 'white', light: lightenColor(capabilityColor, 0.2) },
-    EXEMPLAR: { bg: capabilityColor, border: capabilityColor, text: 'white', light: capabilityColor },
-  };
-
-  const getLevelBgColor = (level: CapabilityLevel, isActive: boolean) => {
-    const colors = levelColors[level];
-    if (isActive) {
-      return `bg-[${colors.bg}] text-white border-[${colors.border}]`;
-    }
-    return `bg-white text-[#4a4a4c] border-[#d9d9d9] hover:border-[${colors.border}] hover:text-[${colors.border}]`;
-  };
-
   return (
-    <div style={{ marginTop: '32px' }}>
-      {/* Level Tabs - Colour coded with proper contrast */}
-      <div className="level-tabs-wrap flex flex-wrap justify-center gap-3 mb-8">
-        {levelOrder.map((level, idx) => {
+    <div>
+      {/* Level Tabs – NO numbers */}
+      <div style={{ display: "flex", flexWrap: "wrap", gap: "20px", marginBottom: "30px" }}>
+        {levelOrder.map((level) => {
           const isActive = selectedTab === level;
-          const isCurrent = currentLevel === level;
-          const counts = getLevelCounts(level);
-          const colors = levelColors[level];
-          
           return (
             <button
               key={level}
               onClick={() => setSelectedTab(level)}
               style={{
-                ...(isActive ? { backgroundColor: colors.bg, borderColor: colors.border } : {}),
-                padding: '18px 36px'
-              }}
-              className={`
-                flex-1 min-w-[180px] relative rounded-xl font-semibold text-base border-2 shadow-sm
-                transition-all duration-200 hover:shadow-md
-                ${isActive 
-                  ? 'text-white' 
-                  : 'bg-white text-[#4a4a4c] border-[#e2e3e4]'}
-              `}
-              onMouseEnter={(e) => {
-                if (!isActive) {
-                  e.currentTarget.style.borderColor = colors.border;
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (!isActive) {
-                  e.currentTarget.style.borderColor = '#e2e3e4';
-                }
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                width: "234px",
+                height: "79px",
+                padding: "10px",
+                borderRadius: "10px",
+                backgroundColor: isActive ? "#0C0C48" : "#FFFFFF",
+                color: isActive ? "#FFFFFF" : "#000000",
+                border: isActive ? "none" : "1px solid #8F9092",
+                fontFamily: "Inter, sans-serif",
+                fontWeight: 700,
+                fontSize: "18px",
+                lineHeight: "27px",
+                cursor: "pointer",
+                transition: "all 0.2s ease",
               }}
             >
               {level.charAt(0) + level.slice(1).toLowerCase()}
-              {requiredLevel === level && (
-                <span
-                  className="ml-2 inline-flex items-center gap-1 text-xs font-bold bg-white/20 rounded-full"
-                  title="Role-relevant level"
-                  style={{ padding: "3px 7px" }}
-                >
-                  ★
-                </span>
-              )}
-              {(counts.demonstrated > 0 || counts.wantToDevelop > 0) && (
-                <span className="absolute -top-2 -right-2 flex items-center gap-0.5 text-xs">
-                  {counts.demonstrated > 0 && (
-                    <span className="w-5 h-5 rounded-full bg-[#00877C] text-white flex items-center justify-center font-bold shadow-sm">
-                      {counts.demonstrated}
-                    </span>
-                  )}
-                  {counts.wantToDevelop > 0 && (
-                    <span className="w-5 h-5 rounded-full bg-[#EAAB00] text-white flex items-center justify-center font-bold shadow-sm">
-                      {counts.wantToDevelop}
-                    </span>
-                  )}
-                </span>
-              )}
             </button>
           );
         })}
       </div>
 
-      {/* Tab Content */}
-      <div className="level-content-container bg-white rounded-2xl border border-[#e2e3e4] shadow-sm overflow-hidden">
-        {/* Header with level colour accent */}
-        <div 
-          className="px-6 md:px-8 py-5 border-b-4"
-          style={{ borderColor: levelColors[selectedTab].bg }}
-        >
-          <div className="flex justify-center items-center">
-            <div className="text-center">
-              <h3 className="text-xl font-bold text-[#4a4a4c]">
-                {selectedTab.charAt(0) + selectedTab.slice(1).toLowerCase()} Level
-              </h3>
-              <p className="text-sm text-[#6d6e71]">
-                {activeLevelData?.bulletPoints.length || 0} descriptors at this level
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Descriptors Section - with generous spacing for readability */}
-        <div className="level-content-padding" style={{ padding: '48px 56px' }}>
-          {/* Mini Legend */}
-          <div className="flex flex-wrap items-center gap-4 mb-10 pb-6 border-b border-[#e2e3e4]">
-            <span className="text-xs font-medium text-[#6d6e71] uppercase tracking-wide">Select status:</span>
-            <div className="flex items-center gap-2">
-              <span className="w-4 h-4 rounded-full bg-[#00877C]/30 border-2 border-[#00877C]/50"></span>
-              <span className="text-sm text-[#6d6e71]">I can do this</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="w-4 h-4 rounded-full bg-[#EAAB00]/30 border-2 border-[#EAAB00]/50"></span>
-              <span className="text-sm text-[#6d6e71]">Want to develop</span>
-            </div>
-          </div>
-          
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
-            {activeLevelData?.bulletPoints.map((point: string, idx: number) => {
-              const isDemonstrated = demonstratedDescriptors.some(
-                d => d.level === selectedTab && d.descriptorIndex === idx
-              );
-              const isWantToDevelop = developmentFocus.some(
-                d => d.level === selectedTab && d.descriptorIndex === idx
-              );
-              
-              return (
-                <DescriptorItem
-                  key={idx}
-                  point={point}
-                  index={idx}
-                  isDemonstrated={isDemonstrated}
-                  isWantToDevelop={isWantToDevelop}
-                  onToggleDemonstrated={() => onToggleDemonstrated(selectedTab, idx)}
-                  onToggleWantToDevelop={() => onToggleWantToDevelop(selectedTab, idx)}
-                  levelColor={levelColors[selectedTab].bg}
-                  isRelevant={selectedTab === requiredLevel && requiredDescriptorIndexes.includes(idx)}
-                  showAlignmentIndicator={idx === 0}
-                />
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Alignment to Whāia Te Hihiri - Fixed, always visible */}
-        <div className="alignment-block-margin" style={{ marginLeft: '56px', marginRight: '56px', marginBottom: '48px' }}>
-          <div className="bg-[#00877C]/5 rounded-lg border-2 border-[#00877C]/20 overflow-hidden">
-            <div className="px-6 py-5 border-b border-[#00877C]/20">
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-[#00877C]/20 flex items-center justify-center">
-                  <svg className="w-5 h-5 text-[#00877C]" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-                  </svg>
-                </div>
-                <h4 className="font-semibold text-[#00877C] text-base">Alignment to Whāia Te Hihiri</h4>
-              </div>
-            </div>
-            <div className="alignment-content-padding" style={{ padding: "32px" }}>
-              <div
-                className="alignment-statement-card bg-white rounded-lg border border-[#00877C]/20"
-                style={{ padding: "28px" }}
-              >
-                <p className="text-xs font-semibold uppercase tracking-wide text-[#00877C] mb-2">
-                  {selectedTab.charAt(0) + selectedTab.slice(1).toLowerCase()}
-                </p>
-                <p className="text-sm text-[#4a4a4c] leading-relaxed" style={{ lineHeight: "1.75" }}>
-                  {activeLevelData?.alignmentStatement || ""}
-                </p>
-              </div>
-            </div>
-          </div>
+      {/* Level header bar */}
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          padding: "20px 0",
+          borderBottom: "1px solid #8F9092",
+          marginBottom: "30px",
+        }}
+      >
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          <h3
+            style={{
+              fontFamily: "Inter, sans-serif",
+              fontWeight: 700,
+              fontSize: "20px",
+              lineHeight: "30px",
+              color: "#0C0C48",
+              margin: 0,
+            }}
+          >
+            {selectedTab.charAt(0) + selectedTab.slice(1).toLowerCase()} Level
+          </h3>
+          <p
+            style={{
+              fontFamily: "Inter, sans-serif",
+              fontWeight: 400,
+              fontSize: "16px",
+              lineHeight: "24px",
+              color: "#4A4A4C",
+              margin: 0,
+            }}
+          >
+            {activeLevelData?.bulletPoints.length || 0} descriptors
+          </p>
         </div>
       </div>
+
+      {/* SELECT STATUS legend row */}
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "15px",
+          marginBottom: "30px",
+        }}
+      >
+        <span
+          style={{
+            fontFamily: "Inter, sans-serif",
+            fontWeight: 700,
+            fontSize: "16px",
+            lineHeight: "24px",
+            color: "#4A4A4C",
+          }}
+        >
+          SELECT STATUS:
+        </span>
+        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+          <div
+            style={{
+              width: "20px",
+              height: "20px",
+              backgroundColor: "#2EC95C",
+              border: "1px solid #0C0C48",
+              borderRadius: "2px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <CheckmarkSvg />
+          </div>
+          <span
+            style={{
+              fontFamily: "Inter, sans-serif",
+              fontWeight: 400,
+              fontSize: "16px",
+              lineHeight: "24px",
+              color: "#4A4A4C",
+            }}
+          >
+            I can do this
+          </span>
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+          <div
+            style={{
+              width: "20px",
+              height: "20px",
+              backgroundColor: "#FDD835",
+              border: "1px solid #0C0C48",
+              borderRadius: "2px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <CheckmarkSvg />
+          </div>
+          <span
+            style={{
+              fontFamily: "Inter, sans-serif",
+              fontWeight: 400,
+              fontSize: "16px",
+              lineHeight: "24px",
+              color: "#4A4A4C",
+            }}
+          >
+            I want to develop
+          </span>
+        </div>
+      </div>
+
+      {/* Descriptor cards */}
+      <div style={{ display: "flex", flexDirection: "column", gap: "30px" }}>
+        {activeLevelData?.bulletPoints.map((point: string, idx: number) => {
+          const isDemonstrated = demonstratedDescriptors.some(
+            (d) => d.level === selectedTab && d.descriptorIndex === idx
+          );
+          const isWantToDevelop = developmentFocus.some(
+            (d) => d.level === selectedTab && d.descriptorIndex === idx
+          );
+
+          return (
+            <DescriptorCard
+              key={idx}
+              point={point}
+              index={idx}
+              isDemonstrated={isDemonstrated}
+              isWantToDevelop={isWantToDevelop}
+              onToggleDemonstrated={() => onToggleDemonstrated(selectedTab, idx)}
+              onToggleWantToDevelop={() => onToggleWantToDevelop(selectedTab, idx)}
+              showAlignmentIcon={idx === 0}
+              isRoleRelevant={selectedTab === requiredLevel && requiredDescriptorIndexes.includes(idx)}
+            />
+          );
+        })}
+      </div>
+
+      {/* ── Māori Alignment Section ── */}
+      {activeLevelData?.alignmentStatement && (
+        <div style={{ marginTop: "40px", marginBottom: "50px" }}>
+          <div
+            style={{
+              backgroundColor: "rgba(0, 135, 124, 0.05)",
+              border: "2px solid rgba(0, 135, 124, 0.2)",
+              borderRadius: "10px",
+              overflow: "hidden",
+            }}
+          >
+            <div
+              className="flex items-center gap-3"
+              style={{
+                padding: "20px 24px",
+                borderBottom: "1px solid rgba(0, 135, 124, 0.2)",
+              }}
+            >
+              <div
+                className="flex items-center justify-center rounded-full"
+                style={{
+                  width: "32px",
+                  height: "32px",
+                  backgroundColor: "rgba(0, 135, 124, 0.2)",
+                }}
+              >
+                <svg width="18" height="18" viewBox="0 0 20 20" fill="#00877C">
+                  <path
+                    fillRule="evenodd"
+                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </div>
+              <h4
+                style={{
+                  fontFamily: "Inter, sans-serif",
+                  fontWeight: 600,
+                  fontSize: "16px",
+                  lineHeight: "24px",
+                  color: "#00877C",
+                  margin: 0,
+                }}
+              >
+                Alignment to Whāia Te Hihiri
+              </h4>
+            </div>
+            <div style={{ padding: "24px" }}>
+              <div
+                style={{
+                  backgroundColor: "#FFFFFF",
+                  border: "1px solid rgba(0, 135, 124, 0.2)",
+                  borderRadius: "8px",
+                  padding: "24px",
+                }}
+              >
+                <p
+                  style={{
+                    fontFamily: "Inter, sans-serif",
+                    fontWeight: 600,
+                    fontSize: "12px",
+                    letterSpacing: "0.05em",
+                    textTransform: "uppercase",
+                    color: "#00877C",
+                    marginBottom: "8px",
+                  }}
+                >
+                  {selectedTab.charAt(0) + selectedTab.slice(1).toLowerCase()}
+                </p>
+                <p
+                  style={{
+                    fontFamily: "Inter, sans-serif",
+                    fontWeight: 400,
+                    fontSize: "14px",
+                    lineHeight: "1.75",
+                    color: "#4A4A4C",
+                    margin: 0,
+                  }}
+                >
+                  {activeLevelData.alignmentStatement}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -347,14 +536,14 @@ function AssessPageContent() {
   const searchParams = useSearchParams();
   const capabilityId = searchParams?.get("capability") || capabilities[0].id;
   const capability = capabilities.find((c) => c.id === capabilityId) || capabilities[0];
-  
+
   const { getResponse, updateResponse } = useAssessment();
-  
+
   return (
-    <div className="min-h-screen bg-[#f8f9fa]">
-      <AssessmentInner 
+    <div className="min-h-screen" style={{ backgroundColor: "#f2f2f2" }}>
+      <AssessmentInner
         key={capabilityId}
-        capability={capability} 
+        capability={capability}
         capabilityId={capabilityId}
         getResponse={getResponse}
         updateResponse={updateResponse}
@@ -372,9 +561,8 @@ function AssessmentInner({ capability, capabilityId, getResponse, updateResponse
     getRelevantDescriptorIndexesForLevel,
     isMappedCapability,
   } = useGuidedFilter();
-  
-  // Get the key area colour for this capability
-  const capabilityColors = CAPABILITY_COLORS[capabilityId] || { main: "#0c0c48", hover: "#0a0a3a" };
+
+  const capabilityColors = CAPABILITY_COLORS[capabilityId] || { main: "#99EAF9", hover: "#87DBF0" };
   const capabilityColor = capabilityColors.main;
 
   const requiredLevel = getRequiredLevel(capabilityId);
@@ -385,360 +573,727 @@ function AssessmentInner({ capability, capabilityId, getResponse, updateResponse
     : [];
   const activeFilterName = selection
     ? (selection.filterType === "role"
-        ? roles.find((r) => r.id === selection.filterId)?.name
-        : functions.find((f) => f.id === selection.filterId)?.name) || selection.filterId
+        ? roles.find((r: any) => r.id === selection.filterId)?.name
+        : functions.find((f: any) => f.id === selection.filterId)?.name) || selection.filterId
     : null;
-  
+
+  const currentIndex = capabilities.findIndex((c) => c.id === capability.id);
+  const prevCapability = currentIndex > 0 ? capabilities[currentIndex - 1] : null;
+  const nextCapability = currentIndex < capabilities.length - 1 ? capabilities[currentIndex + 1] : null;
+
   const [currentLevel, setCurrentLevel] = useState<CapabilityLevel | null>(response?.currentLevel || null);
   const [selectedTab, setSelectedTab] = useState<CapabilityLevel>(response?.currentLevel || "FOUNDATION");
-  
-  // Use demonstratedDescriptors (new) or fallback to focusAreas (legacy)
+
   const [demonstratedDescriptors, setDemonstratedDescriptors] = useState<SelectedDescriptor[]>(
     response?.demonstratedDescriptors || response?.focusAreas || []
   );
-  
-  // Development focus - what user wants to develop (NEW: selected on same page)
+
   const [developmentFocus, setDevelopmentFocus] = useState<SelectedDescriptor[]>(
     response?.developmentFocus || []
   );
-  
-  const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
 
-  // Use ref to track if this is the first render and previous capability
+  const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved">("idle");
+
   const isFirstRender = useRef(true);
   const previousCapabilityId = useRef<string>(capabilityId);
 
-  // Manual save function
   const handleSave = () => {
-    setSaveStatus('saving');
+    setSaveStatus("saving");
     updateResponse(capabilityId, { currentLevel, demonstratedDescriptors, developmentFocus });
     setTimeout(() => {
-      setSaveStatus('saved');
-      setTimeout(() => setSaveStatus('idle'), 2000);
+      setSaveStatus("saved");
+      setTimeout(() => setSaveStatus("idle"), 2000);
     }, 100);
   };
 
-  // CRITICAL FIX: Only save changes after user interaction, not on mount
   useEffect(() => {
     if (isFirstRender.current) {
       isFirstRender.current = false;
       return;
     }
-
-    // Debounce the save to avoid too many updates
-    setSaveStatus('saving');
+    setSaveStatus("saving");
     const timeoutId = setTimeout(() => {
       updateResponse(capabilityId, { currentLevel, demonstratedDescriptors, developmentFocus });
-      setSaveStatus('saved');
-      setTimeout(() => setSaveStatus('idle'), 2000);
+      setSaveStatus("saved");
+      setTimeout(() => setSaveStatus("idle"), 2000);
     }, 300);
-
     return () => clearTimeout(timeoutId);
-  }, [currentLevel, demonstratedDescriptors, developmentFocus]); // Remove capabilityId and updateResponse from deps
+  }, [currentLevel, demonstratedDescriptors, developmentFocus]);
 
-  // Update local state when capability changes (but preserve selectedTab if user is viewing a different tab)
   useEffect(() => {
-    // Only update state if capability actually changed
     if (previousCapabilityId.current !== capabilityId) {
       const newResponse = getResponse(capabilityId);
       setCurrentLevel(newResponse?.currentLevel || null);
-      // Reset selectedTab only when switching to a new capability
       setSelectedTab(newResponse?.currentLevel || "FOUNDATION");
       setDemonstratedDescriptors(newResponse?.demonstratedDescriptors || newResponse?.focusAreas || []);
       setDevelopmentFocus(newResponse?.developmentFocus || []);
-      isFirstRender.current = true; // Reset first render flag
+      isFirstRender.current = true;
       previousCapabilityId.current = capabilityId;
     }
-  }, [capabilityId, getResponse]); // Only run when capabilityId changes
+  }, [capabilityId, getResponse]);
 
-  // Toggle demonstrated descriptor selection ("I can do this")
   const handleToggleDemonstrated = (level: CapabilityLevel, index: number) => {
-    setDemonstratedDescriptors(prev => {
-      const existingIndex = prev.findIndex(
-        d => d.level === level && d.descriptorIndex === index
-      );
-      
+    setDemonstratedDescriptors((prev) => {
+      const existingIndex = prev.findIndex((d) => d.level === level && d.descriptorIndex === index);
       if (existingIndex >= 0) {
-        // Remove if already selected
         return prev.filter((_, idx) => idx !== existingIndex);
       } else {
-        // Add if not selected
         return [...prev, { level, descriptorIndex: index }];
       }
     });
   };
 
-  // Toggle development focus ("Want to develop")
   const handleToggleWantToDevelop = (level: CapabilityLevel, index: number) => {
-    setDevelopmentFocus(prev => {
-      const existingIndex = prev.findIndex(
-        d => d.level === level && d.descriptorIndex === index
-      );
-      
+    setDevelopmentFocus((prev) => {
+      const existingIndex = prev.findIndex((d) => d.level === level && d.descriptorIndex === index);
       if (existingIndex >= 0) {
-        // Remove if already selected
         return prev.filter((_, idx) => idx !== existingIndex);
       } else {
-        // Add if not selected
         return [...prev, { level, descriptorIndex: index }];
       }
     });
   };
 
-  // State for collapsible guidance (expanded by default)
-  const [showGuidance, setShowGuidance] = useState(true);
+  const [showGuidance, setShowGuidance] = useState(false);
 
   return (
-    <div className="w-full min-h-screen bg-[#f2f2f2]">
-      {/* Header with key area colour background */}
-      <header 
-        className="w-full"
-        style={{ backgroundColor: capabilityColor }}
-      >
-        <div className="max-w-[1100px] mx-auto px-8 lg:px-12 py-10 md:py-14 page-mobile-container">
-          {/* Breadcrumb and capability selector - top row */}
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
-            <div className="flex items-center gap-2 text-sm">
-              <a href="/" className="text-white hover:text-white/80 transition-colors" style={{ color: '#FFFFFF' }}>Home</a>
-              <span className="text-white" style={{ color: '#FFFFFF' }}>/</span>
-              <span className="text-white font-medium" style={{ color: '#FFFFFF' }}>Self-Assessment</span>
-            </div>
-            <div className="relative">
-              <CapabilitySelector currentCapabilityId={capabilityId} />
-            </div>
-          </div>
-
-          {/* Centered capability title and description */}
-          <div className="text-center max-w-[800px] mx-auto mb-8">
-            <h1 className="text-3xl md:text-4xl font-bold mb-4 tracking-tight" style={{ color: '#FFFFFF' }}>
-              {capability.name}
-            </h1>
-            <p className="text-lg leading-relaxed" style={{ color: '#FFFFFF' }}>
-              {capability.description}
-            </p>
-            {isGuidedFilterActive && (
-              <div className="inline-flex flex-wrap items-center justify-center gap-2 rounded-lg border border-white/40 bg-white/15"
-                style={{ marginTop: "16px", padding: "8px 12px" }}
-              >
-                <span className="text-sm font-semibold text-white">Guided mode:</span>
-                <span className="text-sm text-white/95">
-                  {selection?.filterType === "role" ? "Role" : "Function"}: {activeFilterName}
-                </span>
-                {requiredLevel ? (
-                  <span className="text-xs font-bold rounded-full bg-white/20 text-white" style={{ padding: "3px 8px" }}>
-                    ★ Role-relevant level: {requiredLevel.charAt(0) + requiredLevel.slice(1).toLowerCase()}
-                  </span>
-                ) : isMappedCapability(capabilityId) ? (
-                  <span className="text-xs font-semibold rounded-full bg-white/20 text-white" style={{ padding: "3px 8px" }}>
-                    ★ Mapped capability
-                  </span>
-                ) : (
-                  <span className="text-xs font-semibold rounded-full bg-white/20 text-white" style={{ padding: "3px 8px" }}>
-                    Not mapped for this role/function
-                  </span>
-                )}
-              </div>
-            )}
-          </div>
-
-          {/* Collapsible Guidance - Click to expand */}
-          <div 
-            className="bg-white/10 backdrop-blur-sm border border-white/30 rounded-xl overflow-hidden"
-            style={{ marginBottom: '40px' }}
-          >
-            <button
-              onClick={() => setShowGuidance(!showGuidance)}
-              className="w-full px-5 py-4 flex items-center justify-between text-left hover:bg-white/20 transition-colors"
+    <div className="w-full min-h-screen" style={{ backgroundColor: "#f2f2f2" }}>
+      {/* ── Breadcrumb bar ── */}
+      <div className="w-full" style={{ backgroundColor: "#FFFFFF" }}>
+        <div
+          style={{
+            width: "1440px",
+            margin: "0 auto",
+            padding: "36px 100px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: "11px" }}>
+            <a
+              href="/"
+              style={{
+                fontFamily: "Inter, sans-serif",
+                fontWeight: 400,
+                fontSize: "16px",
+                lineHeight: "24px",
+                color: "#1F2BD4",
+                textDecoration: "none",
+              }}
             >
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
-                  <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </div>
-                <span className="font-semibold text-white">How to assess yourself</span>
-              </div>
-              <svg 
-                className={`w-5 h-5 text-white transition-transform duration-200 ${showGuidance ? 'rotate-180' : ''}`} 
-                fill="none" 
-                viewBox="0 0 24 24" 
-                stroke="currentColor" 
-                strokeWidth={2}
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-              </svg>
-            </button>
-            
-            {showGuidance && (
-              <div className="px-5 pb-5 pt-2 border-t border-white/30">
-                <div className="flex flex-wrap gap-4 mb-4">
-                  <div className="flex items-center gap-2 px-3 py-2 bg-white/20 backdrop-blur-sm rounded-lg border border-white/40">
-                    <span className="w-4 h-4 rounded bg-[#00877C] border border-white/60 shadow-sm"></span>
-                    <span className="text-sm font-medium text-white">"I can do this"</span>
-                    <span className="text-xs text-white/95">— behaviours you can demonstrate</span>
-                  </div>
-                  <div className="flex items-center gap-2 px-3 py-2 bg-white/20 backdrop-blur-sm rounded-lg border border-white/40">
-                    <span className="w-4 h-4 rounded bg-[#EAAB00] border border-white/60 shadow-sm"></span>
-                    <span className="text-sm font-medium text-white">"Want to develop"</span>
-                    <span className="text-xs text-white/95">— areas for your development plan</span>
-                  </div>
-                </div>
-                <p className="text-sm leading-relaxed" style={{ color: '#FFFFFF' }}>
-                  <strong style={{ color: '#FFFFFF' }}>This is a holistic assessment:</strong> If you have genuinely demonstrated a behaviour before and could still do it (even if not currently in your role), you can tick &ldquo;I can do this&rdquo;. Previous roles and experiences count. You can tick both boxes for a descriptor if you can already do it but still want to develop it further. Not all descriptors need to be ticked — some may not be relevant to your role. This tool is for development conversations, not performance evaluation.
-                </p>
-              </div>
-            )}
+              Home
+            </a>
+            <span
+              style={{
+                fontFamily: "Inter, sans-serif",
+                fontWeight: 300,
+                fontSize: "19.9px",
+                lineHeight: "22px",
+                color: "#0C0C48",
+              }}
+            >
+              /
+            </span>
+            <span
+              style={{
+                fontFamily: "Inter, sans-serif",
+                fontWeight: 400,
+                fontSize: "16px",
+                lineHeight: "24px",
+                color: "#0C0C48",
+              }}
+            >
+              Self-Assessment
+            </span>
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+            <span
+              style={{
+                fontFamily: "Inter, sans-serif",
+                fontWeight: 400,
+                fontSize: "16px",
+                lineHeight: "24px",
+                color: "#4A4A4C",
+              }}
+            >
+              Jump to capability:
+            </span>
+            <CapabilitySelector currentCapabilityId={capabilityId} mode="assess" />
           </div>
         </div>
-      </header>
+      </div>
 
-      {/* Main Content */}
-      <main className="w-full flex justify-center">
-        <div className="max-w-[1100px] mx-auto px-8 lg:px-12 py-12 md:py-16 page-mobile-container">
-        <LevelTabs 
+      {/* ── Central content column ── */}
+      <div style={{ width: "1440px", margin: "0 auto", padding: "30px 100px 0" }}>
+        {/* Capability hero card */}
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "flex-start",
+            padding: "40px",
+            gap: "27px",
+            backgroundColor: capabilityColor,
+            borderRadius: "15px",
+            marginBottom: "30px",
+          }}
+        >
+          <div style={{ width: "45px", height: "45px", flexShrink: 0 }}>
+            <svg width="45" height="45" viewBox="0 0 45 45" fill="none" stroke="#0C0C48" strokeWidth="3">
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M33 38h9v-4a5.5 5.5 0 00-9.8-3.4M33 38H12m21 0v-4c0-1.2-.2-2.3-.7-3.4M12 38H3v-4a5.5 5.5 0 019.8-3.4M12 38v-4c0-1.2.2-2.3.7-3.4m0 0a9.2 9.2 0 0117 0M28 13a5.5 5.5 0 11-11 0 5.5 5.5 0 0111 0zm11 5.5a3.7 3.7 0 11-7.3 0 3.7 3.7 0 017.3 0zM13.3 18.5a3.7 3.7 0 11-7.3 0 3.7 3.7 0 017.3 0z"
+              />
+            </svg>
+          </div>
+          <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: "8px" }}>
+            <h1
+              style={{
+                fontFamily: "Inter, sans-serif",
+                fontWeight: 700,
+                fontSize: "32px",
+                lineHeight: "42px",
+                color: "#0C0C48",
+                margin: 0,
+              }}
+            >
+              {capability.name}
+            </h1>
+            <p
+              style={{
+                fontFamily: "Inter, sans-serif",
+                fontWeight: 400,
+                fontSize: "18px",
+                lineHeight: "27px",
+                color: "#0C0C48",
+                margin: 0,
+              }}
+            >
+              {capability.description}
+            </p>
+          </div>
+        </div>
+
+        {/* "How to assess yourself" collapsible guidance */}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            padding: "0 15px",
+            gap: "44px",
+            backgroundColor: "#FFFFFF",
+            border: "1px solid #8F9092",
+            borderRadius: "15px",
+            marginBottom: "30px",
+            height: "73px",
+            cursor: "pointer",
+          }}
+          onClick={() => setShowGuidance(!showGuidance)}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+            <InfoCircleIcon />
+            <span
+              style={{
+                fontFamily: "Inter, sans-serif",
+                fontWeight: 400,
+                fontSize: "16px",
+                lineHeight: "22px",
+                color: "rgba(12, 12, 72, 0.98)",
+              }}
+            >
+              How to assess yourself
+            </span>
+          </div>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              width: "32px",
+              height: "32px",
+              transition: "transform 0.2s ease",
+              transform: showGuidance ? "rotate(180deg)" : "rotate(0deg)",
+            }}
+          >
+            <svg width="17" height="9" viewBox="0 0 17 9" fill="none">
+              <path d="M1 1L8.5 8L16 1" stroke="#0C0C48" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </div>
+        </div>
+
+        {showGuidance && (
+          <div
+            style={{
+              backgroundColor: "#FFFFFF",
+              border: "1px solid #8F9092",
+              borderRadius: "10px",
+              padding: "24px",
+              marginBottom: "30px",
+              marginTop: "-20px",
+            }}
+          >
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "16px", marginBottom: "16px" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "8px", padding: "8px 12px", backgroundColor: "#D5F4DE", borderRadius: "8px", border: "1px solid #2EC95C" }}>
+                <div style={{ width: "16px", height: "16px", borderRadius: "2px", backgroundColor: "#2EC95C" }} />
+                <span style={{ fontSize: "14px", fontWeight: 500, color: "#0C0C48" }}>&ldquo;I can do this&rdquo;</span>
+                <span style={{ fontSize: "12px", color: "#4A4A4C" }}>— behaviours you can demonstrate</span>
+              </div>
+              <div style={{ display: "flex", alignItems: "center", gap: "8px", padding: "8px 12px", backgroundColor: "#FFF7D7", borderRadius: "8px", border: "1px solid #FDD835" }}>
+                <div style={{ width: "16px", height: "16px", borderRadius: "2px", backgroundColor: "#FDD835" }} />
+                <span style={{ fontSize: "14px", fontWeight: 500, color: "#0C0C48" }}>&ldquo;I want to develop&rdquo;</span>
+                <span style={{ fontSize: "12px", color: "#4A4A4C" }}>— areas for your development plan</span>
+              </div>
+            </div>
+            <p style={{ fontSize: "14px", lineHeight: "1.75", color: "#4A4A4C", margin: 0 }}>
+              <strong style={{ color: "#0C0C48" }}>This is a holistic assessment:</strong> If you have genuinely demonstrated a behaviour before and could still do it (even if not currently in your role), you can tick &ldquo;I can do this&rdquo;. Previous roles and experiences count. You can tick both boxes for a descriptor if you can already do it but still want to develop it further. Not all descriptors need to be ticked — some may not be relevant to your role. This tool is for development conversations, not performance evaluation.
+            </p>
+          </div>
+        )}
+
+        {/* Level tabs + descriptors + Māori alignment */}
+        <AssessLevelTabs
           levels={capability.levels}
-          currentLevel={currentLevel}
           selectedTab={selectedTab}
           setSelectedTab={setSelectedTab}
           demonstratedDescriptors={demonstratedDescriptors}
           developmentFocus={developmentFocus}
           onToggleDemonstrated={handleToggleDemonstrated}
           onToggleWantToDevelop={handleToggleWantToDevelop}
-          onSelectLevel={(level) => {
-            setCurrentLevel(level);
-          }}
-          capabilityColor={capabilityColor}
           requiredLevel={requiredLevel}
           requiredDescriptorIndexes={requiredDescriptorIndexes}
         />
+      </div>
 
-        {/* Training Resources */}
-        <div 
-          className="resource-card-padding bg-white rounded-xl border border-[#d9d9d9] shadow-sm"
-          style={{ marginTop: '64px', marginBottom: '48px', padding: '40px 48px' }}
-        >
-          <div className="flex items-start justify-between gap-4">
-            <div>
-              <h4 className="font-bold text-[#4a4a4c] text-lg" style={{ marginBottom: '16px' }}>
-                Training &amp; Development Resources
-              </h4>
-              <p className="text-[#6d6e71] text-base leading-relaxed" style={{ marginBottom: '20px' }}>
-                Access training materials, courses, and development resources for RMA staff.
-              </p>
-              <a
-                href="https://research-hub.auckland.ac.nz/induction-skills-and-development/research-management-and-administration-rma-staff-development"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-sm font-semibold text-[#1f2bd4] hover:text-[#0c0c48] transition-colors"
+      {/* ── Assessment Summary (grey banded section) ── */}
+      <div className="w-full" style={{ backgroundColor: "#F3F3F6", padding: "20px 0 40px", marginTop: "40px" }}>
+        <div style={{ width: "1440px", margin: "0 auto", padding: "50px 100px" }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: "30px" }}>
+            {/* Title */}
+            <h2
+              style={{
+                fontFamily: "Inter, sans-serif",
+                fontWeight: 700,
+                fontSize: "26px",
+                lineHeight: "34px",
+                color: "#0C0C48",
+                margin: 0,
+                textAlign: "center",
+              }}
+            >
+              Assessment Summary
+            </h2>
+
+            {/* Summary cards row: I Can Do, I Want to Develop, Status */}
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                gap: "29px",
+              }}
+            >
+              {/* I Can Do */}
+              <div
+                style={{
+                  flex: 1,
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                  padding: "5px 20px",
+                  backgroundColor: "#D5F4DE",
+                  border: "1px solid #19CD80",
+                  borderRadius: "10px",
+                  height: "64px",
+                  justifyContent: "center",
+                }}
               >
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                </svg>
-                Visit Research Hub - RMA Staff Development
-                <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                </svg>
-              </a>
+                <span
+                  style={{
+                    fontFamily: "Inter, sans-serif",
+                    fontWeight: 400,
+                    fontSize: "16px",
+                    lineHeight: "24px",
+                    color: "#000000",
+                  }}
+                >
+                  I Can Do
+                </span>
+                <span
+                  style={{
+                    fontFamily: "Inter, sans-serif",
+                    fontWeight: 700,
+                    fontSize: "20px",
+                    lineHeight: "30px",
+                    color: "#000000",
+                  }}
+                >
+                  {demonstratedDescriptors.length} descriptor{demonstratedDescriptors.length !== 1 ? "s" : ""}
+                </span>
+              </div>
+
+              {/* I Want to Develop */}
+              <div
+                style={{
+                  flex: 1,
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                  padding: "5px 20px",
+                  backgroundColor: "#FFF7D7",
+                  border: "1px solid #FDD835",
+                  borderRadius: "10px",
+                  height: "64px",
+                  justifyContent: "center",
+                }}
+              >
+                <span
+                  style={{
+                    fontFamily: "Inter, sans-serif",
+                    fontWeight: 400,
+                    fontSize: "16px",
+                    lineHeight: "24px",
+                    color: "#000000",
+                  }}
+                >
+                  I Want to Develop
+                </span>
+                <span
+                  style={{
+                    fontFamily: "Inter, sans-serif",
+                    fontWeight: 700,
+                    fontSize: "20px",
+                    lineHeight: "30px",
+                    color: "#000000",
+                  }}
+                >
+                  {developmentFocus.length} descriptor{developmentFocus.length !== 1 ? "s" : ""}
+                </span>
+              </div>
+
+              {/* Status */}
+              <div
+                style={{
+                  flex: 1,
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                  padding: "5px 20px",
+                  backgroundColor: "#FFFFFF",
+                  border: "1px solid #8F9092",
+                  borderRadius: "10px",
+                  height: "64px",
+                  justifyContent: "center",
+                }}
+              >
+                <span
+                  style={{
+                    fontFamily: "Inter, sans-serif",
+                    fontWeight: 400,
+                    fontSize: "16px",
+                    lineHeight: "24px",
+                    color: "#000000",
+                  }}
+                >
+                  Status
+                </span>
+                <span
+                  style={{
+                    fontFamily: "Inter, sans-serif",
+                    fontWeight: 700,
+                    fontSize: "20px",
+                    lineHeight: "30px",
+                    color: "#000000",
+                  }}
+                >
+                  {saveStatus === "saving" ? "Saving..." : saveStatus === "saved" ? "Saved" : "Auto-saved"}
+                </span>
+              </div>
+            </div>
+
+            {/* Actions row */}
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                gap: "18px",
+              }}
+            >
+              {/* Left: Save + auto-save text */}
+              <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                <button
+                  onClick={handleSave}
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    padding: "15.5px 40px",
+                    gap: "5px",
+                    backgroundColor: "#4A4A4C",
+                    border: "2px solid #4A4A4C",
+                    borderRadius: "29px",
+                    fontFamily: "Inter, sans-serif",
+                    fontWeight: 700,
+                    fontSize: "16px",
+                    lineHeight: "24px",
+                    color: "#FFFFFF",
+                    cursor: "pointer",
+                  }}
+                >
+                  Save Now
+                </button>
+                <span
+                  style={{
+                    fontFamily: "Inter, sans-serif",
+                    fontWeight: 400,
+                    fontSize: "16px",
+                    lineHeight: "24px",
+                    color: "#000000",
+                    padding: "10px 0",
+                  }}
+                >
+                  Your assessment is saved automatically
+                </span>
+              </div>
+
+              {/* Right: View Summary + Development Plan */}
+              <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                <Link
+                  href="/summary"
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    padding: "15.5px 40px",
+                    gap: "5px",
+                    backgroundColor: "#0C0C48",
+                    border: "2px solid #0C0C48",
+                    borderRadius: "29px",
+                    fontFamily: "Inter, sans-serif",
+                    fontWeight: 700,
+                    fontSize: "16px",
+                    lineHeight: "24px",
+                    color: "#FFFFFF",
+                    textDecoration: "none",
+                  }}
+                >
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="1.5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M18.75 3.75H5.25a1.5 1.5 0 00-1.5 1.5v13.5a1.5 1.5 0 001.5 1.5h13.5a1.5 1.5 0 001.5-1.5V5.25a1.5 1.5 0 00-1.5-1.5z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M10 17.25L7.5 14.25l2.5-3" />
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M14 6.75l2.5 3-2.5 3" />
+                  </svg>
+                  View summary
+                </Link>
+                <Link
+                  href="/plan"
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    padding: "15.5px 40px",
+                    gap: "5px",
+                    backgroundColor: "#FFFFFF",
+                    border: "2px solid #0C0C48",
+                    borderRadius: "29px",
+                    fontFamily: "Inter, sans-serif",
+                    fontWeight: 700,
+                    fontSize: "16px",
+                    lineHeight: "24px",
+                    color: "#0C0C48",
+                    textDecoration: "none",
+                  }}
+                >
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0C0C48" strokeWidth="1.5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                  </svg>
+                  Development Plan
+                </Link>
+              </div>
             </div>
           </div>
         </div>
+      </div>
 
-        {/* Assessment Summary & Next Steps */}
-        <div className="summary-card-mobile mt-8 bg-white rounded-lg border border-[#d9d9d9] p-6 md:p-8">
-          <h3 className="text-xl font-bold text-[#4a4a4c] mb-4 text-center">Assessment Summary</h3>
-          
-          <div className="grid md:grid-cols-3 gap-4 mb-6">
-            <div className="bg-[#00877C]/10 rounded-lg p-4 border border-[#00877C]/30 text-center">
-              <div className="text-sm text-[#00877C] mb-1">I Can Do</div>
-              <div className="text-lg font-semibold text-[#00877C]">
-                {demonstratedDescriptors.length} descriptor{demonstratedDescriptors.length !== 1 ? 's' : ''}
+      {/* ── Previous / Next navigation ── */}
+      <div style={{ width: "1440px", margin: "0 auto", padding: "50px 100px" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          {prevCapability ? (
+            <a
+              href={`/assess?capability=${prevCapability.id}`}
+              style={{ display: "flex", alignItems: "center", gap: "20px", textDecoration: "none" }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  width: "40px",
+                  height: "40px",
+                  backgroundColor: "#F3F3F6",
+                  borderRadius: "100px",
+                  transform: "rotate(180deg)",
+                }}
+              >
+                <svg width="17" height="15" viewBox="0 0 17 15" fill="none">
+                  <path d="M9 1L16 7.5L9 14" stroke="#0C0C48" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
               </div>
-            </div>
-            <div className="bg-[#EAAB00]/10 rounded-lg p-4 border border-[#EAAB00]/30 text-center">
-              <div className="text-sm text-[#9a7100] mb-1">Want to Develop</div>
-              <div className="text-lg font-semibold text-[#9a7100]">
-                {developmentFocus.length} descriptor{developmentFocus.length !== 1 ? 's' : ''}
+              <div style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
+                <span
+                  style={{
+                    fontFamily: "Inter, sans-serif",
+                    fontWeight: 700,
+                    fontSize: "16px",
+                    lineHeight: "24px",
+                    color: "#4A4A4C",
+                  }}
+                >
+                  PREVIOUS
+                </span>
+                <span
+                  style={{
+                    fontFamily: "Inter, sans-serif",
+                    fontWeight: 400,
+                    fontSize: "16px",
+                    lineHeight: "24px",
+                    color: "#4A4A4C",
+                  }}
+                >
+                  {prevCapability.name}
+                </span>
               </div>
-            </div>
-            <div className="bg-[#f3f3f6] rounded-lg p-4 border border-[#e2e3e4] text-center">
-              <div className="text-sm text-[#6d6e71] mb-1">Status</div>
-              <div className="text-lg font-semibold text-[#4a4a4c]">
-                {saveStatus === 'saving' ? 'Saving...' : saveStatus === 'saved' ? 'Saved' : 'Auto-saved'}
+            </a>
+          ) : (
+            <div />
+          )}
+          {nextCapability ? (
+            <a
+              href={`/assess?capability=${nextCapability.id}`}
+              style={{ display: "flex", alignItems: "center", gap: "20px", textDecoration: "none" }}
+            >
+              <div style={{ display: "flex", flexDirection: "column", gap: "5px", textAlign: "right" }}>
+                <span
+                  style={{
+                    fontFamily: "Inter, sans-serif",
+                    fontWeight: 700,
+                    fontSize: "16px",
+                    lineHeight: "24px",
+                    color: "#4A4A4C",
+                  }}
+                >
+                  NEXT
+                </span>
+                <span
+                  style={{
+                    fontFamily: "Inter, sans-serif",
+                    fontWeight: 400,
+                    fontSize: "16px",
+                    lineHeight: "24px",
+                    color: "#4A4A4C",
+                  }}
+                >
+                  {nextCapability.name}
+                </span>
               </div>
-            </div>
-          </div>
-          
-          <div
-            className="summary-actions-row border-t border-[#e2e3e4]"
-            style={{ 
-              paddingTop: '32px', 
-              marginTop: '32px',
-              display: 'flex',
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              gap: '24px',
-              flexWrap: 'wrap'
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  width: "40px",
+                  height: "40px",
+                  backgroundColor: "#F3F3F6",
+                  borderRadius: "100px",
+                }}
+              >
+                <svg width="17" height="15" viewBox="0 0 17 15" fill="none">
+                  <path d="M9 1L16 7.5L9 14" stroke="#0C0C48" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </div>
+            </a>
+          ) : (
+            <div />
+          )}
+        </div>
+      </div>
+
+      {/* ── Training & Development Resources ── */}
+      <div className="w-full" style={{ backgroundColor: "#F3F3F6", padding: "50px 0" }}>
+        <div
+          style={{
+            width: "1440px",
+            margin: "0 auto",
+            padding: "0 100px",
+            display: "flex",
+            flexDirection: "column",
+            gap: "10px",
+          }}
+        >
+          <h4
+            style={{
+              fontFamily: "Inter, sans-serif",
+              fontWeight: 700,
+              fontSize: "20px",
+              lineHeight: "30px",
+              color: "#0C0C48",
+              margin: 0,
             }}
           >
-            <div className="summary-actions-group" style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
-              <button
-                onClick={handleSave}
-                className="inline-flex items-center gap-2 px-6 py-3 bg-[#1f2bd4] rounded-lg font-semibold hover:bg-[#1929a8] transition-colors"
-                style={{ color: 'white' }}
-              >
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
-                </svg>
-                Save Now
-              </button>
-              <p className="text-xs text-[#6d6e71]">
-                Your assessment is saved automatically.
-              </p>
-            </div>
-            
-            <div className="summary-actions-group" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <Link
-                href="/summary"
-                className="inline-flex items-center gap-2 px-6 py-3 bg-[#1f2bd4] rounded-lg font-semibold hover:bg-[#1929a8] transition-colors"
-                style={{ color: 'white' }}
-              >
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
-                View Summary
-              </Link>
-              <Link
-                href="/plan"
-                className="inline-flex items-center gap-2 px-6 py-3 bg-[#1f2bd4] rounded-lg font-semibold hover:bg-[#1929a8] transition-colors"
-                style={{ color: 'white' }}
-              >
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
-                </svg>
-                {developmentFocus.length > 0 ? `Add Notes (${developmentFocus.length} items)` : 'Development Plan'}
-              </Link>
-            </div>
-          </div>
+            Training &amp; Development Resources
+          </h4>
+          <p
+            style={{
+              fontFamily: "Inter, sans-serif",
+              fontWeight: 400,
+              fontSize: "16px",
+              lineHeight: "24px",
+              color: "#0C0C48",
+              margin: 0,
+            }}
+          >
+            Access training materials, courses, and development resources for RMA staff.
+          </p>
+          <a
+            href="https://research-hub.auckland.ac.nz/induction-skills-and-development/research-management-and-administration-rma-staff-development"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "7px",
+              fontFamily: "Inter, sans-serif",
+              fontWeight: 400,
+              fontSize: "16px",
+              lineHeight: "24px",
+              color: "#1F2BD4",
+              textDecoration: "underline",
+              width: "fit-content",
+            }}
+          >
+            Visit Research Hub - RMA Staff Development
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+              <path d="M1 11L11 1M11 1H3M11 1V9" stroke="#1F2BD4" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </a>
         </div>
-
-        {/* Navigation */}
-        <div style={{ marginTop: '64px' }}>
-          <CapabilityNavigation currentCapabilityId={capabilityId} />
-        </div>
-        </div>
-      </main>
+      </div>
     </div>
   );
 }
 
 export default function AssessPage() {
   return (
-    <Suspense fallback={
-      <div className="min-h-screen flex items-center justify-center bg-[#f3f3f6]">
-        <div className="text-[#6d6e71]">Loading...</div>
-      </div>
-    }>
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: "#F3F3F6" }}>
+          <div style={{ color: "#6d6e71" }}>Loading...</div>
+        </div>
+      }
+    >
       <AssessPageContent />
     </Suspense>
   );

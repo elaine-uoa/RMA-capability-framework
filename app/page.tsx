@@ -22,7 +22,7 @@ const keyAreas: KeyArea[] = [
     id: "engagement-impact",
     name: "Research Engagement and Impact",
     description: "Building relationships, exchanging knowledge, and maximising research outcomes",
-    color: { solid: "#0c0c48", hover: "#0a0a3a", light: "#e7e7ed" },
+    color: { solid: "#BCC0F3", hover: "#AAB0E8", light: "#E8EAF9" },
     icon: (
       <svg className="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
@@ -34,7 +34,7 @@ const keyAreas: KeyArea[] = [
     id: "development-culture",
     name: "Researcher Development and Culture",
     description: "Supporting researcher capabilities and fostering a positive research environment",
-    color: { solid: "#00877C", hover: "#006B63", light: "#e6f7f5" },
+    color: { solid: "#99EAF9", hover: "#87DBF0", light: "#E5F8FD" },
     icon: (
       <svg className="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
@@ -46,7 +46,7 @@ const keyAreas: KeyArea[] = [
     id: "proposal-development",
     name: "Research Proposal Development",
     description: "Identifying funding opportunities and supporting research proposals",
-    color: { solid: "#1f2bd4", hover: "#1929a8", light: "#e7e7ed" },
+    color: { solid: "#A3EBCC", hover: "#91DFC0", light: "#E7F9F2" },
     icon: (
       <svg className="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -58,7 +58,7 @@ const keyAreas: KeyArea[] = [
     id: "project-risk",
     name: "Research Project and Risk Management",
     description: "Managing research projects from initiation through to monitoring and reporting",
-    color: { solid: "#D97706", hover: "#B45309", light: "#fef6e7" },
+    color: { solid: "#FFBFB7", hover: "#F0ADA5", light: "#FFF0EE" },
     icon: (
       <svg className="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 8l2 2 4-4" />
@@ -70,7 +70,7 @@ const keyAreas: KeyArea[] = [
     id: "policy-strategy",
     name: "Research Policy and Strategy",
     description: "Contributing to and implementing research policies and strategic frameworks",
-    color: { solid: "#4F2D7F", hover: "#3D2262", light: "#f3eef8" },
+    color: { solid: "#ECBEFA", hover: "#DCAEE8", light: "#F9F0FC" },
     icon: (
       <svg className="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
@@ -167,7 +167,13 @@ export default function Home() {
   const [activeTab, setActiveTab] = useState<'role' | 'function'>('role');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
+  const [mounted, setMounted] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // Prevent hydration mismatch by only showing filter-dependent UI after mount
+  useEffect(() => {
+    setMounted(true);
+  }, []);
   
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -181,11 +187,16 @@ export default function Home() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  // Prevent hydration mismatch: suppress all filter-dependent state until after mount,
+  // since selectedFilterId/filterType come from localStorage (client-only).
+  const effectiveFilterId = mounted ? selectedFilterId : null;
+  const effectiveFilterType = mounted ? filterType : null;
+
   // Determine which capabilities should be visible based on the selected filter
-  const visibleCapabilityIds = selectedFilterId && filterType
+  const visibleCapabilityIds = effectiveFilterId && effectiveFilterType
     ? mappedCapabilityIds
     : null; // null means show all capabilities
-  const currentTab = filterType ?? activeTab;
+  const currentTab = effectiveFilterType ?? activeTab;
   
   // Filter roles and functions based on search query
   const filteredRoles = roles.filter(role => 
@@ -215,72 +226,77 @@ export default function Home() {
   
   return (
     <div className="w-full min-h-screen bg-[#f2f2f2]">
-      {/* Hero Section - UoA Navy background with clean white text */}
-      <section className="w-full bg-[#0c0c48] text-white">
-        <div className="max-w-[1140px] mx-auto px-6 lg:px-8 py-16 md:py-20">
-          <div className="max-w-full mx-auto text-center">
-            <h1 className="text-3xl md:text-4xl font-bold mb-5 leading-tight" style={{ color: '#FFFFFF' }}>
-              RMA Capability Framework
-            </h1>
-            <p className="text-lg leading-relaxed mb-8" style={{ color: '#FFFFFF' }}>
-              A professional development tool for Research Management &amp; Administration staff at Waipapa Taumata Rau, University of Auckland. 
-              Explore capabilities, assess your skills, and create personalised development plans.
-            </p>
-            <div className="home-hero-cta-group flex items-center justify-center gap-4 flex-wrap xl:flex-nowrap mb-8">
-              <Link 
-                href="/how-to-use" 
-                className="inline-flex items-center justify-center gap-3 min-w-[260px] px-10 py-5 bg-white text-[#0c0c48] font-semibold text-lg rounded-xl hover:bg-[#f2f2f2] transition-all shadow-lg hover:shadow-xl"
-              >
-                How to Guide
-                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                </svg>
-              </Link>
-              
-              {/* Download Framework Button - dark background with white text for clear contrast */}
-              <a 
-                href="/api/download" 
-                download
-                className="inline-flex items-center justify-center gap-3 min-w-[280px] px-12 py-5 font-semibold text-lg rounded-xl border-2 border-white/50 hover:bg-white/10 transition-all shadow-lg hover:shadow-xl"
-                style={{ backgroundColor: '#0c0c48', color: '#FFFFFF' }}
-              >
-                <svg className="w-6 h-6 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} style={{ color: '#FFFFFF' }}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
-                <span style={{ color: '#FFFFFF' }}>Download the Framework</span>
-              </a>
-              
-              <Link 
-                href="/assess" 
-                className="inline-flex items-center justify-center gap-3 min-w-[260px] px-10 py-5 bg-white text-[#0c0c48] font-semibold text-lg rounded-xl hover:bg-[#f2f2f2] transition-all shadow-lg hover:shadow-xl"
-              >
-                Start Self-Assessment
-                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                </svg>
-              </Link>
-            </div>
+      {/* Hero Section */}
+      <section className="w-full bg-white border-b border-[#e2e3e4]">
+        <div className="max-w-[1140px] mx-auto px-6 lg:px-8" style={{ paddingTop: '56px', paddingBottom: '56px' }}>
+          <h1 className="text-3xl md:text-4xl font-bold leading-tight text-[#0c0c48]" style={{ marginBottom: '16px' }}>
+            RMA Capability Framework
+          </h1>
+          <p className="text-base md:text-lg leading-relaxed text-[#6d6e71]" style={{ maxWidth: '800px', marginBottom: '32px' }}>
+            A professional development tool for Research Management &amp; Administration staff at Waipapa Taumata Rau, University of Auckland. 
+            Explore capabilities, assess your skills, and create personalized development plans.
+          </p>
+          <div className="home-hero-cta-group flex items-center gap-4 flex-wrap">
+            <Link 
+              href="/assess" 
+              className="inline-flex items-center justify-center gap-2 font-semibold transition-all hover:opacity-90"
+              style={{
+                backgroundColor: '#0c0c48',
+                color: '#FFFFFF',
+                borderRadius: '9999px',
+                padding: '12px 32px',
+                fontSize: '15px',
+              }}
+            >
+              Start Self Assessment
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+              </svg>
+            </Link>
+            
+            <Link 
+              href="/how-to-use" 
+              className="inline-flex items-center justify-center gap-2 font-semibold transition-all hover:bg-[#f2f2f2]"
+              style={{
+                backgroundColor: 'transparent',
+                color: '#0c0c48',
+                border: '2px solid #0c0c48',
+                borderRadius: '9999px',
+                padding: '12px 32px',
+                fontSize: '15px',
+              }}
+            >
+              How to use this tool
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+              </svg>
+            </Link>
           </div>
         </div>
       </section>
 
-      {/* About the Framework Section */}
+      {/* Framework Overview Section */}
       <section className="w-full bg-white border-b border-[#e2e3e4]">
-        <div className="max-w-[1140px] mx-auto px-6 lg:px-8" style={{ paddingTop: '80px', paddingBottom: '80px' }}>
-          <div className="text-center" style={{ marginBottom: '48px' }}>
-            <h2 className="text-2xl md:text-3xl font-bold text-[#4a4a4c] mb-6">
-              About the Framework
-            </h2>
-            <p className="text-base md:text-lg text-[#6d6e71] leading-relaxed max-w-[900px] mx-auto mb-5">
-              The RMA Capability Framework is a professional development tool created to encourage professional development activities for all staff across the RMA function.
-            </p>
-            <p className="text-base md:text-lg text-[#6d6e71] leading-relaxed max-w-[900px] mx-auto">
-              It comprises <strong>10 core capabilities</strong> organised across <strong>5 key functional areas</strong> and <strong>4 proficiency levels</strong>, and supports role-focused development conversations rather than performance evaluation.
-            </p>
-          </div>
+        <div className="max-w-[1140px] mx-auto px-6 lg:px-8" style={{ paddingTop: '56px', paddingBottom: '56px' }}>
+          <h2 className="text-2xl md:text-3xl font-bold text-[#4a4a4c]" style={{ marginBottom: '16px' }}>
+            Framework Overview
+          </h2>
+          <p className="text-base md:text-lg text-[#6d6e71] leading-relaxed" style={{ maxWidth: '900px', marginBottom: '20px' }}>
+            The RMA Capability Framework comprises 10 core capabilities organized across 5 key functional areas. Click on any area below to explore detailed descriptors at Foundation, Intermediate, Advanced, and Exemplar levels.
+          </p>
+          <a 
+            href="/api/download" 
+            download
+            className="inline-flex items-center gap-2 text-[#1f2bd4] hover:text-[#0c0c48] font-medium transition-colors text-sm"
+          >
+            Download the Framework
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+          </a>
 
           {/* Key information cards */}
-          <div className="grid md:grid-cols-3" style={{ gap: '32px', marginBottom: '48px' }}>
+          <div className="grid md:grid-cols-3" style={{ gap: '32px', marginTop: '48px' }}>
             <div className="bg-[#f2f2f2] rounded-xl border border-[#e2e3e4]" style={{ padding: '40px' }}>
               <div className="w-12 h-12 rounded-lg bg-[#0c0c48]/10 flex items-center justify-center" style={{ marginBottom: '24px' }}>
                 <svg className="w-6 h-6 text-[#0c0c48]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -315,7 +331,6 @@ export default function Home() {
               </p>
             </div>
           </div>
-
         </div>
       </section>
 
@@ -337,18 +352,18 @@ export default function Home() {
               </div>
               
               {/* Active filter display - Centered */}
-              {selectedFilterId && (
+              {effectiveFilterId && (
                 <div className="flex items-center justify-center gap-3 p-5 bg-[#E8F4FD] rounded-lg border border-[#1f2bd4] max-w-[700px] mx-auto" style={{ marginBottom: '32px' }}>
                   <svg className="w-5 h-5 text-[#1f2bd4] flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
                   </svg>
                   <div className="flex-1 text-center">
                     <p className="text-sm font-medium text-[#0c0c48]">
-                      Filtering by {filterType === 'role' ? 'Role' : 'Function'}:{' '}
+                      Filtering by {effectiveFilterType === 'role' ? 'Role' : 'Function'}:{' '}
                       <span className="font-bold">
-                        {filterType === 'role' 
-                          ? roles.find(r => r.id === selectedFilterId)?.name 
-                          : functions.find(f => f.id === selectedFilterId)?.name}
+                        {effectiveFilterType === 'role' 
+                          ? roles.find(r => r.id === effectiveFilterId)?.name 
+                          : functions.find(f => f.id === effectiveFilterId)?.name}
                       </span>
                     </p>
                   </div>
@@ -449,7 +464,7 @@ export default function Home() {
                             key={role.id}
                             onClick={() => handleFilterSelect('role', role.id)}
                             className={`w-full text-left transition-colors border-b border-[#e2e3e4] last:border-b-0 ${
-                              selectedFilterId === role.id && filterType === 'role'
+                              effectiveFilterId === role.id && effectiveFilterType === 'role'
                                 ? 'bg-[#0c0c48] text-white'
                                 : 'hover:bg-[#f3f3f6] text-[#4a4a4c]'
                             }`}
@@ -458,7 +473,7 @@ export default function Home() {
                             <div className="font-medium text-sm">{role.name}</div>
                             {role.description && (
                               <div className={`text-xs mt-1 ${
-                                selectedFilterId === role.id && filterType === 'role' ? 'text-white/80' : 'text-[#6d6e71]'
+                                effectiveFilterId === role.id && effectiveFilterType === 'role' ? 'text-white/80' : 'text-[#6d6e71]'
                               }`}>
                                 {role.description}
                               </div>
@@ -471,7 +486,7 @@ export default function Home() {
                             key={func.id}
                             onClick={() => handleFilterSelect('function', func.id)}
                             className={`w-full text-left transition-colors border-b border-[#e2e3e4] last:border-b-0 ${
-                              selectedFilterId === func.id && filterType === 'function'
+                              effectiveFilterId === func.id && effectiveFilterType === 'function'
                                 ? 'bg-[#00877C] text-white'
                                 : 'hover:bg-[#f3f3f6] text-[#4a4a4c]'
                             }`}
@@ -480,7 +495,7 @@ export default function Home() {
                             <div className="font-medium text-sm">{func.name}</div>
                             {func.description && (
                               <div className={`text-xs mt-1 ${
-                                selectedFilterId === func.id && filterType === 'function' ? 'text-white/80' : 'text-[#6d6e71]'
+                                effectiveFilterId === func.id && effectiveFilterType === 'function' ? 'text-white/80' : 'text-[#6d6e71]'
                               }`}>
                                 {func.description}
                               </div>
@@ -564,7 +579,7 @@ export default function Home() {
                     const metadata = capabilityMetadata[cap1.id] || { icon: null };
                     const isMapped = visibleCapabilityIds === null || visibleCapabilityIds.includes(cap1.id);
                     const isGreyedOut = !isMapped;
-                    const requiredLevel = selectedFilterId ? getRequiredLevel(cap1.id) : null;
+                    const requiredLevel = effectiveFilterId ? getRequiredLevel(cap1.id) : null;
 
                     return (
                       <Link
@@ -611,7 +626,7 @@ export default function Home() {
                           {cap1.name}
                           {isGreyedOut && (
                             <span className="block text-xs font-normal italic text-[#afafc3] mt-1">
-                              (not mapped to selected {filterType === 'role' ? 'role' : 'function'})
+                              (not mapped to selected {effectiveFilterType === 'role' ? 'role' : 'function'})
                             </span>
                           )}
                         </h4>
@@ -671,7 +686,7 @@ export default function Home() {
                     const metadata = capabilityMetadata[cap2.id] || { icon: null };
                     const isMapped = visibleCapabilityIds === null || visibleCapabilityIds.includes(cap2.id);
                     const isGreyedOut = !isMapped;
-                    const requiredLevel = selectedFilterId ? getRequiredLevel(cap2.id) : null;
+                    const requiredLevel = effectiveFilterId ? getRequiredLevel(cap2.id) : null;
 
                     return (
                       <Link
@@ -721,7 +736,7 @@ export default function Home() {
                           {cap2.name}
                           {isGreyedOut && (
                             <span className="block text-xs font-normal italic text-[#afafc3] mt-1">
-                              (not mapped to selected {filterType === 'role' ? 'role' : 'function'})
+                              (not mapped to selected {effectiveFilterType === 'role' ? 'role' : 'function'})
                             </span>
                           )}
                         </h4>
@@ -781,7 +796,7 @@ export default function Home() {
           </div>
           
           {/* Info message when filter is active */}
-          {selectedFilterId && (
+          {effectiveFilterId && (
             <div className="text-center py-8">
               <div className="inline-flex flex-col items-center gap-3 p-6 bg-[#E8F4FD] rounded-xl border-2 border-[#1f2bd4]/30">
                 <svg className="w-10 h-10 text-[#1f2bd4]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -792,7 +807,7 @@ export default function Home() {
                     Filter Active
                   </h3>
                   <p className="text-sm text-[#4a4a4c]">
-                    Capabilities mapped to your selected {filterType === 'role' ? 'role' : 'function'} are shown normally. Other capabilities appear greyed out but are still accessible if needed.
+                    Capabilities mapped to your selected {effectiveFilterType === 'role' ? 'role' : 'function'} are shown normally. Other capabilities appear greyed out but are still accessible if needed.
                   </p>
                 </div>
               </div>

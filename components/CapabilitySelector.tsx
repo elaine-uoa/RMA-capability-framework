@@ -15,16 +15,25 @@ export function CapabilitySelector({
   const [isOpen, setIsOpen] = useState(false);
   const { isGuidedFilterActive, isMappedCapability } = useGuidedFilter();
 
+  const currentCap = capabilities.find((c) => c.id === currentCapabilityId);
+
   return (
     <div className="relative z-50 capability-selector">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="capability-selector-button flex items-center gap-3 px-6 py-3.5 bg-white/20 border-2 border-white/30 rounded-lg text-lg font-semibold text-white hover:bg-white/30 transition-colors backdrop-blur-sm"
-        style={{ color: '#FFFFFF' }}
+        className="capability-selector-button flex items-center gap-3 bg-white border rounded-lg hover:bg-[#f3f3f6] transition-colors"
+        style={{
+          padding: "10px 16px",
+          borderColor: "#8F9092",
+          color: "#0C0C48",
+          fontSize: "16px",
+          lineHeight: "24px",
+          fontWeight: 400,
+        }}
       >
-        <span>Jump to Capability</span>
+        <span>{currentCap?.name || "Jump to Capability"}</span>
         <svg 
-          className={`w-6 h-6 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} 
+          className={`w-5 h-5 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} 
           fill="none" 
           viewBox="0 0 24 24" 
           stroke="currentColor"

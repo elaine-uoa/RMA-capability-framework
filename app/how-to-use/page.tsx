@@ -2,395 +2,452 @@ import Link from "next/link";
 
 export default function HowToUsePage() {
   return (
-    <div className="w-full min-h-screen bg-[#f3f3f6] flex flex-col items-center">
-      {/* Header */}
-      <header className="w-full bg-white border-b-2 border-[#d9d9d9] flex justify-center shadow-sm">
-        <div className="w-full max-w-[1140px] px-8 lg:px-12 py-12 md:py-16 text-center">
-          <h1 className="text-3xl md:text-4xl font-bold text-[#4a4a4c] mb-4">How to Guide</h1>
-          <p className="text-lg md:text-xl text-[#6d6e71] leading-relaxed max-w-[800px] mx-auto">
+    <div className="w-full min-h-screen" style={{ backgroundColor: "#FFFFFF" }}>
+      {/* ── HERO ── */}
+      <div style={{ backgroundColor: "#F3F3F6" }}>
+        <div
+          style={{
+            width: "1440px",
+            margin: "0 auto",
+            padding: "72px 100px",
+          }}
+        >
+          <h1
+            style={{
+              fontFamily: "Inter, sans-serif",
+              fontWeight: 600,
+              fontSize: "50px",
+              lineHeight: "60px",
+              color: "#0C0C48",
+              margin: 0,
+              marginBottom: "12px",
+            }}
+          >
+            How to use this tool
+          </h1>
+          <p
+            style={{
+              fontFamily: "Inter, sans-serif",
+              fontWeight: 400,
+              fontSize: "18px",
+              lineHeight: "27px",
+              color: "#0C0C48",
+              margin: 0,
+            }}
+          >
             A comprehensive guide to help you navigate the RMA Capability Framework self-assessment tool.
           </p>
         </div>
-      </header>
+      </div>
 
-      {/* Main Content */}
-      <main className="w-full flex justify-center">
-        <div className="w-full max-w-[1140px] px-8 lg:px-12" style={{ paddingTop: "104px", paddingBottom: "132px" }}>
-        {/* Overview */}
-        <div
-          className="bg-white rounded-lg border-2 border-[#d9d9d9] shadow-sm text-center"
-          style={{ marginBottom: "88px", padding: "52px" }}
-        >
-          <h2 className="text-2xl md:text-3xl font-bold text-[#4a4a4c] mb-6">Overview</h2>
-          <p className="text-[#6d6e71] text-lg leading-relaxed mb-8 max-w-[800px] mx-auto" style={{ lineHeight: '1.8' }}>
-            This tool helps Research Management & Administration (RMA) staff assess their current capabilities, 
-            identify development opportunities, and create focused development plans. The process follows three main steps:
+      {/* ── MAIN CONTENT ── */}
+      <div style={{ width: "1440px", margin: "0 auto", padding: "0 100px" }}>
+        {/* ── OVERVIEW ── */}
+        <div style={{ padding: "50px 0 0" }}>
+          <h2
+            style={{
+              fontFamily: "Inter, sans-serif",
+              fontWeight: 600,
+              fontSize: "40px",
+              lineHeight: "52px",
+              color: "#0C0C48",
+              margin: "0 0 16px",
+            }}
+          >
+            Overview
+          </h2>
+          <p
+            style={{
+              fontFamily: "Inter, sans-serif",
+              fontWeight: 400,
+              fontSize: "20px",
+              lineHeight: "30px",
+              color: "#0C0C48",
+              margin: "0 0 24px",
+            }}
+          >
+            This tool helps Research Management &amp; Administration (RMA) staff assess their current capabilities, identify development opportunities, and create focused development plans. The process follows three main steps:
           </p>
-          <div className="flex flex-wrap justify-center gap-4">
-            <div className="flex items-center gap-2 px-5 py-3 bg-[#1f2bd4]/10 text-[#1f2bd4] rounded-lg font-semibold text-base">
-              <span className="font-bold text-lg">1.</span> Explore
+          <div style={{ display: "flex", gap: "20px", flexWrap: "wrap" }}>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+                height: "50px",
+                padding: "10px 25px",
+                backgroundColor: "#E9EAFB",
+                borderRadius: "100px",
+                fontFamily: "Inter, sans-serif",
+                fontWeight: 700,
+                fontSize: "20px",
+                color: "#0C0C48",
+              }}
+            >
+              <span>1.</span> Explore
             </div>
-            <div className="flex items-center gap-2 px-5 py-3 bg-[#EAAB00]/10 text-[#9a7100] rounded-lg font-semibold text-base">
-              <span className="font-bold text-lg">2.</span> Self-Assess
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+                height: "50px",
+                padding: "10px 25px",
+                backgroundColor: "#FFF7D7",
+                borderRadius: "100px",
+                fontFamily: "Inter, sans-serif",
+                fontWeight: 700,
+                fontSize: "20px",
+                color: "#0C0C48",
+              }}
+            >
+              <span>2.</span> Self-assess
             </div>
-            <div className="flex items-center gap-2 px-5 py-3 bg-[#00877C]/10 text-[#00877C] rounded-lg font-semibold text-base">
-              <span className="font-bold text-lg">3.</span> Build Plan
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+                height: "50px",
+                padding: "10px 25px",
+                backgroundColor: "#D5F4DE",
+                borderRadius: "100px",
+                fontFamily: "Inter, sans-serif",
+                fontWeight: 700,
+                fontSize: "20px",
+                color: "#0C0C48",
+              }}
+            >
+              <span>3.</span> Build plan
             </div>
           </div>
         </div>
-        
-        {/* Framework Progression Logic */}
-        <div
-          className="bg-white rounded-lg border-2 border-[#d9d9d9] shadow-sm"
-          style={{ marginBottom: "88px", padding: "52px" }}
-        >
-          <h2 className="text-2xl md:text-3xl font-bold text-[#4a4a4c] mb-6">Framework Progression Logic</h2>
-          <p className="text-[#6d6e71] text-base leading-relaxed mb-5">
+
+        {/* ── FRAMEWORK PROGRESSION LOGIC ── */}
+        <div style={{ padding: "50px 0 0" }}>
+          <h2
+            style={{
+              fontFamily: "Inter, sans-serif",
+              fontWeight: 600,
+              fontSize: "40px",
+              lineHeight: "52px",
+              color: "#0C0C48",
+              margin: "0 0 16px",
+            }}
+          >
+            Framework Progression Logic
+          </h2>
+          <p style={{ fontFamily: "Inter, sans-serif", fontWeight: 400, fontSize: "16px", lineHeight: "27px", color: "#4A4A4C", margin: "0 0 12px" }}>
             The framework uses a cumulative progression model across four professional levels: Foundation, Intermediate, Advanced, and Exemplar.
           </p>
-          <p className="text-[#6d6e71] text-base leading-relaxed mb-5">
+          <p style={{ fontFamily: "Inter, sans-serif", fontWeight: 400, fontSize: "16px", lineHeight: "27px", color: "#4A4A4C", margin: "0 0 12px" }}>
             Demonstrating capability at a higher level implies competence in all preceding levels within the same capability. For example, competence at Intermediate level assumes the Foundation-level expectations are already met.
           </p>
-          <p className="text-[#6d6e71] text-base leading-relaxed">
+          <p style={{ fontFamily: "Inter, sans-serif", fontWeight: 400, fontSize: "16px", lineHeight: "27px", color: "#4A4A4C", margin: 0 }}>
             In the same way, competence at Exemplar level implies capability across Advanced, Intermediate, and Foundation levels. This progression model supports consistent interpretation of capability development and reinforces that higher-level performance builds on lower-level foundations.
           </p>
         </div>
+      </div>
 
-        {/* Getting Started Section */}
-        <div
-          className="bg-gradient-to-br from-[#0c0c48]/5 to-[#1f2bd4]/5 rounded-lg border-2 border-[#0c0c48]/20 shadow-sm"
-          style={{ marginBottom: "88px", padding: "52px" }}
-        >
-          <h2 className="text-2xl md:text-3xl font-bold text-[#0c0c48] mb-8">Getting Started</h2>
-          <div className="space-y-6">
-            <div className="flex items-start gap-4">
-              <div className="w-8 h-8 rounded-full bg-[#1f2bd4] flex items-center justify-center flex-shrink-0 mt-1">
-                <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+      {/* ── GETTING STARTED (grey banded) ── */}
+      <div style={{ backgroundColor: "#F3F3F6", marginTop: "50px" }}>
+        <div style={{ width: "1440px", margin: "0 auto", padding: "50px 100px" }}>
+          <h2
+            style={{
+              fontFamily: "Inter, sans-serif",
+              fontWeight: 600,
+              fontSize: "40px",
+              lineHeight: "52px",
+              color: "#0C0C48",
+              margin: "0 0 24px",
+            }}
+          >
+            Getting Started
+          </h2>
+          <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+            {/* Data Storage */}
+            <div style={{ display: "flex", alignItems: "flex-start", gap: "16px" }}>
+              <div
+                style={{
+                  width: "32px",
+                  height: "32px",
+                  borderRadius: "50%",
+                  backgroundColor: "rgba(31,43,212,0.1)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  flexShrink: 0,
+                  marginTop: "4px",
+                }}
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1F2BD4" strokeWidth="2">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
               <div>
-                <h3 className="text-lg font-bold text-[#4a4a4c] mb-2">Data Storage</h3>
-                <p className="text-[#6d6e71] leading-relaxed">
-                  All your assessment data is stored locally in your browser. No information is sent to a server. 
-                  You can work at your own pace and your progress is automatically saved as you go. Your selected
-                  role/function filter is also remembered while you move between Homepage, Explore, and Self-Assessment.
+                <h3 style={{ fontFamily: "Inter, sans-serif", fontWeight: 600, fontSize: "20px", lineHeight: "30px", color: "#0C0C48", margin: "0 0 4px" }}>
+                  Data Storage
+                </h3>
+                <p style={{ fontFamily: "Inter, sans-serif", fontWeight: 400, fontSize: "16px", lineHeight: "27px", color: "#4A4A4C", margin: 0 }}>
+                  All your assessment data is stored locally in your browser. No information is sent to a server. You can work at your own pace and your progress is automatically saved as you go. Your selected role/function filter is also remembered while you move between Homepage, Explore, and Self-Assessment.
                 </p>
               </div>
             </div>
-            <div className="flex items-start gap-4">
-              <div className="w-8 h-8 rounded-full bg-[#0c0c48] flex items-center justify-center flex-shrink-0 mt-1">
-                <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            {/* Focus on 1-2 Capabilities */}
+            <div style={{ display: "flex", alignItems: "flex-start", gap: "16px" }}>
+              <div
+                style={{
+                  width: "32px",
+                  height: "32px",
+                  borderRadius: "50%",
+                  backgroundColor: "rgba(31,43,212,0.1)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  flexShrink: 0,
+                  marginTop: "4px",
+                }}
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1F2BD4" strokeWidth="2">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
               <div>
-                <h3 className="text-lg font-bold text-[#4a4a4c] mb-2">Focus on 1–2 Capabilities</h3>
-                <p className="text-[#6d6e71] leading-relaxed">
-                  We recommend focusing on <strong>1–2 capabilities per year</strong> for your development plan. You should self-assess the capabilities mapped to your current role (or a role you'd like to move into), and you can revisit the self-assessment later in the year or at least annually.
+                <h3 style={{ fontFamily: "Inter, sans-serif", fontWeight: 600, fontSize: "20px", lineHeight: "30px", color: "#0C0C48", margin: "0 0 4px" }}>
+                  Focus on 1–2 Capabilities
+                </h3>
+                <p style={{ fontFamily: "Inter, sans-serif", fontWeight: 400, fontSize: "16px", lineHeight: "27px", color: "#4A4A4C", margin: 0 }}>
+                  We recommend focusing on <strong>1–2 capabilities per year</strong> for your development plan. You should self-assess the capabilities mapped to your current role (or a role you&apos;d like to move into), and you can revisit the self-assessment later in the year or at least annually.
                 </p>
               </div>
             </div>
           </div>
         </div>
+      </div>
 
-        {/* Step 1 */}
-        <div
-          className="bg-white rounded-lg border-2 border-[#d9d9d9] shadow-sm"
-          style={{ marginBottom: "88px", padding: "52px" }}
-        >
-          <div className="flex items-start gap-4 mb-8">
-            <div className="w-12 h-12 rounded-full bg-[#1f2bd4]/10 flex items-center justify-center flex-shrink-0">
-              <span className="text-[#1f2bd4] font-bold text-xl">1</span>
+      {/* ── NUMBERED SECTIONS ── */}
+      <div style={{ width: "1440px", margin: "0 auto", padding: "0 100px" }}>
+        {/* ── SECTION 1: Explore the Framework ── */}
+        <div style={{ padding: "60px 0 0" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "20px", marginBottom: "16px" }}>
+            <div style={{ width: "50px", height: "50px", borderRadius: "50%", backgroundColor: "#E9EAFB", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+              <span style={{ fontFamily: "Inter, sans-serif", fontWeight: 700, fontSize: "20px", color: "#0C0C48" }}>1</span>
             </div>
-            <div>
-              <h2 className="text-2xl font-bold text-[#4a4a4c] mb-3">Explore the Framework</h2>
-              <p className="text-[#6d6e71] text-lg leading-relaxed">
-                Start by identifying the capabilities relevant to your current role (or a role you'd like to move into), and browse them to understand what skills and behaviours are expected at each level.
-              </p>
-            </div>
+            <h2 style={{ fontFamily: "Inter, sans-serif", fontWeight: 600, fontSize: "40px", lineHeight: "52px", color: "#0C0C48", margin: 0 }}>
+              Explore the Framework
+            </h2>
           </div>
-          
-          <div className="bg-[#f3f3f6] rounded-lg space-y-5" style={{ padding: "40px" }}>
-            <div className="flex items-start gap-4">
-              <svg className="w-6 h-6 text-[#1f2bd4] mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-              </svg>
-              <p className="text-[#4a4a4c] text-base leading-relaxed">On the homepage, you can <strong>filter by role or function</strong> to activate guided mode. Mapped capabilities remain emphasised, non-mapped capabilities are visually de-emphasised, and role-relevant levels are surfaced to help you focus on what is most relevant.</p>
-            </div>
-            <div className="flex items-start gap-4">
-              <svg className="w-6 h-6 text-[#1f2bd4] mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-              </svg>
-              <p className="text-[#4a4a4c] text-base leading-relaxed">Click on any capability card from the homepage to view its details.</p>
-            </div>
-            <div className="flex items-start gap-4">
-              <svg className="w-6 h-6 text-[#1f2bd4] mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-              </svg>
-              <p className="text-[#4a4a4c] text-base leading-relaxed">Use the level tabs (Foundation, Intermediate, Advanced, Exemplar) to see descriptors at each proficiency level. In guided mode, the role-relevant tab is marked with a <strong>star indicator</strong> for your selected role or function.</p>
-            </div>
-            <div className="flex items-start gap-4">
-              <svg className="w-6 h-6 text-[#1f2bd4] mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-              </svg>
-              <p className="text-[#4a4a4c] text-base leading-relaxed">Within the role-relevant level, look for <strong>role-relevant descriptor indicators</strong> to quickly identify behaviours most relevant to your selected role/function.</p>
-            </div>
-            <div className="flex items-start gap-4">
-              <svg className="w-6 h-6 text-[#1f2bd4] mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-              </svg>
-              <p className="text-[#4a4a4c] text-base leading-relaxed">Use <strong>Jump to Capability</strong> in Explore and Self-Assessment to move directly between capabilities; mapped capabilities are marked to help guided navigation.</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Step 2 */}
-        <div
-          className="bg-white rounded-lg border-2 border-[#d9d9d9] shadow-sm"
-          style={{ marginBottom: "88px", padding: "52px" }}
-        >
-          <div className="flex items-start gap-4 mb-8">
-            <div className="w-12 h-12 rounded-full bg-[#EAAB00]/10 flex items-center justify-center flex-shrink-0">
-              <span className="text-[#9a7100] font-bold text-xl">2</span>
-            </div>
-            <div>
-              <h2 className="text-2xl font-bold text-[#4a4a4c] mb-3">Self-Assessment & Development Focus</h2>
-              <p className="text-[#6d6e71] text-lg leading-relaxed">
-                Once you have read through the capabilities and proficiency levels, select those statements that you feel confident to demonstrate already (&ldquo;I can do this&rdquo;), and select those that you wish to develop (&ldquo;Want to develop&rdquo;). <strong>Focus on 1–2 capabilities per year</strong> to avoid becoming overwhelmed.
-              </p>
-            </div>
-          </div>
-          
-          <div className="bg-[#f3f3f6] rounded-lg space-y-5" style={{ padding: "40px" }}>
-            <div className="flex items-start gap-4">
-              <svg className="w-6 h-6 text-[#9a7100] mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-              </svg>
-              <p className="text-[#4a4a4c] text-base leading-relaxed">Click "Start Self-Assessment" from the Explore page, or go directly from the homepage.</p>
-            </div>
-            <div className="flex items-start gap-4">
-              <svg className="w-6 h-6 text-[#9a7100] mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-              </svg>
-              <p className="text-[#4a4a4c] text-base leading-relaxed">For each descriptor, use the <strong>two checkboxes</strong> (guided mode markers from Explore also appear in Self-Assessment):</p>
-            </div>
-            <div className="ml-10 space-y-3">
-              <p className="text-[#4a4a4c] text-base leading-relaxed flex items-center gap-3">
-                <span className="w-4 h-4 rounded bg-[#00877C]/30 border-2 border-[#00877C]/50 flex-shrink-0"></span>
-                <span><strong>"I can do this"</strong> – behaviours you can competently demonstrate (include previous roles and experiences)</span>
-              </p>
-              <p className="text-[#4a4a4c] text-base leading-relaxed flex items-center gap-3">
-                <span className="w-4 h-4 rounded bg-[#EAAB00]/30 border-2 border-[#EAAB00]/50 flex-shrink-0"></span>
-                <span><strong>"Want to develop"</strong> – areas you want to focus on for your development plan</span>
-              </p>
-            </div>
-            <div className="flex items-start gap-4">
-              <svg className="w-6 h-6 text-[#9a7100] mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-              </svg>
-              <p className="text-[#4a4a4c] text-base leading-relaxed"><strong>You can tick both</strong> for the same descriptor — if you can already do something but want to develop it further, tick both &ldquo;I can do this&rdquo; and &ldquo;Want to develop&rdquo;.</p>
-            </div>
-            <div className="flex items-start gap-4">
-              <svg className="w-6 h-6 text-[#9a7100] mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-              </svg>
-              <p className="text-[#4a4a4c] text-base leading-relaxed"><strong>Not all descriptors need to be ticked.</strong> Some may not be relevant to your role or your development goals — it's perfectly fine to leave them unticked.</p>
-            </div>
-            <div className="flex items-start gap-4">
-              <svg className="w-6 h-6 text-[#9a7100] mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-              </svg>
-              <p className="text-[#4a4a4c] text-base leading-relaxed">Your progress is <strong>saved automatically</strong> to your browser. You can leave and come back anytime.</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Step 3 */}
-        <div
-          className="bg-white rounded-lg border-2 border-[#d9d9d9] shadow-sm"
-          style={{ marginBottom: "88px", padding: "52px" }}
-        >
-          <div className="flex items-start gap-4 mb-8">
-            <div className="w-12 h-12 rounded-full bg-[#00877C]/10 flex items-center justify-center flex-shrink-0">
-              <span className="text-[#00877C] font-bold text-xl">3</span>
-            </div>
-            <div>
-              <h2 className="text-2xl font-bold text-[#4a4a4c] mb-3">Add Development Notes</h2>
-              <p className="text-[#6d6e71] text-lg leading-relaxed">
-                Add reflection and action notes for the development focus items you selected during self-assessment.
-              </p>
-            </div>
-          </div>
-          
-          <div className="bg-[#f3f3f6] rounded-lg space-y-5" style={{ padding: "40px" }}>
-            <div className="flex items-start gap-4">
-              <svg className="w-6 h-6 text-[#00877C] mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-              </svg>
-              <p className="text-[#4a4a4c] text-base leading-relaxed">Go to "Development Plan" – it will show the descriptors you marked as "Want to develop".</p>
-            </div>
-            <div className="flex items-start gap-4">
-              <svg className="w-6 h-6 text-[#00877C] mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-              </svg>
-              <p className="text-[#4a4a4c] text-base leading-relaxed"><strong>Add development notes</strong> with specific actions, e.g., "Shadow colleague on grant applications" or "Attend funder roadshow".</p>
-            </div>
-            <div className="flex items-start gap-4">
-              <svg className="w-6 h-6 text-[#00877C] mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-              </svg>
-              <p className="text-[#4a4a4c] text-base leading-relaxed">You can also <strong>add personal reflection notes</strong> in the text area provided for each capability to capture your thoughts.</p>
-            </div>
-            <div className="flex items-start gap-4">
-              <svg className="w-6 h-6 text-[#00877C] mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-              </svg>
-              <p className="text-[#4a4a4c] text-base leading-relaxed">Focus on <strong>1–2 specific development actions</strong> per capability. These notes will form the basis of your development conversation.</p>
-            </div>
-            <div className="flex items-start gap-4">
-              <svg className="w-6 h-6 text-[#00877C] mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-              </svg>
-              <p className="text-[#4a4a4c] text-base leading-relaxed">If you have multiple capabilities with development focus, use the <strong>tabs</strong> to switch between them.</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Summary & Export */}
-        <div
-          className="bg-white rounded-lg border-2 border-[#d9d9d9] shadow-sm"
-          style={{ marginBottom: "88px", padding: "52px" }}
-        >
-          <div className="flex items-start gap-4 mb-8">
-            <div className="w-12 h-12 rounded-full bg-[#f3f3f6] border-2 border-[#d9d9d9] flex items-center justify-center flex-shrink-0">
-              <svg className="w-6 h-6 text-[#4a4a4c]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-              </svg>
-            </div>
-            <div>
-              <h2 className="text-2xl font-bold text-[#4a4a4c] mb-3">View Summary & Print</h2>
-              <p className="text-[#6d6e71] text-lg leading-relaxed">
-                Review your complete assessment and development plan, then print or save as PDF for development conversations.
-              </p>
-            </div>
-          </div>
-          
-          <div className="bg-[#f3f3f6] rounded-lg space-y-5" style={{ padding: "40px" }}>
-            <div className="flex items-start gap-4">
-              <svg className="w-6 h-6 text-[#6d6e71] mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-              </svg>
-              <p className="text-[#4a4a4c] text-base leading-relaxed">Go to "My Summary" to see all your assessed capabilities, demonstrated descriptors, development focus areas, and personal reflection notes.</p>
-            </div>
-            <div className="flex items-start gap-4">
-              <svg className="w-6 h-6 text-[#6d6e71] mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-              </svg>
-              <p className="text-[#4a4a4c] text-base leading-relaxed">When you click <strong>"Print / Save PDF"</strong>, you'll be prompted to <strong>enter your name</strong>. This will appear on the printed report to identify your document.</p>
-            </div>
-            <div className="flex items-start gap-4">
-              <svg className="w-6 h-6 text-[#6d6e71] mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-              </svg>
-              <p className="text-[#4a4a4c] text-base leading-relaxed">Your name will be saved for future printing sessions. You can edit it anytime by clicking the "Edit Name" link next to your name on the summary page.</p>
-            </div>
-            <div className="flex items-start gap-4">
-              <svg className="w-6 h-6 text-[#6d6e71] mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-              </svg>
-              <p className="text-[#4a4a4c] text-base leading-relaxed">Use your browser's print dialog to save as PDF or print a physical copy for your records or development conversations.</p>
-            </div>
-            <div className="flex items-start gap-4">
-              <svg className="w-6 h-6 text-[#6d6e71] mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-              </svg>
-              <p className="text-[#4a4a4c] text-base leading-relaxed">Use <strong>"Clear Assessment"</strong> to reset all data if you want to start fresh (this cannot be undone).</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Tips */}
-        <div
-          className="bg-gradient-to-br from-[#0c0c48]/5 to-[#1f2bd4]/5 rounded-lg border-2 border-[#0c0c48]/20 shadow-sm"
-          style={{ marginBottom: "88px", padding: "52px" }}
-        >
-          <div className="flex items-center gap-3 mb-8">
-            <svg className="w-8 h-8 text-[#0c0c48]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-            </svg>
-            <h2 className="text-2xl md:text-3xl font-bold text-[#0c0c48]">Tips for Effective Use</h2>
-          </div>
-          <ul className="space-y-6">
-            <li className="flex items-start gap-4">
-              <span className="text-[#0c0c48] font-bold text-2xl leading-none mt-1">•</span>
-              <p className="text-[#4a4a4c] text-base leading-relaxed"><strong>Be honest</strong> in your self-assessment. This tool is for your own development, not performance evaluation.</p>
-            </li>
-            <li className="flex items-start gap-4">
-              <span className="text-[#0c0c48] font-bold text-2xl leading-none mt-1">•</span>
-              <p className="text-[#4a4a4c] text-base leading-relaxed"><strong>Focus on 1–2 capabilities per year</strong> for your development plan. Trying to develop everything at once is less effective.</p>
-            </li>
-            <li className="flex items-start gap-4">
-              <span className="text-[#0c0c48] font-bold text-2xl leading-none mt-1">•</span>
-              <p className="text-[#4a4a4c] text-base leading-relaxed"><strong>Add specific actions</strong> in your development notes – general goals are harder to achieve than concrete steps.</p>
-            </li>
-            <li className="flex items-start gap-4">
-              <span className="text-[#0c0c48] font-bold text-2xl leading-none mt-1">•</span>
-              <p className="text-[#4a4a4c] text-base leading-relaxed"><strong>Review periodically</strong> – come back every few months to update your assessment as you develop new skills.</p>
-            </li>
-            <li className="flex items-start gap-4">
-              <span className="text-[#0c0c48] font-bold text-2xl leading-none mt-1">•</span>
-              <p className="text-[#4a4a4c] text-base leading-relaxed"><strong>Share if you choose</strong> – this assessment is for your own development. You can choose to share your printed summary with your manager to support development conversations and get additional support.</p>
-            </li>
-            <li className="flex items-start gap-4">
-              <span className="text-[#0c0c48] font-bold text-2xl leading-none mt-1">•</span>
-              <p className="text-[#4a4a4c] text-base leading-relaxed"><strong>Download the framework document</strong> from the homepage for detailed reference material you can review offline.</p>
-            </li>
-          </ul>
-        </div>
-
-        {/* Get Started CTA */}
-        <div
-          className="bg-white rounded-lg border-2 border-[#d9d9d9] text-center shadow-sm"
-          style={{ padding: "56px" }}
-        >
-          <h2 className="text-2xl md:text-3xl font-bold text-[#4a4a4c] mb-5">Ready to Get Started?</h2>
-          <p className="text-[#6d6e71] text-lg leading-relaxed mb-8 max-w-[600px] mx-auto">
-            Begin by exploring the framework, then move on to your self-assessment when you're ready.
+          <p style={{ fontFamily: "Inter, sans-serif", fontWeight: 400, fontSize: "20px", lineHeight: "30px", color: "#0C0C48", margin: "0 0 24px", paddingLeft: "70px" }}>
+            Start by identifying the capabilities relevant to your current role (or a role you&apos;d like to move into), and browse them to understand what skills and behaviours are expected at each level.
           </p>
-          <div className="flex flex-wrap items-center justify-center gap-5">
+          <div style={{ backgroundColor: "#F4F4FD", borderRadius: "15px", padding: "24px 32px", display: "flex", flexDirection: "column", gap: "15px" }}>
+            <BulletRow color="#0C0C48">On the homepage, you can <strong>filter by role or function</strong> to activate guided mode. Mapped capabilities remain emphasised, non-mapped capabilities are visually de-emphasised, and role-relevant levels are surfaced to help you focus on what is most relevant.</BulletRow>
+            <BulletRow color="#0C0C48">Click on any capability card from the homepage to view its details.</BulletRow>
+            <BulletRow color="#0C0C48">Use the level tabs (Foundation, Intermediate, Advanced, Exemplar) to see descriptors at each proficiency level. In guided mode, the role-relevant tab is marked with a <strong>star indicator</strong> for your selected role or function.</BulletRow>
+            <BulletRow color="#0C0C48">Within the role-relevant level, look for <strong>role-relevant descriptor indicators</strong> to quickly identify behaviours most relevant to your selected role/function.</BulletRow>
+            <BulletRow color="#0C0C48">Use <strong>Jump to Capability</strong> in Explore and Self-Assessment to move directly between capabilities; mapped capabilities are marked to help guided navigation.</BulletRow>
+          </div>
+        </div>
+
+        {/* ── SECTION 2: Self-assessment & development focus ── */}
+        <div style={{ padding: "60px 0 0" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "20px", marginBottom: "16px" }}>
+            <div style={{ width: "50px", height: "50px", borderRadius: "50%", backgroundColor: "#FFF7D7", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+              <span style={{ fontFamily: "Inter, sans-serif", fontWeight: 700, fontSize: "20px", color: "#0C0C48" }}>2</span>
+            </div>
+            <h2 style={{ fontFamily: "Inter, sans-serif", fontWeight: 600, fontSize: "40px", lineHeight: "52px", color: "#0C0C48", margin: 0 }}>
+              Self-assessment &amp; development focus
+            </h2>
+          </div>
+          <p style={{ fontFamily: "Inter, sans-serif", fontWeight: 400, fontSize: "20px", lineHeight: "30px", color: "#0C0C48", margin: "0 0 24px", paddingLeft: "70px" }}>
+            Once you have read through the capabilities and proficiency levels, select those statements that you feel confident to demonstrate already (&ldquo;I can do this&rdquo;), and select those that you wish to develop (&ldquo;Want to develop&rdquo;). <strong>Focus on 1–2 capabilities per year</strong> to avoid becoming overwhelmed.
+          </p>
+          <div style={{ backgroundColor: "rgba(255,247,215,0.5)", borderRadius: "15px", padding: "24px 32px", display: "flex", flexDirection: "column", gap: "15px" }}>
+            <BulletRow color="#0C0C48">Click &ldquo;Start Self-Assessment&rdquo; from the Explore page, or go directly from the homepage.</BulletRow>
+            <BulletRow color="#0C0C48">For each descriptor, use the <strong>two checkboxes</strong> (guided mode markers from Explore also appear in Self-Assessment):</BulletRow>
+            <div style={{ paddingLeft: "40px", display: "flex", flexDirection: "column", gap: "10px" }}>
+              <p style={{ fontFamily: "Inter, sans-serif", fontWeight: 400, fontSize: "16px", lineHeight: "27px", color: "#4A4A4C", margin: 0, display: "flex", alignItems: "center", gap: "12px" }}>
+                <span style={{ width: "16px", height: "16px", borderRadius: "2px", backgroundColor: "#2EC95C", border: "1px solid #0C0C48", flexShrink: 0 }} />
+                <span><strong>&ldquo;I can do this&rdquo;</strong> – behaviours you can competently demonstrate (include previous roles and experiences)</span>
+              </p>
+              <p style={{ fontFamily: "Inter, sans-serif", fontWeight: 400, fontSize: "16px", lineHeight: "27px", color: "#4A4A4C", margin: 0, display: "flex", alignItems: "center", gap: "12px" }}>
+                <span style={{ width: "16px", height: "16px", borderRadius: "2px", backgroundColor: "#FDD835", border: "1px solid #0C0C48", flexShrink: 0 }} />
+                <span><strong>&ldquo;Want to develop&rdquo;</strong> – areas you want to focus on for your development plan</span>
+              </p>
+            </div>
+            <BulletRow color="#0C0C48"><strong>You can tick both</strong> for the same descriptor — if you can already do something but want to develop it further, tick both &ldquo;I can do this&rdquo; and &ldquo;Want to develop&rdquo;.</BulletRow>
+            <BulletRow color="#0C0C48"><strong>Not all descriptors need to be ticked.</strong> Some may not be relevant to your role or your development goals — it&apos;s perfectly fine to leave them unticked.</BulletRow>
+            <BulletRow color="#0C0C48">Your progress is <strong>saved automatically</strong> to your browser. You can leave and come back anytime.</BulletRow>
+          </div>
+        </div>
+
+        {/* ── SECTION 3: Add development notes ── */}
+        <div style={{ padding: "60px 0 0" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "20px", marginBottom: "16px" }}>
+            <div style={{ width: "50px", height: "50px", borderRadius: "50%", backgroundColor: "#D5F4DE", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+              <span style={{ fontFamily: "Inter, sans-serif", fontWeight: 700, fontSize: "20px", color: "#0C0C48" }}>3</span>
+            </div>
+            <h2 style={{ fontFamily: "Inter, sans-serif", fontWeight: 600, fontSize: "40px", lineHeight: "52px", color: "#0C0C48", margin: 0 }}>
+              Add development notes
+            </h2>
+          </div>
+          <p style={{ fontFamily: "Inter, sans-serif", fontWeight: 400, fontSize: "20px", lineHeight: "30px", color: "#0C0C48", margin: "0 0 24px", paddingLeft: "70px" }}>
+            Add reflection and action notes for the development focus items you selected during self-assessment.
+          </p>
+          <div style={{ backgroundColor: "rgba(25,205,128,0.08)", borderRadius: "15px", padding: "24px 32px", display: "flex", flexDirection: "column", gap: "15px" }}>
+            <BulletRow color="#0C0C48">Go to &ldquo;Development Plan&rdquo; – it will show the descriptors you marked as &ldquo;Want to develop&rdquo;.</BulletRow>
+            <BulletRow color="#0C0C48"><strong>Add development notes</strong> with specific actions, e.g., &ldquo;Shadow colleague on grant applications&rdquo; or &ldquo;Attend funder roadshow&rdquo;.</BulletRow>
+            <BulletRow color="#0C0C48">You can also <strong>add personal reflection notes</strong> in the text area provided for each capability to capture your thoughts.</BulletRow>
+            <BulletRow color="#0C0C48">Focus on <strong>1–2 specific development actions</strong> per capability. These notes will form the basis of your development conversation.</BulletRow>
+            <BulletRow color="#0C0C48">If you have multiple capabilities with development focus, use the <strong>tabs</strong> to switch between them.</BulletRow>
+          </div>
+        </div>
+
+        {/* ── SECTION 4: View summary & print ── */}
+        <div style={{ padding: "60px 0 0" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "20px", marginBottom: "16px" }}>
+            <div style={{ width: "50px", height: "50px", borderRadius: "50%", backgroundColor: "#0C0C48", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+              <span style={{ fontFamily: "Inter, sans-serif", fontWeight: 700, fontSize: "20px", color: "#FFFFFF" }}>4</span>
+            </div>
+            <h2 style={{ fontFamily: "Inter, sans-serif", fontWeight: 600, fontSize: "40px", lineHeight: "52px", color: "#0C0C48", margin: 0 }}>
+              View summary &amp; print
+            </h2>
+          </div>
+          <p style={{ fontFamily: "Inter, sans-serif", fontWeight: 400, fontSize: "20px", lineHeight: "30px", color: "#0C0C48", margin: "0 0 24px", paddingLeft: "70px" }}>
+            Review your complete assessment and development plan, then print or save as PDF for development conversations.
+          </p>
+          <div style={{ backgroundColor: "#F3F3F6", borderRadius: "15px", padding: "24px 32px", display: "flex", flexDirection: "column", gap: "15px" }}>
+            <BulletRow color="#0C0C48">Go to &ldquo;My Summary&rdquo; to see all your assessed capabilities, demonstrated descriptors, development focus areas, and personal reflection notes.</BulletRow>
+            <BulletRow color="#0C0C48">When you click <strong>&ldquo;Print / Save PDF&rdquo;</strong>, you&apos;ll be prompted to <strong>enter your name</strong>. This will appear on the printed report to identify your document.</BulletRow>
+            <BulletRow color="#0C0C48">Your name will be saved for future printing sessions. You can edit it anytime by clicking the &ldquo;Edit Name&rdquo; link next to your name on the summary page.</BulletRow>
+            <BulletRow color="#0C0C48">Use your browser&apos;s print dialog to save as PDF or print a physical copy for your records or development conversations.</BulletRow>
+            <BulletRow color="#0C0C48">Use <strong>&ldquo;Clear Assessment&rdquo;</strong> to reset all data if you want to start fresh (this cannot be undone).</BulletRow>
+          </div>
+        </div>
+
+        {/* ── SECTION 5: Tips for effective use ── */}
+        <div style={{ padding: "60px 0 0" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "20px", marginBottom: "16px" }}>
+            <div style={{ width: "50px", height: "50px", borderRadius: "50%", backgroundColor: "#0C0C48", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+              <span style={{ fontFamily: "Inter, sans-serif", fontWeight: 700, fontSize: "20px", color: "#FFFFFF" }}>5</span>
+            </div>
+            <h2 style={{ fontFamily: "Inter, sans-serif", fontWeight: 600, fontSize: "40px", lineHeight: "52px", color: "#0C0C48", margin: 0 }}>
+              Tips for effective use
+            </h2>
+          </div>
+          <div style={{ backgroundColor: "#F3F3F6", borderRadius: "15px", padding: "24px 32px", display: "flex", flexDirection: "column", gap: "15px" }}>
+            <BulletRow color="#0C0C48"><strong>Be honest</strong> in your self-assessment. This tool is for your own development, not performance evaluation.</BulletRow>
+            <BulletRow color="#0C0C48"><strong>Focus on 1–2 capabilities per year</strong> for your development plan. Trying to develop everything at once is less effective.</BulletRow>
+            <BulletRow color="#0C0C48"><strong>Add specific actions</strong> in your development notes – general goals are harder to achieve than concrete steps.</BulletRow>
+            <BulletRow color="#0C0C48"><strong>Review periodically</strong> – come back every few months to update your assessment as you develop new skills.</BulletRow>
+            <BulletRow color="#0C0C48"><strong>Share if you choose</strong> – this assessment is for your own development. You can choose to share your printed summary with your manager to support development conversations and get additional support.</BulletRow>
+            <BulletRow color="#0C0C48"><strong>Download the framework document</strong> from the homepage for detailed reference material you can review offline.</BulletRow>
+          </div>
+        </div>
+
+        {/* ── BOTTOM CTA ── */}
+        <div
+          style={{
+            backgroundColor: "#0C0C48",
+            borderRadius: "15px",
+            padding: "50px",
+            marginTop: "72px",
+            marginBottom: "60px",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            gap: "40px",
+          }}
+        >
+          <div style={{ flex: 1 }}>
+            <h2 style={{ fontFamily: "Inter, sans-serif", fontWeight: 700, fontSize: "32px", lineHeight: "42px", color: "#FFFFFF", margin: "0 0 12px" }}>
+              Ready to get started?
+            </h2>
+            <p style={{ fontFamily: "Inter, sans-serif", fontWeight: 400, fontSize: "18px", lineHeight: "27px", color: "rgba(255,255,255,0.85)", margin: 0 }}>
+              Begin by exploring the framework, then move on to your self-assessment when you&apos;re ready.
+            </p>
+          </div>
+          <div style={{ display: "flex", gap: "20px", flexShrink: 0 }}>
             <Link
               href="/explore"
-              className="inline-flex items-center gap-3 px-10 py-4 bg-white border-2 border-[#d9d9d9] text-[#4a4a4c] rounded-xl font-semibold text-lg hover:bg-[#f3f3f6] hover:border-[#1f2bd4] transition-all shadow-md hover:shadow-lg"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "10px",
+                height: "55px",
+                padding: "15.5px 40px",
+                backgroundColor: "transparent",
+                border: "2px solid #FFFFFF",
+                borderRadius: "29px",
+                fontFamily: "Inter, sans-serif",
+                fontWeight: 700,
+                fontSize: "16px",
+                color: "#FFFFFF",
+                textDecoration: "none",
+                whiteSpace: "nowrap",
+              }}
             >
-              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
               Explore Framework
+              <svg width="8" height="14" viewBox="0 0 8 14" fill="none">
+                <path d="M1 1L7 7L1 13" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
             </Link>
             <Link
               href="/assess"
-              className="inline-flex items-center gap-3 px-10 py-4 bg-[#1f2bd4] rounded-xl font-semibold text-lg hover:bg-[#1929a8] transition-all shadow-md hover:shadow-lg"
-              style={{ color: 'white' }}
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "10px",
+                height: "55px",
+                padding: "15.5px 40px",
+                backgroundColor: "#FFFFFF",
+                border: "2px solid #0C0C48",
+                borderRadius: "29px",
+                fontFamily: "Inter, sans-serif",
+                fontWeight: 700,
+                fontSize: "16px",
+                color: "#0C0C48",
+                textDecoration: "none",
+                whiteSpace: "nowrap",
+              }}
             >
-              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
               Start Assessment
+              <svg width="8" height="14" viewBox="0 0 8 14" fill="none">
+                <path d="M1 1L7 7L1 13" stroke="#0C0C48" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
             </Link>
           </div>
         </div>
-        </div>
-      </main>
+      </div>
+    </div>
+  );
+}
 
-      {/* Footer */}
-      <footer className="w-full border-t-2 border-[#d9d9d9] bg-white mt-16 flex justify-center">
-        <div className="w-full max-w-[1140px] px-8 lg:px-12 py-10">
-          <p className="text-base text-[#6d6e71] text-center">
-            RMA Capability Framework • Waipapa Taumata Rau, University of Auckland
-          </p>
-        </div>
-      </footer>
+/* ── Reusable bullet row component ── */
+function BulletRow({ color, children }: { color: string; children: React.ReactNode }) {
+  return (
+    <div style={{ display: "flex", alignItems: "flex-start", gap: "16px" }}>
+      <svg
+        width="18"
+        height="18"
+        viewBox="0 0 18 18"
+        fill="none"
+        style={{ flexShrink: 0, marginTop: "5px" }}
+      >
+        <path d="M6.5 3.5L13 9L6.5 14.5" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+      <p
+        style={{
+          fontFamily: "Inter, sans-serif",
+          fontWeight: 400,
+          fontSize: "16px",
+          lineHeight: "27px",
+          color: "#4A4A4C",
+          margin: 0,
+        }}
+      >
+        {children}
+      </p>
     </div>
   );
 }
