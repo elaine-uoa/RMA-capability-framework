@@ -1046,7 +1046,7 @@ export default function SummaryPage() {
                   opacity: tempName.trim() ? 1 : 0.6,
                 }}
               >
-                Confirm &amp; Print
+                Print / Save PDF
               </button>
             </div>
           </div>

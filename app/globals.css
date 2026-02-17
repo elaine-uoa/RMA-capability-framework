@@ -737,6 +737,7 @@ details .details-chevron {
   th {
     background: #f3f3f6 !important;
     font-weight: 600 !important;
+    color: #000000 !important;
   }
   
   div[class*="overflow-x-auto"] {
@@ -960,6 +961,51 @@ details .details-chevron {
   div[style*="backgroundColor"] {
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
+  }
+
+  /* ========================================
+     16. Summary Metric Cards — fix overlapping in print
+     Root cause: the global rule
+       "html, body, ... div { position: relative !important }"
+     forces position:relative on every div, which combined
+     with how Chrome's print engine lays out flex items
+     collapses all three cards to the same render position.
+     Fix: switch to CSS Grid (bypasses flex quirks entirely)
+     and explicitly reset position to static on these elements.
+     ======================================== */
+  .summary-metrics-row {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr 1fr !important;
+    gap: 12px !important;
+    width: 100% !important;
+    position: static !important;
+    margin-bottom: 20px !important;
+  }
+
+  .summary-metric-card {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    height: auto !important;
+    min-height: 60px !important;
+    padding: 12px 8px !important;
+    position: static !important;
+    background-color: #F3F3F6 !important;
+    border: 1px solid #8F9092 !important;
+    border-radius: 6px !important;
+    box-sizing: border-box !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .summary-metric-card span {
+    display: block !important;
+    text-align: center !important;
+    width: 100% !important;
   }
 }
 

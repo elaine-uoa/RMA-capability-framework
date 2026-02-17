@@ -555,19 +555,18 @@ export default function Home() {
                         marginBottom: '12px',
                         transform: 'scale(0.7)',
                         transformOrigin: 'center',
-                        color: '#FFFFFF',
-                        WebkitTextFillColor: '#FFFFFF',
+                        color: '#000000',
+                        WebkitTextFillColor: '#000000',
                       }}
                     >
-                      <div style={{ color: '#FFFFFF', WebkitTextFillColor: '#FFFFFF' }}>{area.icon}</div>
+                      <div style={{ color: '#000000', WebkitTextFillColor: '#000000' }}>{area.icon}</div>
                     </div>
                     <h3
-                      className="font-bold !text-white leading-snug"
+                      className="font-bold leading-snug"
                       style={{
                         fontSize: '0.875rem',
-                        color: '#FFFFFF',
-                        WebkitTextFillColor: '#FFFFFF',
-                        textShadow: '0 1px 2px rgba(0,0,0,0.15)',
+                        color: '#000000',
+                        WebkitTextFillColor: '#000000',
                       }}
                     >
                       {area.name}
@@ -631,13 +630,14 @@ export default function Home() {
                           )}
                         </h4>
                         {requiredLevel && !isGreyedOut && (
-                          <div className="inline-flex items-center rounded-full text-[11px] font-semibold border"
+                          <div className="inline-flex items-center justify-center rounded-full text-[11px] font-semibold border"
                             style={{
                               marginBottom: "8px",
                               padding: "4px 8px",
                               borderColor: `${area.color.solid}55`,
-                              color: area.color.solid,
+                              color: "#000000",
                               backgroundColor: `${area.color.solid}12`,
+                              textAlign: "center",
                             }}
                           >
                             Role-relevant level: {requiredLevel.charAt(0) + requiredLevel.slice(1).toLowerCase()}
@@ -741,13 +741,14 @@ export default function Home() {
                           )}
                         </h4>
                         {requiredLevel && !isGreyedOut && (
-                          <div className="inline-flex items-center rounded-full text-[11px] font-semibold border"
+                          <div className="inline-flex items-center justify-center rounded-full text-[11px] font-semibold border"
                             style={{
                               marginBottom: "8px",
                               padding: "4px 8px",
                               borderColor: `${area.color.solid}55`,
-                              color: area.color.solid,
+                              color: "#000000",
                               backgroundColor: `${area.color.solid}12`,
+                              textAlign: "center",
                             }}
                           >
                             Role-relevant level: {requiredLevel.charAt(0) + requiredLevel.slice(1).toLowerCase()}
