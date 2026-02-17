@@ -228,8 +228,8 @@ export default function Home() {
     <div className="w-full min-h-screen bg-[#f2f2f2]">
       {/* Hero Section */}
       <section className="w-full bg-white border-b border-[#e2e3e4]">
-        <div className="max-w-[1140px] mx-auto px-6 lg:px-8" style={{ paddingTop: '56px', paddingBottom: '56px' }}>
-          <h1 className="text-3xl md:text-4xl font-bold leading-tight text-[#0c0c48]" style={{ marginBottom: '16px' }}>
+        <div className="max-w-[1140px] mx-auto px-4 sm:px-6 lg:px-8 resp-section" style={{ paddingTop: '56px', paddingBottom: '56px' }}>
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold leading-tight text-[#0c0c48]" style={{ marginBottom: '16px' }}>
             RMA Capability Framework
           </h1>
           <p className="text-base md:text-lg leading-relaxed text-[#6d6e71]" style={{ maxWidth: '800px', marginBottom: '32px' }}>
@@ -277,8 +277,8 @@ export default function Home() {
 
       {/* Framework Overview Section */}
       <section className="w-full bg-white border-b border-[#e2e3e4]">
-        <div className="max-w-[1140px] mx-auto px-6 lg:px-8" style={{ paddingTop: '56px', paddingBottom: '56px' }}>
-          <h2 className="text-2xl md:text-3xl font-bold text-[#4a4a4c]" style={{ marginBottom: '16px' }}>
+        <div className="max-w-[1140px] mx-auto px-4 sm:px-6 lg:px-8 resp-section" style={{ paddingTop: '56px', paddingBottom: '56px' }}>
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-[#4a4a4c]" style={{ marginBottom: '16px' }}>
             Framework Overview
           </h2>
           <p className="text-base md:text-lg text-[#6d6e71] leading-relaxed" style={{ maxWidth: '900px', marginBottom: '20px' }}>
@@ -297,7 +297,7 @@ export default function Home() {
 
           {/* Key information cards */}
           <div className="grid md:grid-cols-3" style={{ gap: '32px', marginTop: '48px' }}>
-            <div className="bg-[#f2f2f2] rounded-xl border border-[#e2e3e4]" style={{ padding: '40px' }}>
+            <div className="bg-[#f2f2f2] rounded-xl border border-[#e2e3e4] resp-card" style={{ padding: '40px' }}>
               <div className="w-12 h-12 rounded-lg bg-[#0c0c48]/10 flex items-center justify-center" style={{ marginBottom: '24px' }}>
                 <svg className="w-6 h-6 text-[#0c0c48]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -308,7 +308,7 @@ export default function Home() {
                 The key purpose of RMA at Waipapa Taumata Rau, University of Auckland, is to enable and support research excellence through strategic and operational leadership, with impactful outcomes for Aotearoa New Zealand and beyond while upholding Te Tiriti o Waitangi principles and researcher-centred delivery.
               </p>
             </div>
-            <div className="bg-[#f2f2f2] rounded-xl border border-[#e2e3e4]" style={{ padding: '40px' }}>
+            <div className="bg-[#f2f2f2] rounded-xl border border-[#e2e3e4] resp-card" style={{ padding: '40px' }}>
               <div className="w-12 h-12 rounded-lg bg-[#00877C]/10 flex items-center justify-center" style={{ marginBottom: '24px' }}>
                 <svg className="w-6 h-6 text-[#00877C]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -319,7 +319,7 @@ export default function Home() {
                 Feedback was gathered through extensive consultation with an external consultant and staff across the RMA community. Drawing on international frameworks, this bespoke model reflects the unique context and aspirations of Waipapa Taumata Rau, University of Auckland.
               </p>
             </div>
-            <div className="bg-[#f2f2f2] rounded-xl border border-[#e2e3e4]" style={{ padding: '40px' }}>
+            <div className="bg-[#f2f2f2] rounded-xl border border-[#e2e3e4] resp-card" style={{ padding: '40px' }}>
               <div className="w-12 h-12 rounded-lg bg-[#1f2bd4]/10 flex items-center justify-center" style={{ marginBottom: '24px' }}>
                 <svg className="w-6 h-6 text-[#1f2bd4]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
@@ -336,7 +336,7 @@ export default function Home() {
 
       {/* Capabilities Section */}
       <section className="w-full bg-[#f2f2f2]" style={{ marginTop: 0 }}>
-        <div className="max-w-[1140px] mx-auto px-6 lg:px-8" style={{ paddingTop: '56px', paddingBottom: '56px' }}>
+        <div className="max-w-[1140px] mx-auto px-4 sm:px-6 lg:px-8 resp-section" style={{ paddingTop: '56px', paddingBottom: '56px' }}>
           
           {/* Role / Function Filter */}
           <div className="mb-12" style={{ paddingTop: '32px', paddingBottom: '32px' }}>
@@ -529,7 +529,7 @@ export default function Home() {
           
           {/* 2x5 Capability Card Grid – matches framework document structure */}
           {/* Each column: Key Area header + 2 capability cards as a cohesive vertical group */}
-          <div className="home-key-areas-grid grid grid-cols-5 items-stretch" style={{ gap: '20px', minHeight: '620px' }}>
+          <div className="home-key-areas-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 items-stretch" style={{ gap: '20px', minHeight: '620px' }}>
             {keyAreas.map(area => {
               const areaCaps = capabilities.filter(c => area.capabilityIds.includes(c.id));
               const cap1 = areaCaps[0];

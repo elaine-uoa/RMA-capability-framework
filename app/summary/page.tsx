@@ -88,8 +88,10 @@ export default function SummaryPage() {
           ══════════════════════════════════════════ */}
       <div style={{ backgroundColor: "#F3F3F6", minHeight: "274px" }}>
         <div
+          className="resp-container"
           style={{
-            width: "1440px",
+            maxWidth: "1440px",
+            width: "100%",
             margin: "0 auto",
             padding: "50px 100px 40px",
             position: "relative",
@@ -97,7 +99,7 @@ export default function SummaryPage() {
         >
           {/* Top-right action buttons */}
           <div
-            className="no-print"
+            className="no-print resp-download-btn"
             style={{
               position: "absolute",
               top: "50px",
@@ -157,6 +159,7 @@ export default function SummaryPage() {
           </div>
 
           <h1
+            className="resp-heading-xl"
             style={{
               fontFamily: "Inter, sans-serif",
               fontWeight: 600,
@@ -205,7 +208,7 @@ export default function SummaryPage() {
       {/* ══════════════════════════════════════════
           MAIN CONTENT
           ══════════════════════════════════════════ */}
-      <div style={{ width: "1440px", margin: "0 auto", padding: "40px 100px 0" }}>
+      <div className="resp-container" style={{ maxWidth: "1440px", width: "100%", margin: "0 auto", padding: "40px 100px 0" }}>
         {completedCapabilities.length === 0 ? (
           /* ─── EMPTY STATE ─── */
           <div style={{ textAlign: "center", padding: "80px 0" }}>
@@ -257,10 +260,12 @@ export default function SummaryPage() {
         ) : (
           <>
             {/* ── SECTION B — 3 METRIC CARDS ── */}
-            <div style={{ display: "flex", justifyContent: "center", gap: "29px", marginBottom: "24px" }}>
+            <div className="summary-metrics-row flex-wrap" style={{ display: "flex", justifyContent: "center", gap: "29px", marginBottom: "24px" }}>
               <div
+                className="summary-metric-card"
                 style={{
-                  width: "295px",
+                  width: "100%",
+                  maxWidth: "295px",
                   height: "76px",
                   padding: "8px 24px",
                   backgroundColor: "#F3F3F6",
@@ -280,8 +285,10 @@ export default function SummaryPage() {
                 </span>
               </div>
               <div
+                className="summary-metric-card"
                 style={{
-                  width: "295px",
+                  width: "100%",
+                  maxWidth: "295px",
                   height: "76px",
                   padding: "8px 24px",
                   backgroundColor: "#F3F3F6",
@@ -301,8 +308,10 @@ export default function SummaryPage() {
                 </span>
               </div>
               <div
+                className="summary-metric-card"
                 style={{
-                  width: "295px",
+                  width: "100%",
+                  maxWidth: "295px",
                   height: "76px",
                   padding: "8px 24px",
                   backgroundColor: "#F3F3F6",
@@ -389,7 +398,7 @@ export default function SummaryPage() {
               >
                 Assessment Overview
               </h2>
-              <div style={{ borderRadius: "15px", border: "1px solid #E2E3E4", overflow: "hidden" }}>
+              <div className="overflow-x-auto assessment-overview-table" style={{ borderRadius: "15px", border: "1px solid #E2E3E4", overflow: "hidden" }}>
                 <table style={{ width: "100%", borderCollapse: "collapse" }}>
                   <thead>
                     <tr
@@ -525,6 +534,7 @@ export default function SummaryPage() {
                     >
                       {/* Card header */}
                       <div
+                        className="resp-card"
                         style={{
                           display: "flex",
                           justifyContent: "space-between",
@@ -536,6 +546,7 @@ export default function SummaryPage() {
                         }}
                       >
                         <h3
+                          className="resp-heading-lg"
                           style={{
                             fontFamily: "Inter, sans-serif",
                             fontWeight: 700,
@@ -586,7 +597,7 @@ export default function SummaryPage() {
                       </div>
 
                       {/* Card body */}
-                      <div style={{ padding: "32px" }}>
+                      <div className="resp-card" style={{ padding: "32px" }}>
                         {/* Development Focus Areas */}
                         {focus.length > 0 && (
                           <div style={{ marginBottom: "32px" }}>
@@ -611,6 +622,7 @@ export default function SummaryPage() {
                                 return (
                                   <div
                                     key={level}
+                                    className="resp-card"
                                     style={{
                                       backgroundColor: "rgba(255, 247, 215, 0.5)",
                                       borderRadius: "15px",
@@ -684,6 +696,7 @@ export default function SummaryPage() {
                                 return (
                                   <div
                                     key={level}
+                                    className="resp-card"
                                     style={{
                                       backgroundColor: "rgba(25, 205, 128, 0.08)",
                                       borderRadius: "15px",
@@ -751,6 +764,7 @@ export default function SummaryPage() {
                               Personal Reflection Notes
                             </h4>
                             <div
+                              className="resp-card"
                               style={{
                                 backgroundColor: "#F2F2F2",
                                 borderRadius: "15px",
@@ -830,8 +844,10 @@ export default function SummaryPage() {
           ══════════════════════════════════════════ */}
       <div className="w-full no-print" style={{ backgroundColor: "#0C0C48", padding: "36px 0" }}>
         <div
+          className="resp-container"
           style={{
-            width: "1440px",
+            maxWidth: "1440px",
+            width: "100%",
             margin: "0 auto",
             padding: "0 100px",
             display: "flex",

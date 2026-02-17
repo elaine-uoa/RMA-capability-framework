@@ -6,13 +6,16 @@ export default function HowToUsePage() {
       {/* ── HERO ── */}
       <div style={{ backgroundColor: "#F3F3F6" }}>
         <div
+          className="resp-container"
           style={{
-            width: "1440px",
+            maxWidth: "1440px",
+            width: "100%",
             margin: "0 auto",
             padding: "72px 100px",
           }}
         >
           <h1
+            className="resp-heading-xl"
             style={{
               fontFamily: "Inter, sans-serif",
               fontWeight: 600,
@@ -41,10 +44,11 @@ export default function HowToUsePage() {
       </div>
 
       {/* ── MAIN CONTENT ── */}
-      <div style={{ width: "1440px", margin: "0 auto", padding: "0 100px" }}>
+      <div className="resp-container" style={{ maxWidth: "1440px", width: "100%", margin: "0 auto", padding: "0 100px" }}>
         {/* ── OVERVIEW ── */}
         <div style={{ padding: "50px 0 0" }}>
           <h2
+            className="resp-heading-lg"
             style={{
               fontFamily: "Inter, sans-serif",
               fontWeight: 600,
@@ -68,7 +72,7 @@ export default function HowToUsePage() {
           >
             This tool helps Research Management &amp; Administration (RMA) staff assess their current capabilities, identify development opportunities, and create focused development plans. The process follows three main steps:
           </p>
-          <div style={{ display: "flex", gap: "20px", flexWrap: "wrap" }}>
+          <div className="howto-step-grid" style={{ display: "flex", gap: "20px", flexWrap: "wrap" }}>
             <div
               style={{
                 display: "flex",
@@ -126,6 +130,7 @@ export default function HowToUsePage() {
         {/* ── FRAMEWORK PROGRESSION LOGIC ── */}
         <div style={{ padding: "50px 0 0" }}>
           <h2
+            className="resp-heading-lg"
             style={{
               fontFamily: "Inter, sans-serif",
               fontWeight: 600,
@@ -151,8 +156,9 @@ export default function HowToUsePage() {
 
       {/* ── GETTING STARTED (grey banded) ── */}
       <div style={{ backgroundColor: "#F3F3F6", marginTop: "50px" }}>
-        <div style={{ width: "1440px", margin: "0 auto", padding: "50px 100px" }}>
+        <div className="resp-container" style={{ maxWidth: "1440px", width: "100%", margin: "0 auto", padding: "50px 100px" }}>
           <h2
+            className="resp-heading-lg"
             style={{
               fontFamily: "Inter, sans-serif",
               fontWeight: 600,
@@ -226,14 +232,14 @@ export default function HowToUsePage() {
       </div>
 
       {/* ── NUMBERED SECTIONS ── */}
-      <div style={{ width: "1440px", margin: "0 auto", padding: "0 100px" }}>
+      <div className="resp-container" style={{ maxWidth: "1440px", width: "100%", margin: "0 auto", padding: "0 100px" }}>
         {/* ── SECTION 1: Explore the Framework ── */}
         <div style={{ padding: "60px 0 0" }}>
           <div style={{ display: "flex", alignItems: "center", gap: "20px", marginBottom: "16px" }}>
             <div style={{ width: "50px", height: "50px", borderRadius: "50%", backgroundColor: "#E9EAFB", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
               <span style={{ fontFamily: "Inter, sans-serif", fontWeight: 700, fontSize: "20px", color: "#0C0C48" }}>1</span>
             </div>
-            <h2 style={{ fontFamily: "Inter, sans-serif", fontWeight: 600, fontSize: "40px", lineHeight: "52px", color: "#0C0C48", margin: 0 }}>
+            <h2 className="resp-heading-lg" style={{ fontFamily: "Inter, sans-serif", fontWeight: 600, fontSize: "40px", lineHeight: "52px", color: "#0C0C48", margin: 0 }}>
               Explore the Framework
             </h2>
           </div>
@@ -255,7 +261,7 @@ export default function HowToUsePage() {
             <div style={{ width: "50px", height: "50px", borderRadius: "50%", backgroundColor: "#FFF7D7", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
               <span style={{ fontFamily: "Inter, sans-serif", fontWeight: 700, fontSize: "20px", color: "#0C0C48" }}>2</span>
             </div>
-            <h2 style={{ fontFamily: "Inter, sans-serif", fontWeight: 600, fontSize: "40px", lineHeight: "52px", color: "#0C0C48", margin: 0 }}>
+            <h2 className="resp-heading-lg" style={{ fontFamily: "Inter, sans-serif", fontWeight: 600, fontSize: "40px", lineHeight: "52px", color: "#0C0C48", margin: 0 }}>
               Self-assessment &amp; development focus
             </h2>
           </div>
@@ -287,7 +293,7 @@ export default function HowToUsePage() {
             <div style={{ width: "50px", height: "50px", borderRadius: "50%", backgroundColor: "#D5F4DE", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
               <span style={{ fontFamily: "Inter, sans-serif", fontWeight: 700, fontSize: "20px", color: "#0C0C48" }}>3</span>
             </div>
-            <h2 style={{ fontFamily: "Inter, sans-serif", fontWeight: 600, fontSize: "40px", lineHeight: "52px", color: "#0C0C48", margin: 0 }}>
+            <h2 className="resp-heading-lg" style={{ fontFamily: "Inter, sans-serif", fontWeight: 600, fontSize: "40px", lineHeight: "52px", color: "#0C0C48", margin: 0 }}>
               Add development notes
             </h2>
           </div>
@@ -309,7 +315,7 @@ export default function HowToUsePage() {
             <div style={{ width: "50px", height: "50px", borderRadius: "50%", backgroundColor: "#0C0C48", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
               <span style={{ fontFamily: "Inter, sans-serif", fontWeight: 700, fontSize: "20px", color: "#FFFFFF" }}>4</span>
             </div>
-            <h2 style={{ fontFamily: "Inter, sans-serif", fontWeight: 600, fontSize: "40px", lineHeight: "52px", color: "#0C0C48", margin: 0 }}>
+            <h2 className="resp-heading-lg" style={{ fontFamily: "Inter, sans-serif", fontWeight: 600, fontSize: "40px", lineHeight: "52px", color: "#0C0C48", margin: 0 }}>
               View summary &amp; print
             </h2>
           </div>
@@ -331,7 +337,7 @@ export default function HowToUsePage() {
             <div style={{ width: "50px", height: "50px", borderRadius: "50%", backgroundColor: "#0C0C48", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
               <span style={{ fontFamily: "Inter, sans-serif", fontWeight: 700, fontSize: "20px", color: "#FFFFFF" }}>5</span>
             </div>
-            <h2 style={{ fontFamily: "Inter, sans-serif", fontWeight: 600, fontSize: "40px", lineHeight: "52px", color: "#0C0C48", margin: 0 }}>
+            <h2 className="resp-heading-lg" style={{ fontFamily: "Inter, sans-serif", fontWeight: 600, fontSize: "40px", lineHeight: "52px", color: "#0C0C48", margin: 0 }}>
               Tips for effective use
             </h2>
           </div>
@@ -347,6 +353,7 @@ export default function HowToUsePage() {
 
         {/* ── BOTTOM CTA ── */}
         <div
+          className="flex flex-col sm:flex-row items-center sm:justify-between"
           style={{
             backgroundColor: "#0C0C48",
             borderRadius: "15px",
@@ -360,7 +367,7 @@ export default function HowToUsePage() {
           }}
         >
           <div style={{ flex: 1 }}>
-            <h2 style={{ fontFamily: "Inter, sans-serif", fontWeight: 700, fontSize: "32px", lineHeight: "42px", color: "#FFFFFF", margin: "0 0 12px" }}>
+            <h2 className="resp-heading-md" style={{ fontFamily: "Inter, sans-serif", fontWeight: 700, fontSize: "32px", lineHeight: "42px", color: "#FFFFFF", margin: "0 0 12px" }}>
               Ready to get started?
             </h2>
             <p style={{ fontFamily: "Inter, sans-serif", fontWeight: 400, fontSize: "18px", lineHeight: "27px", color: "rgba(255,255,255,0.85)", margin: 0 }}>
@@ -370,6 +377,7 @@ export default function HowToUsePage() {
           <div style={{ display: "flex", gap: "20px", flexShrink: 0 }}>
             <Link
               href="/explore"
+              className="w-full sm:w-auto justify-center"
               style={{
                 display: "inline-flex",
                 alignItems: "center",
@@ -394,6 +402,7 @@ export default function HowToUsePage() {
             </Link>
             <Link
               href="/assess"
+              className="w-full sm:w-auto justify-center"
               style={{
                 display: "inline-flex",
                 alignItems: "center",

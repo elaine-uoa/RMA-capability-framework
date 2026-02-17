@@ -145,6 +145,7 @@ function DescriptorCard({
 
         {/* Checkbox row */}
         <div
+          className="assess-checkbox-row"
           style={{
             display: "flex",
             alignItems: "center",
@@ -280,16 +281,18 @@ function AssessLevelTabs({
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
-                width: "234px",
-                height: "79px",
-                padding: "10px",
+                width: "100%",
+                maxWidth: "234px",
+                height: "auto",
+                minHeight: "60px",
+                padding: "10px 14px",
                 borderRadius: "10px",
                 backgroundColor: isActive ? "#0C0C48" : "#FFFFFF",
                 color: isActive ? "#FFFFFF" : "#000000",
                 border: isActive ? "none" : "1px solid #8F9092",
                 fontFamily: "Inter, sans-serif",
                 fontWeight: 700,
-                fontSize: "18px",
+                fontSize: "16px",
                 lineHeight: "27px",
                 cursor: "pointer",
                 transition: "all 0.2s ease",
@@ -661,8 +664,10 @@ function AssessmentInner({ capability, capabilityId, getResponse, updateResponse
       {/* ── Breadcrumb bar ── */}
       <div className="w-full" style={{ backgroundColor: "#FFFFFF" }}>
         <div
+          className="resp-container"
           style={{
-            width: "1440px",
+            maxWidth: "1440px",
+            width: "100%",
             margin: "0 auto",
             padding: "36px 100px",
             display: "flex",
@@ -725,7 +730,7 @@ function AssessmentInner({ capability, capabilityId, getResponse, updateResponse
       </div>
 
       {/* ── Central content column ── */}
-      <div style={{ width: "1440px", margin: "0 auto", padding: "30px 100px 0" }}>
+      <div className="resp-container" style={{ maxWidth: "1440px", width: "100%", margin: "0 auto", padding: "30px 100px 0" }}>
         {/* Capability hero card */}
         <div
           style={{
@@ -751,6 +756,7 @@ function AssessmentInner({ capability, capabilityId, getResponse, updateResponse
           </div>
           <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: "8px" }}>
             <h1
+              className="resp-heading-md"
               style={{
                 fontFamily: "Inter, sans-serif",
                 fontWeight: 700,
@@ -870,10 +876,11 @@ function AssessmentInner({ capability, capabilityId, getResponse, updateResponse
 
       {/* ── Assessment Summary (grey banded section) ── */}
       <div className="w-full" style={{ backgroundColor: "#F3F3F6", padding: "20px 0 40px", marginTop: "40px" }}>
-        <div style={{ width: "1440px", margin: "0 auto", padding: "50px 100px" }}>
+        <div className="resp-container" style={{ maxWidth: "1440px", width: "100%", margin: "0 auto", padding: "50px 100px" }}>
           <div style={{ display: "flex", flexDirection: "column", gap: "30px" }}>
             {/* Title */}
             <h2
+              className="resp-heading-md"
               style={{
                 fontFamily: "Inter, sans-serif",
                 fontWeight: 700,
@@ -1119,7 +1126,7 @@ function AssessmentInner({ capability, capabilityId, getResponse, updateResponse
       </div>
 
       {/* ── Previous / Next navigation ── */}
-      <div style={{ width: "1440px", margin: "0 auto", padding: "50px 100px" }}>
+      <div className="resp-container" style={{ maxWidth: "1440px", width: "100%", margin: "0 auto", padding: "50px 100px" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           {prevCapability ? (
             <a
@@ -1224,8 +1231,10 @@ function AssessmentInner({ capability, capabilityId, getResponse, updateResponse
       {/* ── Training & Development Resources ── */}
       <div className="w-full" style={{ backgroundColor: "#F3F3F6", padding: "50px 0" }}>
         <div
+          className="resp-container"
           style={{
-            width: "1440px",
+            maxWidth: "1440px",
+            width: "100%",
             margin: "0 auto",
             padding: "0 100px",
             display: "flex",

@@ -964,11 +964,53 @@ details .details-chevron {
 }
 
 /* ============================================
+   Responsive Container Utility
+   Pages use .resp-container on 1440px-wide sections.
+   Desktop stays untouched; tablet and mobile scale.
+   ============================================ */
+.resp-container {
+  width: 100% !important;
+  box-sizing: border-box;
+}
+
+/* ============================================
+   Tablet Responsive (768px – 1023px)
+   ============================================ */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .resp-container {
+    padding-left: 32px !important;
+    padding-right: 32px !important;
+  }
+
+  /* Explore/Assess level-tab buttons */
+  .level-tabs-wrap button {
+    min-width: 0 !important;
+    padding: 14px 20px !important;
+    font-size: 14px !important;
+  }
+
+  /* Summary metric cards */
+  .summary-metric-card {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  /* Plan/Summary card padding */
+  .resp-card {
+    padding: 24px !important;
+  }
+}
+
+/* ============================================
    Mobile-First Responsive Safeguards
    Desktop-safe: only applies <= 767px
    ============================================ */
 @media (max-width: 767px) {
-  /* Global container spacing */
+  /* ---- Global container spacing ---- */
+  .resp-container {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
   .page-mobile-container,
   .w-full.max-w-\[1140px\],
   .w-full.max-w-\[1100px\] {
@@ -976,30 +1018,58 @@ details .details-chevron {
     padding-right: 16px !important;
   }
 
-  /* Navbar */
+  /* ---- Responsive font sizes ---- */
+  .resp-heading-xl {
+    font-size: 28px !important;
+    line-height: 1.2 !important;
+  }
+  .resp-heading-lg {
+    font-size: 24px !important;
+    line-height: 1.25 !important;
+  }
+  .resp-heading-md {
+    font-size: 20px !important;
+    line-height: 1.3 !important;
+  }
+
+  /* ---- Responsive padding ---- */
+  .resp-card {
+    padding: 20px !important;
+  }
+  .resp-section {
+    padding-top: 32px !important;
+    padding-bottom: 32px !important;
+  }
+
+  /* ---- Navbar ---- */
   nav.no-print > div > div {
-    height: 82px !important;
+    height: 72px !important;
   }
   nav.no-print a[href="/"] {
-    padding-left: 16px !important;
+    padding-left: 12px !important;
   }
-  nav.no-print img[alt*="University of Auckland"] {
-    height: 50px !important;
+  nav.no-print img[alt*="University of Auckland"],
+  nav.no-print img[alt*="Waipapa Taumata Rau"] {
+    height: 36px !important;
     width: auto !important;
   }
   nav.no-print button[aria-label="Toggle navigation menu"] {
     margin-right: 12px !important;
   }
 
-  /* Footer */
+  /* ---- Footer ---- */
   footer.no-print > div {
     padding: 24px 0 !important;
   }
   footer.no-print > div > div {
     gap: 20px !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center;
   }
   footer.no-print > div > div > div:first-child {
     padding-left: 16px !important;
+    padding-right: 16px !important;
   }
   footer.no-print > div > div > div:nth-child(2) {
     padding: 0 16px !important;
@@ -1009,10 +1079,16 @@ details .details-chevron {
     width: auto !important;
   }
 
-  /* Homepage */
-  .home-hero-cta-group > a {
-    width: 100%;
+  /* ---- Homepage ---- */
+  .home-hero-cta-group {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+  .home-hero-cta-group > a,
+  .home-hero-cta-group > button {
+    width: 100% !important;
     justify-content: center;
+    text-align: center;
   }
   .home-filter-panel {
     padding: 22px 16px !important;
@@ -1033,13 +1109,14 @@ details .details-chevron {
     padding: 24px 16px !important;
   }
   .home-proficiency-grid {
+    grid-template-columns: 1fr !important;
     gap: 16px !important;
   }
   .home-proficiency-card {
     padding: 20px !important;
   }
 
-  /* Explore + Assess: tabs and descriptor density */
+  /* ---- Explore + Assess: tabs and descriptor density ---- */
   .capability-selector-button {
     width: 100%;
     justify-content: space-between;
@@ -1051,9 +1128,12 @@ details .details-chevron {
     width: min(92vw, 360px) !important;
     right: 0 !important;
   }
+  .level-tabs-wrap {
+    flex-direction: column !important;
+  }
   .level-tabs-wrap button {
     min-width: 0 !important;
-    width: 100%;
+    width: 100% !important;
     padding: 14px 16px !important;
     font-size: 14px !important;
   }
@@ -1091,7 +1171,13 @@ details .details-chevron {
     height: 42px !important;
   }
 
-  /* Assess summary action row */
+  /* ---- Assess checkbox row ---- */
+  .assess-checkbox-row {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+
+  /* ---- Assess summary action row ---- */
   .summary-actions-row {
     flex-direction: column !important;
     align-items: stretch !important;
@@ -1103,7 +1189,22 @@ details .details-chevron {
     flex-wrap: wrap;
   }
 
-  /* Summary + Plan + Guide card/tables/modal */
+  /* ---- Summary metric cards ---- */
+  .summary-metric-card {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+  .summary-metrics-row {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+
+  /* ---- Summary + Plan + Guide tables ---- */
+  .assessment-overview-table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
   .assessment-overview-table th,
   .assessment-overview-table td {
     padding-top: 12px !important;
@@ -1121,7 +1222,23 @@ details .details-chevron {
     -webkit-overflow-scrolling: touch;
   }
 
-  /* Modal layout on small screens */
+  /* ---- Plan/Summary card padding ---- */
+  .resp-card {
+    padding: 16px !important;
+  }
+
+  /* ---- How-to-Use page ---- */
+  .howto-step-grid {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+
+  /* ---- Summary download / action buttons ---- */
+  .resp-download-btn {
+    right: 16px !important;
+  }
+
+  /* ---- Modal layout on small screens ---- */
   .fixed.inset-0 > .bg-white.rounded-xl.shadow-2xl.max-w-lg.w-full {
     padding: 24px !important;
     max-height: 92vh;

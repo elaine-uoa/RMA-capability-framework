@@ -101,8 +101,9 @@ export default function PlanPage() {
     <div className="w-full min-h-screen" style={{ backgroundColor: "#FFFFFF" }}>
       {/* ── HERO ── */}
       <div style={{ backgroundColor: "#F3F3F6", paddingBottom: "40px" }}>
-        <div style={{ width: "1440px", margin: "0 auto", padding: "50px 100px 0" }}>
+        <div className="resp-container" style={{ maxWidth: "1440px", width: "100%", margin: "0 auto", padding: "50px 100px 0" }}>
           <h1
+            className="resp-heading-xl"
             style={{
               fontFamily: "Inter, sans-serif",
               fontWeight: 700,
@@ -173,12 +174,13 @@ export default function PlanPage() {
       </div>
 
       {/* ── MAIN CONTENT ── */}
-      <div style={{ width: "1440px", margin: "0 auto", padding: "40px 100px 0" }}>
+      <div className="resp-container" style={{ maxWidth: "1440px", width: "100%", margin: "0 auto", padding: "40px 100px 0" }}>
         {allIncludedCapabilities.length === 0 ? (
           /* ─── EMPTY STATE ─── */
           <div style={{ display: "flex", flexDirection: "column", gap: "48px" }}>
             {/* Dark empty-state card */}
             <div
+              className="flex flex-col sm:flex-row items-center sm:justify-between resp-card"
               style={{
                 display: "flex",
                 justifyContent: "space-between",
@@ -218,6 +220,7 @@ export default function PlanPage() {
               </div>
               <Link
                 href="/assess"
+                className="w-full sm:w-auto justify-center"
                 style={{
                   display: "inline-flex",
                   alignItems: "center",
@@ -496,7 +499,7 @@ export default function PlanPage() {
                   </div>
 
                   {/* Card body */}
-                  <div style={{ padding: "32px" }}>
+                  <div className="resp-card" style={{ padding: "32px" }}>
                     {/* Development Focus Areas */}
                     {hasFocus ? (
                       <div style={{ marginBottom: "32px" }}>
@@ -520,6 +523,7 @@ export default function PlanPage() {
                             return (
                               <div
                                 key={level}
+                                className="resp-card"
                                 style={{
                                   backgroundColor: "rgba(255, 247, 215, 0.5)",
                                   borderRadius: "15px",
@@ -640,6 +644,7 @@ export default function PlanPage() {
                               return (
                                 <div
                                   key={level}
+                                  className="resp-card"
                                   style={{
                                     backgroundColor: "rgba(25, 205, 128, 0.08)",
                                     borderRadius: "15px",
@@ -848,8 +853,10 @@ export default function PlanPage() {
       {/* ── Training & Development Resources ── */}
       <div className="w-full" style={{ backgroundColor: "#F3F3F6", padding: "50px 0", marginTop: "40px" }}>
         <div
+          className="resp-container"
           style={{
-            width: "1440px",
+            maxWidth: "1440px",
+            width: "100%",
             margin: "0 auto",
             padding: "0 100px",
             display: "flex",
@@ -910,8 +917,10 @@ export default function PlanPage() {
       {allIncludedCapabilities.length > 0 && (
         <div className="w-full" style={{ backgroundColor: "#0C0C48", padding: "24px 0" }}>
           <div
+            className="resp-container flex flex-col sm:flex-row items-center sm:justify-between resp-card"
             style={{
-              width: "1440px",
+              maxWidth: "1440px",
+              width: "100%",
               margin: "0 auto",
               padding: "0 100px",
               display: "flex",
@@ -934,6 +943,7 @@ export default function PlanPage() {
             <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
               <Link
                 href="/assess"
+                className="w-full sm:w-auto justify-center"
                 style={{
                   display: "inline-flex",
                   alignItems: "center",
@@ -958,6 +968,7 @@ export default function PlanPage() {
               </Link>
               <Link
                 href="/summary"
+                className="w-full sm:w-auto justify-center"
                 style={{
                   display: "inline-flex",
                   alignItems: "center",

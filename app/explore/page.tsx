@@ -146,11 +146,13 @@ function LevelTabsReadOnly({
               onClick={() => setSelectedTab(level)}
               className="flex items-center justify-center gap-3 font-bold transition-all duration-200"
               style={{
-                width: "234px",
-                height: "79px",
-                padding: "10px",
+                width: "100%",
+                maxWidth: "234px",
+                height: "auto",
+                minHeight: "60px",
+                padding: "10px 14px",
                 borderRadius: "10px",
-                fontSize: "18px",
+                fontSize: "16px",
                 lineHeight: "27px",
                 backgroundColor: isActive ? "#0C0C48" : "#FFFFFF",
                 color: isActive ? "#FFFFFF" : "#000000",
@@ -344,8 +346,10 @@ function ExploreContent() {
       {/* ── Breadcrumb bar ── */}
       <div className="w-full" style={{ backgroundColor: "#FFFFFF" }}>
         <div
+          className="resp-container"
           style={{
-            width: "1440px",
+            maxWidth: "1440px",
+            width: "100%",
             margin: "0 auto",
             padding: "36px 100px",
             display: "flex",
@@ -370,10 +374,10 @@ function ExploreContent() {
       </div>
 
       {/* ── Central content column (1240 px content, centered within 1440 px) ── */}
-      <div style={{ width: "1440px", margin: "0 auto", padding: "30px 100px 0" }}>
+      <div className="resp-container" style={{ maxWidth: "1440px", width: "100%", margin: "0 auto", padding: "30px 100px 0" }}>
         {/* Capability header card */}
         <div
-          className="flex items-start"
+          className="flex flex-col sm:flex-row items-start resp-card"
           style={{
             backgroundColor: capabilityColor,
             borderRadius: "15px",
@@ -388,7 +392,7 @@ function ExploreContent() {
             </svg>
           </div>
           <div className="flex flex-col gap-2 flex-1">
-            <h1 className="font-bold" style={{ fontSize: "32px", lineHeight: "42px", color: "#0C0C48" }}>
+            <h1 className="font-bold resp-heading-lg" style={{ fontSize: "32px", lineHeight: "42px", color: "#0C0C48" }}>
               {capability.name}
             </h1>
             <p className="font-normal" style={{ fontSize: "18px", lineHeight: "27px", color: "#0C0C48" }}>
@@ -448,7 +452,7 @@ function ExploreContent() {
 
       {/* ── Training & Development Resources (full-width grey bg) ── */}
       <div className="w-full" style={{ backgroundColor: "#F3F3F6", padding: "50px 0", marginTop: "50px" }}>
-        <div style={{ width: "1440px", margin: "0 auto", padding: "0 100px", display: "flex", flexDirection: "column", gap: "8px" }}>
+        <div className="resp-container" style={{ maxWidth: "1440px", width: "100%", margin: "0 auto", padding: "0 100px", display: "flex", flexDirection: "column", gap: "8px" }}>
           <h4 className="font-bold" style={{ fontSize: "20px", lineHeight: "30px", color: "#0C0C48" }}>
             Training &amp; Development Resources
           </h4>
@@ -471,13 +475,13 @@ function ExploreContent() {
       </div>
 
       {/* ── "Ready to assess yourself?" CTA ── */}
-      <div style={{ width: "1440px", margin: "0 auto", padding: "20px 100px 60px" }}>
+      <div className="resp-container" style={{ maxWidth: "1440px", width: "100%", margin: "0 auto", padding: "20px 100px 60px" }}>
         <div
-          className="flex items-center justify-between"
-          style={{ backgroundColor: "#0C0C48", borderRadius: "15px", padding: "50px", gap: "50px" }}
+          className="flex flex-col sm:flex-row items-center sm:justify-between resp-card"
+          style={{ backgroundColor: "#0C0C48", borderRadius: "15px", padding: "50px", gap: "30px" }}
         >
-          <div className="flex flex-col gap-2 flex-1">
-            <h3 className="font-bold" style={{ fontSize: "32px", lineHeight: "42px", color: "#FFFFFF" }}>
+          <div className="flex flex-col gap-2 flex-1 text-center sm:text-left">
+            <h3 className="font-bold resp-heading-md" style={{ fontSize: "32px", lineHeight: "42px", color: "#FFFFFF" }}>
               Ready to assess yourself?
             </h3>
             <p className="font-normal" style={{ fontSize: "18px", lineHeight: "27px", color: "#FFFFFF" }}>
@@ -487,7 +491,7 @@ function ExploreContent() {
           </div>
           <a
             href={`/assess?capability=${capability.id}`}
-            className="flex-shrink-0 inline-flex items-center gap-6 bg-white rounded-full hover:bg-gray-50 transition-colors whitespace-nowrap font-bold"
+            className="flex-shrink-0 inline-flex items-center gap-6 bg-white rounded-full hover:bg-gray-50 transition-colors whitespace-nowrap font-bold w-full sm:w-auto justify-center"
             style={{ padding: "15.5px 40px", fontSize: "16px", lineHeight: "24px", color: "#0C0C48", border: "2px solid #0C0C48" }}
           >
             Start Self Assessment
