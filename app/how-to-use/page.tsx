@@ -195,7 +195,7 @@ export default function HowToUsePage() {
                   Data Storage
                 </h3>
                 <p style={{ fontFamily: "Inter, sans-serif", fontWeight: 400, fontSize: "16px", lineHeight: "27px", color: "#4A4A4C", margin: 0 }}>
-                  All your assessment data is stored locally in your browser. No information is sent to a server. You can work at your own pace and your progress is automatically saved as you go. Your selected role/function filter is also remembered while you move between Homepage, Explore, and Self-Assessment.
+                  All your assessment data is stored locally in your browser. No information is sent to a server. You can work at your own pace and your progress is automatically saved as you go.
                 </p>
               </div>
             </div>
@@ -247,11 +247,10 @@ export default function HowToUsePage() {
             Start by identifying the capabilities relevant to your current role (or a role you&apos;d like to move into), and browse them to understand what skills and behaviours are expected at each level.
           </p>
           <div style={{ backgroundColor: "#F4F4FD", borderRadius: "15px", padding: "24px 32px", display: "flex", flexDirection: "column", gap: "15px" }}>
-            <BulletRow color="#0C0C48">On the homepage, you can <strong>filter by role or function</strong> to activate guided mode. Mapped capabilities remain emphasised, non-mapped capabilities are visually de-emphasised, and role-relevant levels are surfaced to help you focus on what is most relevant.</BulletRow>
-            <BulletRow color="#0C0C48">Click on any capability card from the homepage to view its details.</BulletRow>
-            <BulletRow color="#0C0C48">Use the level tabs (Foundation, Intermediate, Advanced, Exemplar) to see descriptors at each proficiency level. In guided mode, the role-relevant tab is marked with a <strong>star indicator</strong> for your selected role or function.</BulletRow>
-            <BulletRow color="#0C0C48">Within the role-relevant level, look for <strong>role-relevant descriptor indicators</strong> to quickly identify behaviours most relevant to your selected role/function.</BulletRow>
-            <BulletRow color="#0C0C48">Use <strong>Jump to Capability</strong> in Explore and Self-Assessment to move directly between capabilities; mapped capabilities are marked to help guided navigation.</BulletRow>
+            <BulletRow color="#0C0C48">Click on any capability card from the homepage to view its details in full.</BulletRow>
+            <BulletRow color="#0C0C48">Use the level tabs (Foundation, Intermediate, Advanced, Exemplar) to see descriptors at each proficiency level and understand what competency looks like at each stage.</BulletRow>
+            <BulletRow color="#0C0C48">Use <strong>Jump to Capability</strong> in Explore and Self-Assessment to move directly between capabilities without returning to the homepage.</BulletRow>
+            <BulletRow color="#0C0C48"><strong>Role-based filtering is coming soon.</strong> We are currently working on mapping capabilities to specific RMA roles and functions. Once this is complete, you will be able to filter the framework by your role or function to surface the capabilities and levels most relevant to your position. This feature will be available in a future update.</BulletRow>
           </div>
         </div>
 
@@ -270,7 +269,7 @@ export default function HowToUsePage() {
           </p>
           <div style={{ backgroundColor: "rgba(255,247,215,0.5)", borderRadius: "15px", padding: "24px 32px", display: "flex", flexDirection: "column", gap: "15px" }}>
             <BulletRow color="#0C0C48">Click &ldquo;Start Self-Assessment&rdquo; from the Explore page, or go directly from the homepage.</BulletRow>
-            <BulletRow color="#0C0C48">For each descriptor, use the <strong>two checkboxes</strong> (guided mode markers from Explore also appear in Self-Assessment):</BulletRow>
+            <BulletRow color="#0C0C48">For each descriptor, use the <strong>two checkboxes</strong>:</BulletRow>
             <div style={{ paddingLeft: "40px", display: "flex", flexDirection: "column", gap: "10px" }}>
               <p style={{ fontFamily: "Inter, sans-serif", fontWeight: 400, fontSize: "16px", lineHeight: "27px", color: "#4A4A4C", margin: 0, display: "flex", alignItems: "center", gap: "12px" }}>
                 <span style={{ width: "16px", height: "16px", borderRadius: "2px", backgroundColor: "#2EC95C", border: "1px solid #0C0C48", flexShrink: 0 }} />

@@ -338,8 +338,8 @@ export default function Home() {
       <section className="w-full bg-[#f2f2f2]" style={{ marginTop: 0 }}>
         <div className="max-w-[1140px] mx-auto px-4 sm:px-6 lg:px-8 resp-section" style={{ paddingTop: '56px', paddingBottom: '56px' }}>
           
-          {/* Role / Function Filter */}
-          <div className="mb-12" style={{ paddingTop: '32px', paddingBottom: '32px' }}>
+          {/* Role / Function Filter — hidden until role-mapping data is finalised */}
+          <div className="hidden" style={{ paddingTop: '32px', paddingBottom: '32px' }}>
             <div className="home-filter-panel bg-white rounded-xl border-2 border-[#e2e3e4] shadow-sm" style={{ padding: '36px 48px' }}>
               {/* Header - Centered */}
               <div className="text-center" style={{ marginBottom: '32px' }}>
@@ -796,8 +796,8 @@ export default function Home() {
             })}
           </div>
           
-          {/* Info message when filter is active */}
-          {effectiveFilterId && (
+          {/* Info message when filter is active — hidden along with filter panel */}
+          {effectiveFilterId && false && (
             <div className="text-center py-8">
               <div className="inline-flex flex-col items-center gap-3 p-6 bg-[#E8F4FD] rounded-xl border-2 border-[#1f2bd4]/30">
                 <svg className="w-10 h-10 text-[#1f2bd4]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>

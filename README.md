@@ -1,260 +1,318 @@
 # RMA Capability Framework Self-Assessment Tool
 
-An interactive web application for Research Management & Administration (RMA) staff at the University of Auckland to complete self-assessments across 10 key capabilities.
+An interactive web application for Research Management and Administration (RMA) staff at Waipapa Taumata Rau, the University of Auckland, to explore the RMA Capability Framework, complete a structured self-assessment, and build a personalised professional development plan.
 
-![RMA Framework](https://img.shields.io/badge/Version-1.5-blue) ![Next.js](https://img.shields.io/badge/Next.js-16-black) ![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)
+**Version:** Phase One complete  
+**Stack:** Next.js 16, React 19, TypeScript 5, Tailwind CSS 4  
+**Deployment:** Vercel (current); University-hosted infrastructure (planned)
 
-## 🎯 Purpose
+---
+
+## Purpose
 
 This tool enables RMA staff to:
-- **Explore** capabilities in a beautiful, intuitive interface inspired by Untools and Laws of UX
-- **Understand** each capability through four progressive levels with Māori alignment statements
-- **Assess** their current capabilities with an interactive tabbed interface
-- **Plan** their professional development with personalized growth recommendations
-- **Export** their development summary as a PDF report
+
+- Browse all ten capabilities and read behavioural descriptors at each of the four proficiency levels
+- Complete a self-assessment by marking which behaviours they can demonstrate and which they want to develop
+- Build a structured development plan from their assessment results
+- Generate a print-ready or PDF summary for use in development conversations with managers
+- Download the RMA Capability Framework document
+
+All data is stored in the user's browser locally. No data is sent to a server and no login is required.
 
 **Note:** This is a professional development tool, not a performance management system.
 
-## ✨ Key Features
+---
 
-### 🎨 Beautiful, Modern Design
-- Clean, minimal aesthetic inspired by [Untools](https://untools.co) and [Laws of UX](https://lawsofux.com)
-- Soft color gradients and smooth animations
-- Responsive design that works on all devices
-- Accessible and print-friendly
+## Application Pages
 
-### 📊 Interactive Assessment
-- **Tabbed Interface**: Switch between Foundation, Intermediate, Advanced, and Exemplar levels
-- **One-Click Selection**: Select your current level directly from the level details
-- **Auto-Save**: Your progress is automatically saved to local storage
-- **Visual Indicators**: See your current level at a glance with badges
+| Page | URL | Purpose |
+|---|---|---|
+| Homepage | `/` | Capability grid overview, key area navigation, framework download |
+| Explore | `/explore` | Read-only view of any capability with level tabs and Maori alignment |
+| Self-Assessment | `/assess` | Dual-checkbox descriptor-level assessment with notes |
+| Development Plan | `/plan` | Aggregated development focus items with per-capability notes |
+| My Summary | `/summary` | Full printable overview of all assessment data |
+| How-to Guide | `/how-to-use` | Step-by-step instructions for using the tool |
 
-### 🎯 Smart Navigation
-- **Quick Jump**: Dropdown selector to jump to any capability
-- **Progress Tracking**: Visual indicators show assessment completion
-- **Smooth Transitions**: Navigate between capabilities with elegant prev/next buttons
-- **Growth Recommendations**: Personalized suggestions based on your target levels
+---
 
-### 📈 Development Summary
-- **Overview Dashboard**: See your progress across all capabilities
-- **Growth Opportunities**: Detailed recommendations for skill development
-- **Export Options**: Print or save as PDF for development discussions
+## Key Features
 
-## 🚀 Getting Started
+### Capability Exploration
+- Read-only Explore page showing descriptors at each proficiency level
+- Maori alignment section per level, linked to Whaia Te Hihiri and Nga Taumata Tutuki
+- Previous and Next navigation between capabilities
+- Jump to any capability via a dropdown selector
+
+### Self-Assessment Interface
+- Dual-checkbox design per behavioural descriptor: one for "I can demonstrate this" and one for "I want to develop this"
+- Colour-coded descriptor cards that visually reflect the combination of selections made
+- Free-text notes area per capability for written reflection
+- Auto-save on every interaction; manual "Save now" button also available
+
+### Development Plan
+- Automatically populated from self-assessment selections
+- Tabbed view per capability showing development focus items grouped by proficiency level
+- Per-capability notes fields with save state
+- Ability to include additional capabilities not yet formally assessed
+- Ability to remove capabilities from the plan
+
+### Summary and Print
+- Full assessment overview across all engaged capabilities
+- Personalised with the user's name before printing
+- Two print modes: full summary or development-focus only
+- PDF-quality print layout using CSS print styles
+
+### Role and Function Filtering (built, not yet visible)
+The application includes a complete role and function filtering system that allows users to select their specific role or functional area and receive a personalised, guided view of the framework. This system is fully implemented across all pages but the homepage filter panel is currently hidden while the RMA team finalises the official role-mapping data. See the section below for instructions on restoring this feature.
+
+### How-to Guide
+A five-step illustrated guide page walking users through the full tool workflow.
+
+### Framework Download
+A "Download the Framework" button on the homepage that serves the official framework as a Word document via `/api/download`.
+
+---
+
+## The Ten Capabilities
+
+The ten capabilities are grouped into five key areas:
+
+**Research Engagement and Impact**
+1. Research-related Engagement
+2. Maximising Impact
+
+**Researcher Development and Culture**
+3. Researcher Development
+4. Environment and Culture
+
+**Research Proposal Development**
+5. Funding Opportunities
+6. Proposal Support
+
+**Research Project and Risk Management**
+7. Initiation
+8. Projects and Initiatives
+
+**Research Policy and Strategy**
+9. Monitoring and Reporting
+10. Policy and Strategy
+
+Each capability has four proficiency levels: Foundation, Intermediate, Advanced, and Exemplar. Each level contains behavioural descriptors and a Maori alignment statement.
+
+---
+
+## Project Structure
+
+```
+/
+├── app/
+│   ├── layout.tsx                Root layout: Navbar, Footer, AssessmentProvider
+│   ├── globals.css               Global styles, CSS custom properties, print media query
+│   ├── page.tsx                  Homepage: capability grid, key areas, filter panel (hidden)
+│   ├── explore/page.tsx          Explore: read-only capability browser with level tabs
+│   ├── assess/page.tsx           Self-Assessment: dual-checkbox descriptor assessment
+│   ├── plan/page.tsx             Development Plan: aggregated focus items and notes
+│   ├── summary/page.tsx          Summary: print-ready full assessment view
+│   ├── how-to-use/page.tsx       How-to Guide: step-by-step user instructions
+│   └── api/download/route.ts     API route: serves the framework .docx file
+│
+├── components/
+│   ├── Navbar.tsx                Top navigation bar with mobile responsive menu
+│   ├── Footer.tsx                Footer with institutional links
+│   ├── CapabilitySelector.tsx    "Jump to Capability" dropdown (Explore and Assess)
+│   └── CapabilityNavigation.tsx  Previous/Next capability navigation cards (Assess)
+│
+├── contexts/
+│   └── AssessmentContext.tsx     React Context: global assessment state, localStorage sync
+│
+├── hooks/
+│   └── useGuidedFilter.ts        Custom hook: role/function filter state and derived values
+│
+├── data/
+│   ├── capabilities.ts           All framework content: capabilities, levels, descriptors
+│   └── roleFilters.ts            Role/function definitions and capability mappings
+│
+├── types/
+│   └── index.ts                  TypeScript interfaces for all shared data structures
+│
+├── public/
+│   ├── uoa_logo.png
+│   ├── uoa_logo_ext_reversed.png
+│   ├── uoa_footer_logo.png
+│   ├── RMAF_V1.5_for_socialisation.docx
+│   └── uoa_corporate_branding/   Fonts, logo variants, UoA templates
+│
+├── package.json
+├── tsconfig.json
+├── next.config.ts
+└── postcss.config.mjs
+```
+
+---
+
+## Getting Started
 
 ### Prerequisites
 
-- Node.js 18+ and npm
-- Modern web browser (Chrome, Firefox, Safari, Edge)
+- Node.js 18 or later
+- npm 9 or later
 
 ### Installation
 
-1. **Install dependencies:**
 ```bash
 npm install
 ```
 
-2. **Run the development server:**
+### Development
+
 ```bash
 npm run dev
 ```
 
-3. **Open your browser:**
-Navigate to [http://localhost:3000](http://localhost:3000)
+The application will be available at `http://localhost:3000`.
 
-### Building for Production
+### Production build
 
 ```bash
 npm run build
 npm start
 ```
 
-## 📁 Project Structure
+### Linting
 
+```bash
+npm run lint
 ```
-├── app/                    # Next.js App Router pages
-│   ├── page.tsx           # Landing page with capability grid
-│   ├── assess/            # Assessment interface
-│   │   └── page.tsx       # Interactive tabbed assessment
-│   ├── summary/           # Summary and reporting
-│   │   └── page.tsx       # Development summary with growth recommendations
-│   ├── layout.tsx         # Root layout with providers
-│   └── globals.css        # Global styles and custom CSS
-├── components/            # Reusable React components
-│   ├── CapabilityNavigation.tsx  # Next/Previous navigation with visual cards
-│   └── CapabilitySelector.tsx     # Quick-jump dropdown menu
-├── contexts/              # React Context providers
-│   └── AssessmentContext.tsx     # State management & localStorage persistence
-├── data/                  # Data models
-│   └── capabilities.ts    # All 10 capabilities with 4 levels each
-├── types/                 # TypeScript type definitions
-│   └── index.ts          # Type interfaces and models
-└── README.md
-```
-
-## 🎨 Design Philosophy
-
-The UI/UX is inspired by:
-
-### [Untools](https://untools.co)
-- Clean, minimal design with plenty of white space
-- Card-based layout with hover effects
-- Soft color palette with gradients
-- Elegant typography and visual hierarchy
-
-### [Laws of UX](https://lawsofux.com)
-- **Hick's Law**: Simplified choices with tabbed interface
-- **Miller's Law**: Information chunked into digestible pieces
-- **Fitts's Law**: Large, easy-to-click interactive elements
-- **Progressive Disclosure**: Details revealed as needed
-
-### Key Design Principles
-- **Visual Clarity**: Clean layouts with consistent spacing
-- **Smooth Interactions**: Subtle animations and transitions
-- **Color Coding**: Each capability has a unique gradient color
-- **Responsive Design**: Works beautifully on desktop, tablet, and mobile
-
-## 📊 The 10 Capabilities
-
-1. **Research-related Engagement** - Engage interest-holders to build research impact
-2. **Maximising Impact** - Identify, evaluate, and enhance research impact
-3. **Researcher Development** - Support development through effective programmes
-4. **Environment and Culture** - Support and advance research culture
-5. **Funding Opportunities** - Identify and disseminate funding opportunities
-6. **Proposal Support** - Support and develop research proposals
-7. **Initiation** - Negotiate, agree, and set up research projects
-8. **Projects and Initiatives** - Manage research projects and initiatives
-9. **Monitoring and Reporting** - Fulfill statutory and compliance requirements
-10. **Policy and Strategy** - Contribute to research-related policies
-
-## 📝 Assessment Levels
-
-Each capability has four progressive levels:
-
-- **Foundation** - Technical understanding and foundational skills
-- **Intermediate** - Independent execution of complex tasks
-- **Advanced** - Deep expertise and autonomous problem-solving
-- **Exemplar** - Excellence, strategic thinking, and leadership
-
-Each level includes:
-- Detailed bullet points describing expected behaviors
-- Māori alignment statements honoring Te Tiriti o Waitangi
-- Cultural context and values (Te Ao Māori principles)
-
-## 🔧 Updating Capabilities
-
-To update capability data:
-
-1. Edit `/data/capabilities.ts`
-2. Follow the existing structure:
-
-```typescript
-{
-  id: "capability-id",
-  name: "Capability Name",
-  description: "Brief description",
-  levels: [
-    {
-      level: "FOUNDATION",
-      bulletPoints: ["Indicator 1", "Indicator 2", ...],
-      alignmentStatement: "Māori alignment text..."
-    },
-    // ... other levels
-  ]
-}
-```
-
-## 🔮 Future Enhancements
-
-### Currently Implemented ✅
-- All 10 capabilities with 4 levels each
-- Interactive tabbed assessment interface
-- Auto-save functionality
-- Keyword-based search
-- Progress tracking
-- Summary report with growth recommendations
-- Print/PDF export
-
-### Planned Features ⏳
-- **Role-Based Filtering**: Filter capabilities by job title
-- **Recommended Levels**: Suggested levels based on role
-- **Development Pathways**: Role-specific learning paths
-- **Peer Comparison**: Anonymous benchmarking (opt-in)
-- **Evidence Upload**: Attach supporting documents
-- **Manager Review**: Collaborative development planning
-
-**Note:** Role-based recommendations will be available once the University finalizes the role-mapping dataset.
-
-## 🌏 Cultural Considerations
-
-All Māori terms and alignment statements are preserved exactly as written in the framework document. The app respects:
-
-- **Te Tiriti o Waitangi** principles
-- **Te Ao Māori** values and worldviews
-- **Kaupapa Māori** approaches to research
-- Cultural protocols and terminology (Manaakitanga, Whanaungatanga, Kaitiakitanga, etc.)
-
-Each capability level includes specific alignment statements explaining how that level embodies these principles in practice.
-
-## 🛠️ Technology Stack
-
-- **Framework**: Next.js 16 (App Router) with Turbopack
-- **Language**: TypeScript 5
-- **Styling**: Tailwind CSS 4
-- **Icons**: Heroicons
-- **Fonts**: Inter (Google Fonts)
-- **State Management**: React Context API + localStorage
-- **Deployment**: Vercel-ready (or any Node.js hosting)
-
-## 📱 Browser Support
-
-- Chrome/Edge 90+
-- Firefox 88+
-- Safari 14+
-- Mobile browsers (iOS Safari, Chrome Mobile)
-
-## 🐛 Troubleshooting
-
-### Issue: Changes not saving
-- Check browser console for localStorage errors
-- Ensure cookies/storage are enabled
-- Try clearing browser cache
-
-### Issue: Styling looks broken
-- Clear `.next` cache: `rm -rf .next`
-- Reinstall dependencies: `rm -rf node_modules && npm install`
-- Rebuild: `npm run build`
-
-### Issue: Navigation not working
-- Ensure JavaScript is enabled
-- Check for console errors
-- Try a hard refresh (Cmd+Shift+R / Ctrl+F5)
-
-## 📄 License
-
-Developed for the University of Auckland Research Hub.
-
-## 👥 Credits
-
-- **Framework Development**: The Skills Group (David Penney) & University of Auckland
-- **Working Group Leads**: Julia Mouatt, Victoria Louise Smith, Louise Brand
-- **Working Group**: 16 members from across RMA, especially Hine Busby, Rangimaarie Painting, and Sheye Semple
-
-**Version 1.5** | November 2025
 
 ---
 
-## 🎯 Quick Start Guide
+## Data Architecture
 
-1. **Start the app**: `npm run dev`
-2. **Explore capabilities** on the home page grid
-3. **Click any capability** to begin assessment
-4. **Switch between tabs** to view different levels
-5. **Click "Select as Current"** to mark your level
-6. **Add notes** for reflection and evidence
-7. **Navigate** using prev/next buttons
-8. **View summary** to see your progress and growth recommendations
-9. **Print or save PDF** for development discussions
+### Framework content
+
+All capability content lives in `data/capabilities.ts`. This is the single file to edit for any updates to capability names, descriptions, behavioural descriptors, or Maori alignment statements. No other files need to be changed for content-only updates.
+
+### Role and function mapping
+
+All role and function definitions and their capability-level mappings live in `data/roleFilters.ts`. This is the file to update when the RMA team confirms the official role-mapping dataset.
+
+### Assessment state
+
+User assessment data is managed by `contexts/AssessmentContext.tsx` and persisted to `localStorage` under the key `rma-assessment-state`. The context is provided at the root layout level and is available to all pages without prop drilling.
+
+### Guided filter state
+
+The active role or function filter selection is managed by `hooks/useGuidedFilter.ts` and persisted to `localStorage` under the key `rma-guided-filter-selection`.
+
+---
+
+## Role and Function Filtering — Restoring the Feature
+
+The filtering system is fully built and functional. The homepage filter panel was hidden at the end of Phase One pending confirmation of the official role-mapping data. To restore it:
+
+**Step 1 — Restore the filter panel container**
+
+In `app/page.tsx`, find the comment:
+
+```
+{/* Role / Function Filter — hidden until role-mapping data is finalised */}
+```
+
+On the div immediately below that comment, change:
+
+```jsx
+<div className="hidden" ...>
+```
+
+to:
+
+```jsx
+<div className="mb-12" ...>
+```
+
+**Step 2 — Restore the filter-active info message**
+
+In the same file, find the comment:
+
+```
+{/* Info message when filter is active — hidden along with filter panel */}
+```
+
+On the line immediately below, change:
+
+```jsx
+{effectiveFilterId && false && (
+```
+
+to:
+
+```jsx
+{effectiveFilterId && (
+```
+
+No further changes are needed. All filtering behaviour across the Explore, Self-Assessment, and navigation components will resume automatically.
+
+---
+
+## Updating the Downloadable Framework Document
+
+Replace the file at `public/RMAF_V1.5_for_socialisation.docx` with the new version, keeping the same filename. If the filename changes, also update the path string in `app/api/download/route.ts`.
+
+---
+
+## Data Storage
+
+All user data is stored in `localStorage` on the user's own device. No data is transmitted to any external server. Users who clear their browser storage or switch devices will not see their previous assessment.
+
+Two keys are used:
+
+| Key | Contents |
+|---|---|
+| `rma-assessment-state` | Full assessment state: levels, descriptors, notes |
+| `rma-guided-filter-selection` | Selected role or function filter |
+
+---
+
+## Troubleshooting
+
+**Changes not saving**
+- Check browser console for localStorage-related errors
+- Ensure the browser has storage permissions enabled
+
+**Styling appears broken**
+- Clear the Next.js build cache: `rm -rf .next`
+- Reinstall dependencies: `rm -rf node_modules && npm install`
+
+**Navigation not working**
+- Ensure JavaScript is enabled in the browser
+- Try a hard refresh (Cmd+Shift+R on macOS, Ctrl+F5 on Windows)
+
+---
+
+## Phase Two Considerations
+
+- Finalise role and function mapping data in `data/roleFilters.ts` and restore the homepage filter panel
+- Update wording in `app/how-to-use/page.tsx` once the filter feature is live (the "coming soon" bullet in Section 1)
+- Evidence upload feature (requires cloud storage integration)
+- Longitudinal assessment history and snapshot comparison
+- Back-end data storage and optional user authentication if institutional requirements change
+- Formal WCAG 2.1 AA accessibility audit
+
+---
+
+## Cultural Considerations
+
+All Maori terms and alignment statements are preserved exactly as written in the framework document. The application respects Te Tiriti o Waitangi principles and integrates Te Ao Maori values throughout the framework content, including alignment to Whaia Te Hihiri and Nga Taumata Tutuki at each capability level.
+
+---
+
+## Credits
+
+- **Framework Development:** The Skills Group (David Penney) and University of Auckland
+- **Working Group Leads:** Julia Mouatt, Victoria Louise Smith, Louise Brand
+- **Working Group:** 16 members from across RMA, with particular contributions from Hine Busby, Rangimaarie Painting, and Sheye Semple
 
 ---
 
